@@ -1,13 +1,26 @@
 ---
 import EjemploCoponente from '@/componentes/EjemploCoponente.astro';
+import NombreBarra from '@/componentes/NombreBarra.astro';
 import Plantilla from '@/plantillas/Plantilla.astro';
 ---
 
 <Plantilla>
   <main>
-    <h1>..:: Plantilla EnFlujo - Astro ::..</h1>
+    <NombreBarra
+      titulo="Lideres"
+      lista={[
+        { nombre: 'Julian', conteo: 6 },
+        { nombre: 'Juan Camilo', conteo: 2 },
+      ]}
+    />
 
-    <EjemploCoponente titulo="Una base para empezar a usar Astro" contenido="¬ | ¬" />
+    <NombreBarra
+      titulo="Temas"
+      lista={[
+        { nombre: 'algo', conteo: 9 },
+        { nombre: 'otro', conteo: 5 },
+      ]}
+    />
   </main>
 </Plantilla>
 

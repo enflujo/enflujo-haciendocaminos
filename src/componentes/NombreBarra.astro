@@ -1,0 +1,42 @@
+---
+interface Props {
+  titulo: string;
+  lista: {
+    nombre: string;
+    conteo: number;
+  }[];
+}
+
+const { lista, titulo } = Astro.props;
+---
+
+<h2>{titulo}</h2>
+<ul>
+  {
+    lista.map((elemento) => (
+      <li>
+        <h4>{elemento.nombre}</h4>
+        <div class="barra">
+          <span class="linea" style={`width: ${elemento.conteo * 100}px`} />
+          <span class="conteo">{elemento.conteo}</span>
+        </div>
+      </li>
+    ))
+  }
+</ul>
+
+<style lang="scss">
+  .barra {
+    display: flex;
+    align-items: center;
+
+    .linea {
+      height: 2px;
+      background-color: aqua;
+    }
+
+    .conteo {
+      margin-left: 3px;
+    }
+  }
+</style>
