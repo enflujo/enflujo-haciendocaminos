@@ -1,5 +1,33 @@
 @import './normalizar';
+@import url('https://fonts.googleapis.com/css2?family=Tourney&display=swap');
 
 :root {
+  /// Fuentes tipográficas hemochas
+  ---fuenteTitulo: font-family: 'Tourney', 'Garamond', 'Georgia', 'Times', serif;
+
+  --fuenteParrafo: 'Inter', 'Helvetica', 'Roboto', 'Arial', 'Tahoma', 'Verdana', sans-serif;
+  font-feature-settings:
+    'liga' 1,
+    'calt' 1; /* fix for Chrome */
+  @supports (font-variation-settings: normal) {
+    :root {
+      font-family: InterVariable, sans-serif;
+    }
+  }
+
+  //Colores * CSS HEX *
+  --negro: #0a0908ff;
+  --linoAntro: #f7efe8ff;
+  --papelViejo: #f1edeaff;
+  --pantalonCaqui: #968176ff;
+  --chalecoCafe: #5e503fff;
+  --cafeBota: #4a3221ff;
+  --cafeCaraota: #351303ff;
+  --bufandaVieja: #22333bff;
+  --azulBic: #06235fff;
+  --lavandaFranchute: #858ae3ff;
+  --rosaPigmento: #ffadc6ff;
+  --rojoRubor: #ff0a54ff;
+
   --colorFuente: #252424;
 }
