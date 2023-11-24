@@ -32,8 +32,25 @@ const listaTipos: ElementoLista[] = [];
 const listaLideres: ElementoLista[] = [];
 const listaRoles: ElementoLista[] = [];
 const listaParticipantes: ElementoLista[] = [];
+const listaRamas: ElementoLista[] = [];
+const listaTemas: ElementoLista[] = [];
+const listaObjetos: ElementoLista[] = [];
+const listaLugares: ElementoLista[] = [];
+const listaDecadas: ElementoLista[] = [];
 const proyectos: Proyectos = [];
-const listas: Lista = { regiones: [], años: [], tipos: [], lideres: [], roles: [], participantes: [] };
+const listas: Lista = {
+  regiones: [],
+  años: [],
+  tipos: [],
+  lideres: [],
+  roles: [],
+  participantes: [],
+  ramas: [],
+  temas: [],
+  objetos: [],
+  lugares: [],
+  decadas: [],
+};
 
 async function procesar() {
   const flujo = await getXlsxStream({
@@ -61,12 +78,22 @@ async function procesar() {
     ordenarListaObjetos(listaLideres, 'nombre', true);
     ordenarListaObjetos(listaRoles, 'nombre', true);
     ordenarListaObjetos(listaParticipantes, 'nombre', true);
+    ordenarListaObjetos(listaRamas, 'nombre', true);
+    ordenarListaObjetos(listaTemas, 'nombre', true);
+    ordenarListaObjetos(listaObjetos, 'nombre', true);
+    ordenarListaObjetos(listaLugares, 'nombre', true);
+    ordenarListaObjetos(listaDecadas, 'nombre', true);
     listas.regiones = listaRegiones;
     listas.años = listaAños;
     listas.tipos = listaTipos;
     listas.lideres = listaLideres;
     listas.roles = listaRoles;
     listas.participantes = listaParticipantes;
+    listas.ramas = listaRamas;
+    listas.temas = listaTemas;
+    listas.objetos = listaObjetos;
+    listas.lugares = listaLugares;
+    listas.decadas = listaDecadas;
     guardarJSON(proyectos, 'proyectos');
     guardarJSON(listas, 'listas');
     console.log('fin');
@@ -80,20 +107,26 @@ function procesarFila(fila: string[]) {
   const lideres = validarValorMultiple(fila[4], listaLideres);
   const rol = validarValorSingular(fila[5], listaRoles);
   const participantes = validarValorMultiple(fila[6], listaParticipantes);
+  const ramas = validarValorMultiple(fila[7], listaRamas);
+  const temas = validarValorMultiple(fila[8], listaTemas);
+  const objetos = validarValorMultiple(fila[9], listaObjetos);
+  const lugares = validarValorMultiple(fila[11], listaLugares);
+  const decada = validarValorSingular(fila[3], listaDecadas);
+  const nombreProyecto = fila[0].trim();
 
   proyectos.push({
-    nombre: fila[0].trim(),
+    nombre: { nombre: nombreProyecto, slug: slug(nombreProyecto) },
     tipo,
     años,
-    decada: `${fila[3]}`.trim(),
+    decada,
     lideres,
     rol,
     participantes,
-    ramas: fila[7] ? fila[7].split(',').map((rama) => rama.trim()) : [],
-    temas: fila[8] ? fila[8].split(',').map((tema) => tema.trim()) : [],
-    objetos: fila[9] ? fila[9].split(',').map((objeto) => objeto.trim()) : [],
+    ramas,
+    temas,
+    objetos,
     regiones,
-    lugares: fila[11] ? fila[11].split(',').map((lugar) => lugar.trim()) : [],
+    lugares,
   });
 }
 
@@ -115,7 +148,7 @@ function validarRegion(valor: string) {
         existeLugar.conteo++;
       }
 
-      return region.trim();
+      return { nombre, slug: slug(nombre) };
     });
 }
 
@@ -126,7 +159,7 @@ function validarValorMultiple(valor: string, lista: ElementoLista[]) {
     .trim()
     .split(',')
     .map((elemento) => {
-      return validarValorSingular(elemento, lista)
+      return validarValorSingular(elemento, lista);
     });
 
   return respuesta;
@@ -136,13 +169,13 @@ function validarValorSingular(valor: string, lista: ElementoLista[]) {
   const existe = lista.find((obj) => obj.nombre === valor);
 
   if (!existe) {
-    lista.push({ nombre: valor, conteo: 1, slug: slug(valor) });
+    lista.push({ nombre: valor, conteo: 1, slug: slug(`${valor}`) });
   } else {
     existe.conteo++;
   }
 
-  const nombre = valor.trim();
-  return {nombre, slug: slug(nombre)};
+  const nombre = `${valor}`.trim();
+  return { nombre, slug: slug(nombre) };
 }
 
 function validarAño(valorAño: string) {
@@ -184,7 +217,7 @@ function procesarAño(año: string) {
   const elemento = listaAños.find((elemento) => elemento.nombre === año);
 
   if (!elemento) {
-    listaAños.push({ nombre: año, conteo: 1, slug: slug(año) });
+    listaAños.push({ nombre: año, conteo: 1, slug: slug(`${año}`) });
   } else {
     elemento.conteo++;
   }
