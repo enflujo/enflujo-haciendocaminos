@@ -1,5 +1,6 @@
 ---
 import NombreBarra from '@/componentes/NombreBarra.astro';
+import Mapa from '@/componentes/Mapa.astro';
 import Plantilla from '@/plantillas/Plantilla.astro';
 import listas from '../../estaticos/listas.json';
 ---
@@ -14,6 +15,7 @@ import listas from '../../estaticos/listas.json';
       <NombreBarra titulo="Roles" lista={listas.roles} />
       <NombreBarra titulo="Participantes" lista={listas.participantes} />
     </div>
+    <div id="mapa"><Mapa /></div>
   </main>
 </Plantilla>
 
