@@ -3,6 +3,7 @@ interface Props {
   titulo: string;
   lista: {
     nombre: string;
+    slug: string;
     conteo: number;
   }[];
 }
@@ -15,7 +16,7 @@ const { lista, titulo } = Astro.props;
   <ul>
     {
       lista.map((elemento) => (
-        <li>
+        <li class={`${elemento.slug}`}>
           <h3 class="nombre">{elemento.nombre}</h3>
           <div class="barra">
             <span class="linea" style={`width: ${elemento.conteo}%`} />
@@ -26,6 +27,8 @@ const { lista, titulo } = Astro.props;
     }
   </ul>
 </section>
+
+<script></script>
 
 <style lang="scss">
   .nombre {

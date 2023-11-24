@@ -75,7 +75,7 @@ async function procesar() {
 
 function procesarFila(fila: string[]) {
   const regiones = validarRegion(fila[10]);
-  validarValorSingular(fila[1].trim(), listaTipos);
+  const tipo = validarValorSingular(fila[1], listaTipos);
   const años = validarAño(`${fila[2]}`.trim());
   const lideres = validarValorMultiple(fila[4], listaLideres);
   const rol = validarValorSingular(fila[5], listaRoles);
@@ -83,7 +83,7 @@ function procesarFila(fila: string[]) {
 
   proyectos.push({
     nombre: fila[0].trim(),
-    tipo: fila[1].trim(),
+    tipo,
     años,
     decada: `${fila[3]}`.trim(),
     lideres,
@@ -125,10 +125,9 @@ function validarValorMultiple(valor: string, lista: ElementoLista[]) {
   const respuesta = valor
     .trim()
     .split(',')
-    .map((elemento) => elemento.trim());
-  respuesta.forEach((elemento) => {
-    validarValorSingular(elemento, lista);
-  });
+    .map((elemento) => {
+      return validarValorSingular(elemento, lista)
+    });
 
   return respuesta;
 }
@@ -142,7 +141,8 @@ function validarValorSingular(valor: string, lista: ElementoLista[]) {
     existe.conteo++;
   }
 
-  return valor.trim();
+  const nombre = valor.trim();
+  return {nombre, slug: slug(nombre)};
 }
 
 function validarAño(valorAño: string) {
