@@ -1,27 +1,24 @@
 ---
-import EjemploCoponente from '@/componentes/EjemploCoponente.astro';
 import NombreBarra from '@/componentes/NombreBarra.astro';
 import Plantilla from '@/plantillas/Plantilla.astro';
+import listas from '../../estaticos/listas.json';
 ---
 
 <Plantilla>
   <main>
-    <NombreBarra
-      titulo="Lideres"
-      lista={[
-        { nombre: 'Julian', conteo: 6 },
-        { nombre: 'Juan Camilo', conteo: 2 },
-      ]}
-    />
-
-    <NombreBarra
-      titulo="Temas"
-      lista={[
-        { nombre: 'algo', conteo: 9 },
-        { nombre: 'otro', conteo: 5 },
-      ]}
-    />
+    <div class="listas">
+      <NombreBarra titulo="Regiones" lista={listas.regiones} />
+      <NombreBarra titulo="Años" lista={listas.años} />
+      <NombreBarra titulo="Tipos" lista={listas.tipos} />
+      <NombreBarra titulo="Líderes de Proyectos" lista={listas.lideres} />
+      <NombreBarra titulo="Roles" lista={listas.roles} />
+      <NombreBarra titulo="Participantes" lista={listas.participantes} />
+    </div>
   </main>
 </Plantilla>
 
-<style lang="scss"></style>
+<style lang="scss">
+  .listas {
+    display: flex;
+  }
+</style>

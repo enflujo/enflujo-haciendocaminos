@@ -60,11 +60,16 @@ const altImg = imagen ? imagen.alt : nombreProyecto;
 </html>
 
 <script>
-  import { proyectos } from '@/utilidades/cerebro';
+  import { listas, proyectos } from '@/utilidades/cerebro';
+
+  listas.subscribe((datos) => {
+    if (!Object.keys(datos).length) return;
+    console.log('listas', datos);
+  });
 
   proyectos.subscribe((datos) => {
     if (!datos.length) return;
-    console.log('listos los datos de proyectos', datos);
+    console.log('proyectos', datos);
   });
 </script>
 

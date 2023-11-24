@@ -10,22 +10,29 @@ interface Props {
 const { lista, titulo } = Astro.props;
 ---
 
-<h2>{titulo}</h2>
-<ul>
-  {
-    lista.map((elemento) => (
-      <li>
-        <h4>{elemento.nombre}</h4>
-        <div class="barra">
-          <span class="linea" style={`width: ${elemento.conteo * 100}px`} />
-          <span class="conteo">{elemento.conteo}</span>
-        </div>
-      </li>
-    ))
-  }
-</ul>
+<section>
+  <h2>{titulo}</h2>
+  <ul>
+    {
+      lista.map((elemento) => (
+        <li>
+          <h3 class="nombre">{elemento.nombre}</h3>
+          <div class="barra">
+            <span class="linea" style={`width: ${elemento.conteo}%`} />
+            <span class="conteo">{elemento.conteo}</span>
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+</section>
 
 <style lang="scss">
+  .nombre {
+    margin: 0;
+    font-size: 0.85em;
+  }
+
   .barra {
     display: flex;
     align-items: center;

@@ -5,3 +5,9 @@ export function ordenarListaObjetos(lista: any[], llave: string | number, descen
     return 0;
   });
 }
+
+export async function pedirDatos<Respuesta>(url: string, config: RequestInit = {}): Promise<Respuesta> {
+  const res = await fetch(url, config);
+  const datos = await res.json();
+  return datos as Respuesta;
+}

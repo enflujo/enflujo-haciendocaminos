@@ -9,18 +9,26 @@
     "preview": "astro preview",
     "astro": "astro",
     "lint": "prettier --check .",
-    "lint:fix": "prettier --write --list-different ."
+    "lint:fix": "prettier --write --list-different .",
+    "datos": "nodemon ./procesador/procesador.ts"
   },
   "dependencies": {
     "@astrojs/check": "^0.3.1",
     "astro": "^3.6.0",
     "nanostores": "^0.9.5",
-    "papaparse": "^5.4.1",
     "typescript": "^5.3.2"
   },
   "devDependencies": {
-    "@types/papaparse": "^5.3.13",
+    "@types/node": "^20.9.5",
+    "nodemon": "^3.0.1",
     "prettier": "^3.1.0",
-    "sass": "^1.69.5"
+    "sass": "^1.69.5",
+    "ts-node": "^10.9.1",
+    "xlstream": "^2.5.3"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "estaticos"
+    ]
   }
 }
