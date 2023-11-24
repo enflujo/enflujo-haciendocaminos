@@ -1,4 +1,4 @@
-# Plantilla Astro
+# Antropología Uniandes - 60 años haciendo caminos
 
 ![Estilo Código](https://github.com/enflujo/enflujo-plantilla-astro/actions/workflows/estilo-codigo.yml/badge.svg)
 ![Tamaño](https://img.shields.io/github/repo-size/enflujo/enflujo-plantilla-astro?color=%235757f7&label=Tama%C3%B1o%20repo&logo=open-access&logoColor=white)
