@@ -19,7 +19,7 @@ interface Props {
   // import iconoImagen from '~/assets/imgs/icono-imagen.svg';
 
   const contenedorMapa = document.getElementById('contenedorMapa');
-  const estilo = 'mapbox://styles/enflujo/clbmr4ink000314lg4hi2hcm1/draft';
+  const estilo = 'mapbox://styles/enflujo/clpcruhsj005z01qr10czhk1d';
   mapbox.accessToken = 'pk.eyJ1IjoiZW5mbHVqbyIsImEiOiJjbDNrOXNndXQwMnZsM2lvNDd4N2x0M3dvIn0.eWs4BHs67PcETEUI00T66Q';
 
   function pintarMapa() {
@@ -48,6 +48,7 @@ interface Props {
       // Crea la fuente con todos los paises (polígonos).
       mapa.addSource('paises', {
         type: 'geojson',
+        // data: 'https://docs.mapbox.com/mapbox-gl-js/assets/earthquakes.geojsons',
         //    data: props.paises,
       });
 
@@ -55,6 +56,7 @@ interface Props {
       mapa.addSource('ubicaciones', {
         type: 'geojson',
         //   data: props.ubicaciones,
+        data: 'https://docs.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson',
         cluster: true,
         clusterRadius: 100,
         clusterProperties: {
