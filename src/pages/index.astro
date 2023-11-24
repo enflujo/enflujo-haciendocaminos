@@ -26,13 +26,18 @@ import listas from '../../estaticos/listas.json';
   listas.subscribe((datos) => {
     if (!Object.keys(datos).length) return;
     console.log(datos);
-    const { tipos, lideres } = datos;
+    const { tipos, lideres, años } = datos;
     const contenedorTipos = document.createElement('section');
     const tituloTipos = document.createElement('h2');
     const listaTipos = document.createElement('ul');
     tituloTipos.innerText = 'Tipos de Proyectos';
     contenedorTipos.classList.add('lista');
 
+    // Agregar las categorías relacionadas a los elementos de cada lista como clases
+
+    /**
+     * Tipos
+     */
     tipos.forEach((tipo) => {
       const elemento = document.createElement('li');
       const nombre = document.createElement('span');
@@ -49,9 +54,8 @@ import listas from '../../estaticos/listas.json';
     contenedorListas.appendChild(contenedorTipos);
 
     /**
-     *
+     * Líderes
      */
-
     const contenedorLideres = document.createElement('section');
     const tituloLideres = document.createElement('h2');
     const listaLideres = document.createElement('ul');
@@ -70,6 +74,28 @@ import listas from '../../estaticos/listas.json';
     contenedorLideres.appendChild(tituloLideres);
     contenedorLideres.appendChild(listaLideres);
     contenedorListas.appendChild(contenedorLideres);
+
+    /**
+     * Años
+     */
+    const contenedorAños = document.createElement('section');
+    const tituloAños = document.createElement('h2');
+    const listaAños = document.createElement('ul');
+    tituloAños.innerText = 'Años';
+    contenedorAños.classList.add('lista');
+
+    años.forEach((año) => {
+      const elemento = document.createElement('li');
+      const nombre = document.createElement('span');
+      elemento.className = `año ${año.slug}`;
+      nombre.innerText = año.nombre;
+      elemento.appendChild(nombre);
+      listaAños.appendChild(elemento);
+    });
+
+    contenedorAños.appendChild(tituloAños);
+    contenedorAños.appendChild(listaAños);
+    contenedorListas.appendChild(contenedorAños);
   });
 
   proyectos.subscribe((datos) => {
@@ -91,6 +117,36 @@ import listas from '../../estaticos/listas.json';
           contenedorListas.classList.remove('todoVisible');
           elemento.classList.add('visible');
           tiposRelacionados.forEach((relacion) => {
+            relacion.classList.add('visible');
+          });
+        };
+
+        elemento.onmouseleave = () => {
+          contenedorListas.classList.add('todoVisible');
+
+          const visibles = document.querySelectorAll<HTMLLIElement>('.visible');
+
+          visibles.forEach((elemento) => elemento.classList.remove('visible'));
+        };
+      });
+
+      /**
+       * Años
+       */
+      proyecto.años.forEach((año) => {
+        const elemento = document.querySelector<HTMLLIElement>(`.${año.slug}`);
+        const añoRelacionado = document.querySelector<HTMLLIElement>(`.${proyecto.años.valor}`);
+
+        if (!elemento || !añoRelacionado) return;
+
+        elemento.classList.add(`t-${proyecto.tipo.slug}`);
+        añoRelacionado.classList.add(`a-${año.slug}`);
+
+        elemento.onmouseenter = () => {
+          const añosRelacionados = document.querySelectorAll(`.l-${año.slug}`);
+          contenedorListas.classList.remove('todoVisible');
+          elemento.classList.add('visible');
+          añosRelacionados.forEach((relacion) => {
             relacion.classList.add('visible');
           });
         };
