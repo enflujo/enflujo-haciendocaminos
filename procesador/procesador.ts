@@ -1,6 +1,7 @@
 import type { Año, ElementoLista, Lista, Proyectos, Regiones } from '../src/tipos.ts';
 import { writeFileSync } from 'fs';
 import { getXlsxStream } from 'xlstream';
+import slug from 'slug';
 
 const guardarJSON = (json: any, nombre: string) => {
   writeFileSync(`./estaticos/${nombre}.json`, JSON.stringify(json));
@@ -51,7 +52,6 @@ async function procesar() {
     }
 
     numeroFila++;
-    // procesador(fila.formatted.obj, numeroFila);
   });
 
   flujo.on('close', () => {
@@ -137,7 +137,7 @@ function validarValorSingular(valor: string, lista: ElementoLista[]) {
   const existe = lista.find((obj) => obj.nombre === valor);
 
   if (!existe) {
-    lista.push({ nombre: valor, conteo: 1 });
+    lista.push({ nombre: valor, conteo: 1, slug: slug(valor) });
   } else {
     existe.conteo++;
   }
@@ -184,7 +184,7 @@ function procesarAño(año: string) {
   const elemento = listaAños.find((elemento) => elemento.nombre === año);
 
   if (!elemento) {
-    listaAños.push({ nombre: año, conteo: 1 });
+    listaAños.push({ nombre: año, conteo: 1, slug: slug(año) });
   } else {
     elemento.conteo++;
   }

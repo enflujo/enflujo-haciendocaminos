@@ -1,5 +1,6 @@
 export interface ElementoLista {
   nombre: string;
+  slug: string;
   conteo: number;
 }
 export type Años = [año: number, conteo: number][];
