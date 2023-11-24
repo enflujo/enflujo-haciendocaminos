@@ -7,20 +7,134 @@ import listas from '../../estaticos/listas.json';
 
 <Plantilla>
   <main>
-    <div class="listas">
-      <NombreBarra titulo="Regiones" lista={listas.regiones} />
+    <div id="contenedorListas" class="todoVisible">
+      <!-- <NombreBarra titulo="Regiones" lista={listas.regiones} />
       <NombreBarra titulo="Años" lista={listas.años} />
       <NombreBarra titulo="Tipos" lista={listas.tipos} />
       <NombreBarra titulo="Líderes de Proyectos" lista={listas.lideres} />
       <NombreBarra titulo="Roles" lista={listas.roles} />
-      <NombreBarra titulo="Participantes" lista={listas.participantes} />
+      <NombreBarra titulo="Participantes" lista={listas.participantes} /> -->
     </div>
     <div id="mapa"><Mapa /></div>
   </main>
 </Plantilla>
 
-<style lang="scss">
-  .listas {
+<script>
+  import { listas, proyectos } from '@/utilidades/cerebro';
+  const contenedorListas = document.getElementById('contenedorListas') as HTMLDivElement;
+
+  listas.subscribe((datos) => {
+    if (!Object.keys(datos).length) return;
+    console.log(datos);
+    const { tipos, lideres } = datos;
+    const contenedorTipos = document.createElement('section');
+    const tituloTipos = document.createElement('h2');
+    const listaTipos = document.createElement('ul');
+    tituloTipos.innerText = 'Tipos de Proyectos';
+    contenedorTipos.classList.add('lista');
+
+    tipos.forEach((tipo) => {
+      const elemento = document.createElement('li');
+      const nombre = document.createElement('span');
+      elemento.className = `tipo ${tipo.slug}`;
+      nombre.innerText = tipo.nombre;
+      elemento.appendChild(nombre);
+      listaTipos.appendChild(elemento);
+
+      elemento.onmouseenter = () => {};
+    });
+
+    contenedorTipos.appendChild(tituloTipos);
+    contenedorTipos.appendChild(listaTipos);
+    contenedorListas.appendChild(contenedorTipos);
+
+    /**
+     *
+     */
+
+    const contenedorLideres = document.createElement('section');
+    const tituloLideres = document.createElement('h2');
+    const listaLideres = document.createElement('ul');
+    tituloLideres.innerText = 'Lideres de Proyectos';
+    contenedorLideres.classList.add('lista');
+
+    lideres.forEach((lider) => {
+      const elemento = document.createElement('li');
+      const nombre = document.createElement('span');
+      elemento.className = `lider ${lider.slug}`;
+      nombre.innerText = lider.nombre;
+      elemento.appendChild(nombre);
+      listaLideres.appendChild(elemento);
+    });
+
+    contenedorLideres.appendChild(tituloLideres);
+    contenedorLideres.appendChild(listaLideres);
+    contenedorListas.appendChild(contenedorLideres);
+  });
+
+  proyectos.subscribe((datos) => {
+    if (!datos.length) return;
+    console.log('proyectos', datos);
+
+    datos.forEach((proyecto) => {
+      proyecto.lideres.forEach((lider) => {
+        const elemento = document.querySelector<HTMLLIElement>(`.${lider.slug}`);
+        const tipoRelacionado = document.querySelector<HTMLLIElement>(`.${proyecto.tipo.slug}`);
+
+        if (!elemento || !tipoRelacionado) return;
+
+        elemento.classList.add(`t-${proyecto.tipo.slug}`);
+        tipoRelacionado.classList.add(`l-${lider.slug}`);
+
+        elemento.onmouseenter = () => {
+          const tiposRelacionados = document.querySelectorAll(`.l-${lider.slug}`);
+          contenedorListas.classList.remove('todoVisible');
+          elemento.classList.add('visible');
+          tiposRelacionados.forEach((relacion) => {
+            relacion.classList.add('visible');
+          });
+        };
+
+        elemento.onmouseleave = () => {
+          contenedorListas.classList.add('todoVisible');
+
+          const visibles = document.querySelectorAll<HTMLLIElement>('.visible');
+
+          visibles.forEach((elemento) => elemento.classList.remove('visible'));
+        };
+      });
+    });
+  });
+</script>
+
+<style lang="scss" is:global>
+  #contenedorListas {
     display: flex;
+    z-index: 2;
+    position: relative;
+
+    li {
+      opacity: 0.3;
+
+      &.visible {
+        opacity: 1;
+      }
+    }
+
+    &.todoVisible {
+      li {
+        opacity: 1;
+      }
+    }
+
+    .lista {
+      height: 50vh;
+      overflow: auto;
+      position: relative;
+
+      h2 {
+        position: sticky;
+      }
+    }
   }
 </style>
