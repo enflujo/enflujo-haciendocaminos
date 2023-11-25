@@ -1,44 +1,37 @@
-import type { Año, ElementoLista, Lista, Proyectos, Regiones } from '../src/tipos.ts';
-import { writeFileSync } from 'fs';
+import type {
+  Año,
+  Campos,
+  DefinicionSimple,
+  ElementoLista,
+  LLavesMultiples,
+  Listas,
+  LllavesSingulares,
+  Proyecto,
+} from '../src/tipos.ts';
 import { getXlsxStream } from 'xlstream';
-import slug from 'slug';
+import slugificar from 'slug';
+import { guardarJSON, ordenarListaObjetos } from './ayudas.js';
 
-const guardarJSON = (json: any, nombre: string) => {
-  writeFileSync(`./estaticos/${nombre}.json`, JSON.stringify(json));
-};
+const datosEmpiezanEnFila = 2;
+const camposSingulares: Campos = [
+  { llave: 'tipos', indice: 1 },
+  { llave: 'roles', indice: 5 },
+];
+const camposMultiples: Campos = [
+  { llave: 'decadas', indice: 3 },
+  { llave: 'lideres', indice: 4 },
+  { llave: 'participantes', indice: 6 },
+  { llave: 'ramas', indice: 7 },
+  { llave: 'temas', indice: 8 },
+  { llave: 'objetos', indice: 9 },
+  { llave: 'regiones', indice: 10 },
+  { llave: 'lugares', indice: 11 },
+];
+const campos = [...camposSingulares, ...camposMultiples];
 
-function ordenarListaObjetos(lista: any[], llave: string, descendente = false) {
-  lista.sort((a, b) => {
-    const valorA = normalizar(`${a[llave]}`);
-    const valorB = normalizar(`${b[llave]}`);
-    if (valorA < valorB) return descendente ? -1 : 1;
-    else if (valorA > valorB) return descendente ? 1 : -1;
-    return 0;
-  });
-}
+const proyectos: Proyecto[] = [];
 
-export const normalizar = (texto: string): string => {
-  return texto
-    .toLocaleLowerCase()
-    .normalize('NFD')
-    .replace(/\p{Diacritic}/gu, '');
-};
-
-procesar();
-
-const listaRegiones: Regiones = [];
-const listaAños: ElementoLista[] = [];
-const listaTipos: ElementoLista[] = [];
-const listaLideres: ElementoLista[] = [];
-const listaRoles: ElementoLista[] = [];
-const listaParticipantes: ElementoLista[] = [];
-const listaRamas: ElementoLista[] = [];
-const listaTemas: ElementoLista[] = [];
-const listaObjetos: ElementoLista[] = [];
-const listaLugares: ElementoLista[] = [];
-const listaDecadas: ElementoLista[] = [];
-const proyectos: Proyectos = [];
-const listas: Lista = {
+const listas: Listas = {
   regiones: [],
   años: [],
   tipos: [],
@@ -52,9 +45,11 @@ const listas: Lista = {
   decadas: [],
 };
 
+procesar();
+
 async function procesar() {
   const flujo = await getXlsxStream({
-    filePath: './procesador/Listado de proyectos - 60 años dpto antropología.xlsx',
+    filePath: './procesador/Listado de proyectos - 60 años dpto antropología .xlsx',
     sheet: 'Proyectos',
     withHeader: false,
     ignoreEmpty: true,
@@ -63,37 +58,108 @@ async function procesar() {
   let numeroFila = 1;
 
   flujo.on('data', (fila) => {
-    if (numeroFila > 2) {
+    if (numeroFila > datosEmpiezanEnFila) {
       procesarFila(fila.formatted.arr);
-    } else {
     }
 
     numeroFila++;
   });
 
   flujo.on('close', () => {
-    ordenarListaObjetos(listaRegiones, 'nombre', true);
-    ordenarListaObjetos(listaAños, 'nombre', true);
-    ordenarListaObjetos(listaTipos, 'nombre', true);
-    ordenarListaObjetos(listaLideres, 'nombre', true);
-    ordenarListaObjetos(listaRoles, 'nombre', true);
-    ordenarListaObjetos(listaParticipantes, 'nombre', true);
-    ordenarListaObjetos(listaRamas, 'nombre', true);
-    ordenarListaObjetos(listaTemas, 'nombre', true);
-    ordenarListaObjetos(listaObjetos, 'nombre', true);
-    ordenarListaObjetos(listaLugares, 'nombre', true);
-    ordenarListaObjetos(listaDecadas, 'nombre', true);
-    listas.regiones = listaRegiones;
-    listas.años = listaAños;
-    listas.tipos = listaTipos;
-    listas.lideres = listaLideres;
-    listas.roles = listaRoles;
-    listas.participantes = listaParticipantes;
-    listas.ramas = listaRamas;
-    listas.temas = listaTemas;
-    listas.objetos = listaObjetos;
-    listas.lugares = listaLugares;
-    listas.decadas = listaDecadas;
+    for (const lista in listas) {
+      ordenarListaObjetos(listas[lista as keyof Listas], 'slug', true);
+    }
+
+    proyectos.forEach((proyecto) => {
+      campos.forEach((campoRelacion) => {
+        const datosRelacion = proyecto[campoRelacion.llave];
+
+        campos.forEach((campo) => {
+          // Agregar datos de cada campo en todos los otros, excepto en si mismo.
+          if (campoRelacion.llave !== campo.llave && datosRelacion) {
+            const llaveALlenar = campo.llave;
+            const llaveDondeLllenar = campoRelacion.llave;
+            const datosProyecto = proyecto[llaveALlenar];
+
+            // Si el proyecto tiene datos en este campo
+            if (datosProyecto) {
+              // Sacar los slugs del campo
+              const slugsCampoProyecto = Array.isArray(datosProyecto)
+                ? (datosProyecto as DefinicionSimple[]).map(({ slug }) => slug)
+                : [(datosProyecto as DefinicionSimple).slug];
+
+              slugsCampoProyecto.forEach((slug) => {
+                const i = listas[llaveALlenar].findIndex((obj) => obj.slug === slug);
+                const elementosDondeConectar = Array.isArray(datosRelacion)
+                  ? (datosRelacion as DefinicionSimple[]).map(({ slug }) => slug)
+                  : [datosRelacion.slug];
+
+                elementosDondeConectar.forEach((elementoConector) => {
+                  const elementoALlenar = listas[llaveDondeLllenar].find((obj) => obj.slug === elementoConector);
+
+                  if (elementoALlenar) {
+                    const existe = elementoALlenar.relaciones.find((obj) => obj.slug === slug);
+
+                    if (!existe) {
+                      elementoALlenar.relaciones.push({
+                        conteo: 1,
+                        indice: i,
+                        tipo: llaveALlenar,
+                        slug,
+                      });
+                    } else {
+                      existe.conteo++;
+                    }
+                  }
+                });
+              });
+            }
+          }
+        });
+      });
+
+      // Años
+      if (proyecto.años) {
+        proyecto.años.años.forEach((año) => {
+          const añoEnSlug = `${año}`;
+          campos.forEach((campo) => {
+            const datosCampo = proyecto[campo.llave];
+            const llaveALlenar = campo.llave;
+            if (datosCampo) {
+              const slugs = Array.isArray(datosCampo) ? datosCampo.map(({ slug }) => slug) : [datosCampo.slug];
+
+              slugs.forEach((slug) => {
+                const objALlenar = listas[llaveALlenar].find((obj) => obj.slug === slug);
+
+                if (objALlenar) {
+                  const i = listas.años.findIndex((año) => año.slug === añoEnSlug);
+                  const existe = objALlenar.relaciones.find((obj) => obj.slug === añoEnSlug && obj.tipo === 'años');
+
+                  if (!existe) {
+                    objALlenar.relaciones.push({ conteo: 1, indice: i, tipo: 'años', slug: añoEnSlug });
+                  } else {
+                    existe.conteo++;
+                  }
+                }
+
+                // Llenar este en años
+                const objAño = listas.años.find((obj) => obj.slug === añoEnSlug);
+
+                if (objAño) {
+                  const i = listas[llaveALlenar].findIndex((obj) => obj.slug === slug);
+                  const existe = objAño.relaciones.find((obj) => obj.slug === slug);
+
+                  if (!existe) {
+                    objAño.relaciones.push({ conteo: 1, indice: i, tipo: llaveALlenar, slug });
+                  }
+                }
+              });
+            }
+          });
+        });
+      }
+    });
+
     guardarJSON(proyectos, 'proyectos');
     guardarJSON(listas, 'listas');
     console.log('fin');
@@ -101,84 +167,56 @@ async function procesar() {
 }
 
 function procesarFila(fila: string[]) {
-  const regiones = validarRegion(fila[10]);
-  const tipo = validarValorSingular(fila[1], listaTipos);
-  const años = validarAño(`${fila[2]}`.trim());
-  const lideres = validarValorMultiple(fila[4], listaLideres);
-  const rol = validarValorSingular(fila[5], listaRoles);
-  const participantes = validarValorMultiple(fila[6], listaParticipantes);
-  const ramas = validarValorMultiple(fila[7], listaRamas);
-  const temas = validarValorMultiple(fila[8], listaTemas);
-  const objetos = validarValorMultiple(fila[9], listaObjetos);
-  const lugares = validarValorMultiple(fila[11], listaLugares);
-  const decada = validarValorSingular(fila[3], listaDecadas);
   const nombreProyecto = fila[0].trim();
+  const respuesta: Proyecto = {
+    nombre: { nombre: nombreProyecto, slug: slugificar(nombreProyecto) },
+  };
+  const años = validarAño(`${fila[2]}`.trim());
+  if (años) respuesta.años = años;
 
-  proyectos.push({
-    nombre: { nombre: nombreProyecto, slug: slug(nombreProyecto) },
-    tipo,
-    años,
-    decada,
-    lideres,
-    rol,
-    participantes,
-    ramas,
-    temas,
-    objetos,
-    regiones,
-    lugares,
+  camposSingulares.forEach((campo) => {
+    const validacion = validarValorSingular(fila[campo.indice], listas[campo.llave]);
+    if (validacion) respuesta[campo.llave as LllavesSingulares] = validacion;
   });
-}
 
-function validarRegion(valor: string) {
-  if (!valor) return [];
+  camposMultiples.forEach((campo) => {
+    const validacion = validarValorMultiple(fila[campo.indice], listas[campo.llave]);
+    if (validacion) respuesta[campo.llave as LLavesMultiples] = validacion;
+  });
 
-  return valor
-    .trim()
-    .split(',')
-    .map((region) => {
-      const nombre = region.trim();
-      const existeLugar = listaRegiones.find((dep) => dep.nombre === nombre);
-
-      if (!existeLugar) {
-        if (nombre.length && nombre !== 'No aplica') {
-          listaRegiones.push({ nombre: region.trim(), lon: 0, lat: 0, conteo: 1 });
-        }
-      } else {
-        existeLugar.conteo++;
-      }
-
-      return { nombre, slug: slug(nombre) };
-    });
+  proyectos.push(respuesta);
 }
 
 function validarValorMultiple(valor: string, lista: ElementoLista[]) {
-  if (!valor) return [];
+  if (!valor) return null;
+  const partes = `${valor}`.trim().split(',');
+  const respuesta: DefinicionSimple[] = [];
 
-  const respuesta = valor
-    .trim()
-    .split(',')
-    .map((elemento) => {
-      return validarValorSingular(elemento, lista);
-    });
+  partes.forEach((elemento) => {
+    const valorProcesado = validarValorSingular(elemento, lista);
+    if (valorProcesado) respuesta.push(valorProcesado);
+  });
 
-  return respuesta;
+  return respuesta.length ? respuesta : null;
 }
 
 function validarValorSingular(valor: string, lista: ElementoLista[]) {
-  const existe = lista.find((obj) => obj.nombre === valor);
+  if (!valor || valor === 'No aplica' || valor === 'undefined' || valor === 'Sin Información') return;
+  const nombre = `${valor}`.trim();
+  const slug = slugificar(nombre);
+  const existe = lista.find((obj) => obj.slug === slug);
 
   if (!existe) {
-    lista.push({ nombre: valor, conteo: 1, slug: slug(`${valor}`) });
+    lista.push({ nombre, conteo: 1, slug, relaciones: [] });
   } else {
     existe.conteo++;
   }
 
-  const nombre = `${valor}`.trim();
-  return { nombre, slug: slug(nombre) };
+  return { nombre, slug };
 }
 
 function validarAño(valorAño: string) {
+  if (!validarAño.length || valorAño === 'undefined') return;
   const añoProcesado: Año = {
     años: [],
     tipo: 'singular',
@@ -187,8 +225,9 @@ function validarAño(valorAño: string) {
 
   if (valorAño.includes(',')) {
     const partes = valorAño.split(',');
+
     partes.forEach((año) => {
-      procesarAño(año.trim());
+      validarValorSingular(año, listas.años);
     });
 
     añoProcesado.años = partes.map((año) => +año);
@@ -198,27 +237,17 @@ function validarAño(valorAño: string) {
     const [inicio, fin] = valorAño.split('-');
 
     for (let a = +inicio; a <= +fin; a++) {
-      procesarAño(`${a}`);
+      validarValorSingular(`${a}`, listas.años);
       añoProcesado.años.push(a);
     }
 
     añoProcesado.tipo = 'rango';
     añoProcesado.valor = valorAño;
   } else if (valorAño) {
-    procesarAño(valorAño);
+    validarValorSingular(valorAño, listas.años);
     añoProcesado.años.push(+valorAño);
     añoProcesado.valor = valorAño;
   }
 
   return añoProcesado;
-}
-
-function procesarAño(año: string) {
-  const elemento = listaAños.find((elemento) => elemento.nombre === año);
-
-  if (!elemento) {
-    listaAños.push({ nombre: año, conteo: 1, slug: slug(`${año}`) });
-  } else {
-    elemento.conteo++;
-  }
 }

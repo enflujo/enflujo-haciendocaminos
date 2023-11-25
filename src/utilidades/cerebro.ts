@@ -1,22 +1,18 @@
 import { atom, map, onMount } from 'nanostores';
 import { pedirDatos } from './ayudas';
-import type { Lista, Proyectos } from '@/tipos';
+import type { Listas, Proyecto } from '@/tipos';
 
-export const proyectos = atom<Proyectos>([]);
-export const listas = map<Lista>();
+export const proyectos = atom<Proyecto[]>([]);
+export const listas = map<Listas>();
 
-onMount(proyectos, () => {
-  
-});
+onMount(proyectos, () => {});
 
 onMount(listas, () => {
-  pedirDatos<Lista>(`${import.meta.env.BASE_URL}listas.json`).then((res) => {
+  pedirDatos<Listas>(`${import.meta.env.BASE_URL}listas.json`).then((res) => {
     listas.set(res);
 
-    pedirDatos<Proyectos>(`${import.meta.env.BASE_URL}proyectos.json`).then((res) => {
+    pedirDatos<Proyecto[]>(`${import.meta.env.BASE_URL}proyectos.json`).then((res) => {
       proyectos.set(res);
     });
   });
-
-  
 });

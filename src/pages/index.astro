@@ -1,5 +1,5 @@
 ---
-import NombreBarra from '@/componentes/NombreBarra.astro';
+import ListaNodos from '@/componentes/ListaNodos.astro';
 import Mapa from '@/componentes/Mapa.astro';
 import Plantilla from '@/plantillas/Plantilla.astro';
 import listas from '../../estaticos/listas.json';
@@ -8,110 +8,62 @@ import listas from '../../estaticos/listas.json';
 <Plantilla>
   <main>
     <div id="contenedorListas" class="todoVisible">
-      <!-- <NombreBarra titulo="Regiones" lista={listas.regiones} />
-      <NombreBarra titulo="Años" lista={listas.años} />
-      <NombreBarra titulo="Tipos" lista={listas.tipos} />
-      <NombreBarra titulo="Líderes de Proyectos" lista={listas.lideres} />
-      <NombreBarra titulo="Roles" lista={listas.roles} />
-      <NombreBarra titulo="Participantes" lista={listas.participantes} /> -->
+      <ListaNodos id="regiones" titulo="Regiones" lista={listas.regiones} />
+      <ListaNodos id="tipos" titulo="Tipos" lista={listas.tipos} />
+      <ListaNodos id="lideres" titulo="Líderes de Proyectos" lista={listas.lideres} />
+      <ListaNodos id="roles" titulo="Roles" lista={listas.roles} />
+      <ListaNodos id="participantes" titulo="Participantes" lista={listas.participantes} />
+      <ListaNodos id="ramas" titulo="Ramas" lista={listas.ramas} />
+      <ListaNodos id="temas" titulo="Temas" lista={listas.temas} />
+      <ListaNodos id="objetos" titulo="Objetos" lista={listas.objetos} />
+      <ListaNodos id="lugares" titulo="Lugares" lista={listas.lugares} />
+      <ListaNodos id="decadas" titulo="Decadas" lista={listas.decadas} />
     </div>
-    <div id="mapa"><Mapa /></div>
+
+    <Mapa />
   </main>
 </Plantilla>
 
 <script>
-  import { listas, proyectos } from '@/utilidades/cerebro';
   const contenedorListas = document.getElementById('contenedorListas') as HTMLDivElement;
+  const nodos = document.querySelectorAll<HTMLLIElement>('.nodo');
 
-  listas.subscribe((datos) => {
-    if (!Object.keys(datos).length) return;
-    console.log(datos);
-    const { tipos, lideres } = datos;
-    const contenedorTipos = document.createElement('section');
-    const tituloTipos = document.createElement('h2');
-    const listaTipos = document.createElement('ul');
-    tituloTipos.innerText = 'Tipos de Proyectos';
-    contenedorTipos.classList.add('lista');
+  nodos.forEach((nodo) => {
+    const nodosConectados: HTMLLIElement[] = [];
+    const conexiones = nodo.dataset.con?.split(',');
 
-    tipos.forEach((tipo) => {
-      const elemento = document.createElement('li');
-      const nombre = document.createElement('span');
-      elemento.className = `tipo ${tipo.slug}`;
-      nombre.innerText = tipo.nombre;
-      elemento.appendChild(nombre);
-      listaTipos.appendChild(elemento);
+    if (conexiones) {
+      conexiones.forEach((id) => {
+        const elemento = document.getElementById(id) as HTMLLIElement;
 
-      elemento.onmouseenter = () => {};
-    });
-
-    contenedorTipos.appendChild(tituloTipos);
-    contenedorTipos.appendChild(listaTipos);
-    contenedorListas.appendChild(contenedorTipos);
-
-    /**
-     *
-     */
-
-    const contenedorLideres = document.createElement('section');
-    const tituloLideres = document.createElement('h2');
-    const listaLideres = document.createElement('ul');
-    tituloLideres.innerText = 'Lideres de Proyectos';
-    contenedorLideres.classList.add('lista');
-
-    lideres.forEach((lider) => {
-      const elemento = document.createElement('li');
-      const nombre = document.createElement('span');
-      elemento.className = `lider ${lider.slug}`;
-      nombre.innerText = lider.nombre;
-      elemento.appendChild(nombre);
-      listaLideres.appendChild(elemento);
-    });
-
-    contenedorLideres.appendChild(tituloLideres);
-    contenedorLideres.appendChild(listaLideres);
-    contenedorListas.appendChild(contenedorLideres);
-  });
-
-  proyectos.subscribe((datos) => {
-    if (!datos.length) return;
-    console.log('proyectos', datos);
-
-    datos.forEach((proyecto) => {
-      proyecto.lideres.forEach((lider) => {
-        const elemento = document.querySelector<HTMLLIElement>(`.${lider.slug}`);
-        const tipoRelacionado = document.querySelector<HTMLLIElement>(`.${proyecto.tipo.slug}`);
-
-        if (!elemento || !tipoRelacionado) return;
-
-        elemento.classList.add(`t-${proyecto.tipo.slug}`);
-        tipoRelacionado.classList.add(`l-${lider.slug}`);
-
-        elemento.onmouseenter = () => {
-          const tiposRelacionados = document.querySelectorAll(`.l-${lider.slug}`);
-          contenedorListas.classList.remove('todoVisible');
-          elemento.classList.add('visible');
-          tiposRelacionados.forEach((relacion) => {
-            relacion.classList.add('visible');
-          });
-        };
-
-        elemento.onmouseleave = () => {
-          contenedorListas.classList.add('todoVisible');
-
-          const visibles = document.querySelectorAll<HTMLLIElement>('.visible');
-
-          visibles.forEach((elemento) => elemento.classList.remove('visible'));
-        };
+        if (elemento) nodosConectados.push(elemento);
       });
-    });
+    }
+    nodo.onmouseenter = () => {
+      nodosConectados.forEach((nodo) => {
+        nodo.classList.add('visible');
+      });
+      nodo.classList.add('visible');
+      contenedorListas.classList.remove('todoVisible');
+    };
+
+    nodo.onmouseleave = () => {
+      nodosConectados.forEach((nodo) => {
+        nodo.classList.remove('visible');
+      });
+      nodo.classList.remove('visible');
+      contenedorListas.classList.add('todoVisible');
+    };
   });
 </script>
 
 <style lang="scss" is:global>
   #contenedorListas {
     display: flex;
+    flex-wrap: wrap;
     z-index: 2;
     position: relative;
+    width: 50vw;
 
     li {
       opacity: 0.3;
@@ -132,9 +84,17 @@ import listas from '../../estaticos/listas.json';
       overflow-y: auto;
       overflow-x: hidden;
       position: relative;
+      background-color: rgba(255, 255, 255, 0.6);
+      flex-basis: 20%;
 
       h2 {
         position: sticky;
+        top: 0;
+        background-color: black;
+        color: white;
+        margin-top: 0;
+        font-size: 1em;
+        padding: 0.2em;
       }
     }
   }

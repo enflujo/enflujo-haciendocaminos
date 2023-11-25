@@ -1,22 +1,25 @@
 ---
+import type { ElementoLista, Listas } from '@/tipos';
+
 interface Props {
+  id: keyof Listas;
   titulo: string;
-  lista: {
-    nombre: string;
-    slug: string;
-    conteo: number;
-  }[];
+  lista: ElementoLista[];
 }
 
-const { lista, titulo } = Astro.props;
+const { lista, titulo, id } = Astro.props;
 ---
 
-<section>
+<section id={id} class="lista">
   <h2>{titulo}</h2>
   <ul>
     {
-      lista.map((elemento) => (
-        <li class={`${elemento.slug}`}>
+      lista.map((elemento, i) => (
+        <li
+          id={`${id}_${i}`}
+          class="nodo"
+          data-con={`${elemento.relaciones.map((rel) => `${rel.tipo}_${rel.indice}`)}`}
+        >
           <h3 class="nombre">{elemento.nombre}</h3>
           <div class="barra">
             <span class="linea" style={`width: ${elemento.conteo}%`} />
@@ -31,6 +34,14 @@ const { lista, titulo } = Astro.props;
 <script></script>
 
 <style lang="scss">
+  li {
+    cursor: pointer;
+
+    &:hover {
+      background-color: white;
+    }
+  }
+
   .nombre {
     margin: 0;
     font-size: 0.85em;

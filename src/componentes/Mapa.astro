@@ -6,9 +6,7 @@ interface Props {
 }
 ---
 
-<section>
-  <div id="contenedorMapa"></div>
-</section>
+<div id="contenedorMapa"></div>
 
 <script>
   import type { FeatureCollection, Point } from 'geojson';
@@ -17,14 +15,13 @@ interface Props {
   import 'mapbox-gl/dist/mapbox-gl.css';
   // import iconoImagen from '~/assets/imgs/icono-imagen.svg';
 
-  const contenedorMapa = document.getElementById('contenedorMapa');
+  const contenedorMapa = document.getElementById('contenedorMapa') as HTMLDivElement;
   const estilo = 'mapbox://styles/enflujo/clpcruhsj005z01qr10czhk1d';
   mapbox.accessToken = 'pk.eyJ1IjoiZW5mbHVqbyIsImEiOiJjbDNrOXNndXQwMnZsM2lvNDd4N2x0M3dvIn0.eWs4BHs67PcETEUI00T66Q';
 
   function pintarMapa() {
     if (!contenedorMapa) return;
 
-    contenedorMapa;
     const mapa = new mapbox.Map({
       container: contenedorMapa,
       style: estilo,
@@ -44,13 +41,6 @@ interface Props {
      * Esperar a que el mapa de mapbox termine de cargar antes de llenarlo con los datos.
      */
     mapa.on('load', () => {
-      // Crea la fuente con todos los paises (polígonos).
-      mapa.addSource('paises', {
-        type: 'geojson',
-        // data: 'https://docs.mapbox.com/mapbox-gl-js/assets/earthquakes.geojsons',
-        //    data: props.paises,
-      });
-
       // Crea la fuente para todas las ubicaciones (puntos).
       mapa.addSource('ubicaciones', {
         type: 'geojson',
@@ -61,27 +51,7 @@ interface Props {
         clusterProperties: {
           // Esto suma la cantidad de obras que tiene un grupo,
           // para poder actualizar los círculos a medida que se hace zoom
-          obras: ['+', ['get', 'obras']],
-        },
-      });
-
-      /**
-       * 🇨🇴 Pintar las zonas de cada país dependiendo del numero de obras.
-       */
-      mapa.addLayer({
-        id: 'zonas',
-        type: 'fill',
-        source: 'paises', // extrae los datos de la fuente "paises" que creamos antes.
-        layout: {},
-        paint: {
-          /**
-           * ['interpolate', [linear]] | Crea una escala lineal entre dos colores.
-           * ['get', 'obras'] | Saca el numero de obras que tiene un país desde el geojson `properties.obras`
-           * Los 4 valores que siguen corresponden a la escala: valorMin, colorMin, valorMax, colorMax.
-           */
-          //'fill-color': ['interpolate', ['linear'], ['get', 'obras'], 0, '#49C5B6', props.max, '#107177'],
-          'fill-color': ['interpolate', ['linear'], ['get', 'obras'], 0, '#49C5B6', 100, '#107177'],
-          'fill-opacity': ['case', ['boolean', ['feature-state', 'activo'], false], 0.8, 0.7],
+          conteo: ['+', ['get', 'mag']],
         },
       });
 
@@ -95,14 +65,14 @@ interface Props {
         filter: ['has', 'point_count'],
         paint: {
           //'circle-color': ['interpolate', ['linear'], ['get', 'obras'], 0, '#FFE485', props.max, '#D14836'],
-          'circle-color': ['interpolate', ['linear'], ['get', 'obras'], 0, '#FFE485', 100, '#D14836'],
+          'circle-color': ['interpolate', ['linear'], ['get', 'conteo'], 0, '#FFE485', 100, '#D14836'],
           /**
            * ['step'] | A diferencia de "interpolate", "step" crea una serie de puntos donde algo debe cambiar.
            * ['get', 'obras'] | La cantidad de obras dentro del círculo, sale de "clusterProperties" que definimos al crear la capa.
            * En "step" se pueden crear los cortes que uno quiera, los valores que siguen deben ser impares:
            * anchoMin, corte1, ancho1, corte2, ancho2, ....
            */
-          'circle-radius': ['step', ['get', 'obras'], 15, 100, 30, 750, 40],
+          'circle-radius': ['step', ['get', 'conteo'], 15, 100, 30, 750, 40],
           'circle-opacity': ['case', ['boolean', ['feature-state', 'activo'], false], 1, 0.8],
         },
       });
@@ -121,7 +91,7 @@ interface Props {
            * 'format' | Permite concatenar una serie de textos o imágenes.
            * ['image', 'icono'] | Pone la imagen que registramos antes en la instancia de mapbox.
            */
-          'text-field': ['format', ['image', 'icono'], ' ', ['get', 'obras']],
+          'text-field': ['format', ['get', 'conteo']],
           // 'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
           'text-size': 12,
         },
@@ -155,10 +125,8 @@ interface Props {
             'format',
             ['get', 'nombre'],
             { 'font-scale': 0.8 },
-            '\n',
-            ['image', 'icono'],
             ' ',
-            ['get', 'obras'],
+            ['get', 'conteo'],
             { 'font-scale': 0.75 },
           ],
         },
