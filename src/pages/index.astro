@@ -3,13 +3,14 @@ import ListaNodos from '@/componentes/ListaNodos.astro';
 import Mapa from '@/componentes/Mapa.astro';
 import Plantilla from '@/plantillas/Plantilla.astro';
 import listas from '../../estaticos/listas.json';
+import LineaTiempo from '@/componentes/LineaTiempo.astro';
 ---
 
 <Plantilla>
   <main>
     <div id="contenedorListas" class="todoVisible">
       <ListaNodos id="regiones" titulo="Regiones" lista={listas.regiones} />
-      <ListaNodos id="tipos" titulo="Tipos" lista={listas.tipos} />
+      <ListaNodos id="tipos" titulo="Categorías" lista={listas.tipos} />
       <ListaNodos id="lideres" titulo="Líderes de Proyectos" lista={listas.lideres} />
       <ListaNodos id="roles" titulo="Roles" lista={listas.roles} />
       <ListaNodos id="participantes" titulo="Participantes" lista={listas.participantes} />
@@ -21,6 +22,8 @@ import listas from '../../estaticos/listas.json';
     </div>
 
     <Mapa />
+
+    <!-- <LineaTiempo tiempo={listas.años} decadas={listas.decadas} /> -->
   </main>
 </Plantilla>
 
@@ -90,7 +93,7 @@ import listas from '../../estaticos/listas.json';
       h2 {
         position: sticky;
         top: 0;
-        background-color: black;
+        background-color: var(--bufandaVieja);
         color: white;
         margin-top: 0;
         font-size: 1em;
