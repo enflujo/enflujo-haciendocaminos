@@ -330,6 +330,11 @@
   resolved "https://registry.yarnpkg.com/@emmetio/scanner/-/scanner-1.0.4.tgz#e9cdc67194fd91f8b7eb141014be4f2d086c15f1"
   integrity sha512-IqRuJtQff7YHHBk4G8YZ45uB9BaAGcwQeVzgj/zj8/UdOhtQpEIupUhSk8dys6spFIWVZVeK20CzGEnqR5SbqA==
 
+"@enflujo/alquimia@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@enflujo/alquimia/-/alquimia-2.0.0.tgz#d0cda3e14c6c0dcdee971e55f1cd515197d66dc8"
+  integrity sha512-4+j3jL9Kb929z6+nLIlDW+BBxXs81tgNxTiEYONNIEkA4QJDtjEZoyJss7E2QWLM3xpV0YA6j0kKV6tGahqARw==
+
 "@esbuild/android-arm64@0.18.20":
   version "0.18.20"
   resolved "https://registry.yarnpkg.com/@esbuild/android-arm64/-/android-arm64-0.18.20.tgz#984b4f9c8d0377443cc2dfcef266d02244593622"

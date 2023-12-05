@@ -23,7 +23,7 @@ import LineaTiempo from '@/componentes/LineaTiempo.astro';
 
     <Mapa />
 
-    <!-- <LineaTiempo tiempo={listas.años} decadas={listas.decadas} /> -->
+    <LineaTiempo tiempo={listas.años} decadas={listas.decadas} />
   </main>
 </Plantilla>
 
@@ -34,6 +34,8 @@ import LineaTiempo from '@/componentes/LineaTiempo.astro';
   nodos.forEach((nodo) => {
     const nodosConectados: HTMLLIElement[] = [];
     const conexiones = nodo.dataset.con?.split(',');
+    const contenedor = nodo.parentElement;
+    console.log(contenedor);
 
     if (conexiones) {
       conexiones.forEach((id) => {
@@ -42,18 +44,21 @@ import LineaTiempo from '@/componentes/LineaTiempo.astro';
         if (elemento) nodosConectados.push(elemento);
       });
     }
+
     nodo.onmouseenter = () => {
       nodosConectados.forEach((nodo) => {
-        nodo.classList.add('visible');
+        nodo.classList.add('visible', 'explotado');
       });
+      contenedor?.classList.add('mantener');
       nodo.classList.add('visible');
       contenedorListas.classList.remove('todoVisible');
     };
 
     nodo.onmouseleave = () => {
       nodosConectados.forEach((nodo) => {
-        nodo.classList.remove('visible');
+        nodo.classList.remove('visible', 'explotado');
       });
+      contenedor?.classList.remove('mantener');
       nodo.classList.remove('visible');
       contenedorListas.classList.add('todoVisible');
     };
@@ -68,27 +73,43 @@ import LineaTiempo from '@/componentes/LineaTiempo.astro';
     position: relative;
     width: 50vw;
 
-    li {
-      opacity: 0.3;
+    ul {
+      li {
+        display: none;
 
-      &.visible {
-        opacity: 1;
+        &.visible {
+          display: block;
+          // font-size: 0.75em;
+        }
+      }
+
+      &.mantener {
+        li {
+          opacity: 0.3;
+          display: block;
+
+          &.visible {
+            opacity: 1;
+          }
+        }
       }
     }
 
     &.todoVisible {
       li {
         opacity: 1;
+        display: block;
       }
     }
 
     .lista {
-      height: 50vh;
+      height: calc((100vh - 150px) / 2);
       overflow-y: auto;
       overflow-x: hidden;
       position: relative;
       background-color: rgba(255, 255, 255, 0.6);
       flex-basis: 20%;
+      padding-bottom: 3em;
 
       h2 {
         position: sticky;

@@ -12,7 +12,7 @@ const { lista, titulo, id } = Astro.props;
 
 <section id={id} class="lista">
   <h2>{titulo}</h2>
-  <ul>
+  <ul class={id}>
     {
       lista.map((elemento, i) => (
         <li

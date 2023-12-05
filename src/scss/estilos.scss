@@ -3,7 +3,7 @@
 
 :root {
   /// Fuentes tipográficas hemochas
-  ---fuenteTitulo: font-family: 'Tourney', 'Garamond', 'Georgia', 'Times', serif;
+  --fuenteTitulo: font-family: 'Tourney', 'Garamond', 'Georgia', 'Times', serif;
   --fuenteParrafo: 'Inter', 'Helvetica', 'Roboto', 'Arial', 'Tahoma', 'Verdana', sans-serif;
 
   //Colores * CSS HEX *
@@ -30,12 +30,18 @@ body {
     'calt' 1; /* fix for Chrome */
 }
 
+@supports (font-variation-settings: normal) {
+  :root {
+    --fuenteParrafo: InterVariable, 'Helvetica', 'Roboto', 'Arial', 'Tahoma', 'Verdana', sans-serif;
+  }
+}
+
 h1,
 h2,
 h3,
 h4,
 h5 {
-  font-family: var(---fuenteTitulo);
+  font-family: var(--fuenteTitulo);
 }
 
 ul {

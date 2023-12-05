@@ -1,0 +1,80 @@
+---
+import type { ElementoLista } from '@/tipos';
+import { convertirEscala } from '@enflujo/alquimia';
+import { text } from 'stream/consumers';
+interface Props {
+  tiempo: ElementoLista[];
+  decadas: ElementoLista[];
+}
+
+const { decadas, tiempo } = Astro.props;
+let datosLinea = '';
+const numeroDecadas = decadas.length;
+const anchoDecada = 100 / numeroDecadas;
+const altoDecada = (valor: number) => convertirEscala(valor, 0, 58, 0, 30);
+const posY = (valor: number) => convertirEscala(valor, 0, 20, 100, 0);
+const posX = (valor: number) => convertirEscala(valor, 1966, 2026, 0, 100);
+
+tiempo.forEach((marca, i) => {
+  const x = posX(+marca.nombre);
+  const y = posY(marca.conteo);
+
+  if (i === 0) {
+    datosLinea += `M ${0}, ${100} L`;
+  } else {
+  }
+
+  datosLinea += ` ${x}, ${y}`;
+
+  if (i === tiempo.length - 1) {
+    datosLinea += 'L 100, 100 Z';
+  }
+});
+---
+
+<div id="contenedorGrafica">
+  <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
+    <g id="decadas">
+      {
+        decadas.map((decada, i) => (
+          <rect x={`${i * anchoDecada}%`} y="0" width={`${anchoDecada}%`} height={`${altoDecada(decada.conteo)}px`} />
+        ))
+      }
+
+      <path d={datosLinea}></path>
+    </g>
+  </svg>
+
+  <svg id="marcas" width="100%" height="100%">
+    {
+      tiempo.map((marca) => (
+        <text style={`transform:translate(${posX(+marca.nombre)}%, ${posY(marca.conteo)}%)`} x="0" y="0">
+          {marca.nombre}
+        </text>
+      ))
+    }
+  </svg>
+</div>
+
+<style lang="scss">
+  #contenedorGrafica {
+    height: 150px;
+    position: relative;
+    background-color: var(--rosaPigmento);
+    z-index: 3;
+  }
+  svg {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+
+    path {
+      fill: rgba(210, 76, 76, 0.679);
+    }
+
+    text {
+      font-size: 8px;
+      fill: white;
+    }
+  }
+</style>
