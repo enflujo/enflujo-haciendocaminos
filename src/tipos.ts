@@ -8,6 +8,7 @@ export type DefinicionSimple = { nombre: string; slug: string };
 export type Años = [año: number, conteo: number][];
 export type Año = { años: number[]; tipo: 'singular' | 'rango' | 'multiples'; valor: string };
 export type Regiones = { nombre: string; slug: string; lon: number; lat: number; conteo: number }[];
+export type Municipios = { nombre: string; slug: string; lon: number; lat: number; conteo: number }[];
 
 export type LllavesSingulares = 'tipos' | 'roles';
 export type LLavesMultiples =
@@ -18,9 +19,10 @@ export type LLavesMultiples =
   | 'temas'
   | 'objetos'
   | 'regiones'
-  | 'lugares';
+  | 'municipios';
 
 export type Proyecto = {
+  id: number;
   nombre: DefinicionSimple;
   tipos?: DefinicionSimple;
   años?: Año;
@@ -32,10 +34,11 @@ export type Proyecto = {
   temas?: DefinicionSimple[];
   objetos?: DefinicionSimple[];
   regiones?: DefinicionSimple[];
-  lugares?: DefinicionSimple[];
+  municipios?: DefinicionSimple[];
 };
 
 export type Listas = {
+  id: ElementoLista[];
   regiones: ElementoLista[];
   años: ElementoLista[];
   tipos: ElementoLista[];
@@ -45,7 +48,7 @@ export type Listas = {
   ramas: ElementoLista[];
   temas: ElementoLista[];
   objetos: ElementoLista[];
-  lugares: ElementoLista[];
+  municipios: ElementoLista[];
   decadas: ElementoLista[];
 };
 

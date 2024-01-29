@@ -11,27 +11,30 @@ import type {
 import { getXlsxStream } from 'xlstream';
 import slugificar from 'slug';
 import { guardarJSON, ordenarListaObjetos } from './ayudas.js';
+import { number } from 'astro/zod';
+import { idText } from 'typescript';
 
 const datosEmpiezanEnFila = 2;
 const camposSingulares: Campos = [
-  { llave: 'tipos', indice: 1 },
-  { llave: 'roles', indice: 5 }
+  { llave: 'tipos', indice: 2 },
+  { llave: 'roles', indice: 6 }
 ];
 const camposMultiples: Campos = [
-  { llave: 'decadas', indice: 3 },
-  { llave: 'lideres', indice: 4 },
-  { llave: 'participantes', indice: 6 },
-  { llave: 'ramas', indice: 7 },
-  { llave: 'temas', indice: 8 },
-  { llave: 'objetos', indice: 9 },
-  { llave: 'regiones', indice: 10 },
-  { llave: 'lugares', indice: 11 }
+  { llave: 'decadas', indice: 4 },
+  { llave: 'lideres', indice: 5 },
+  { llave: 'participantes', indice: 7 },
+  { llave: 'ramas', indice: 8 },
+  { llave: 'temas', indice: 9 },
+  { llave: 'objetos', indice: 10 },
+  { llave: 'regiones', indice: 11 },
+  { llave: 'municipios', indice: 14 }
 ];
 const campos = [...camposSingulares, ...camposMultiples];
 
 const proyectos: Proyecto[] = [];
 
 const listas: Listas = {
+  id: [],
   regiones: [],
   años: [],
   tipos: [],
@@ -41,7 +44,7 @@ const listas: Listas = {
   ramas: [],
   temas: [],
   objetos: [],
-  lugares: [],
+  municipios: [],
   decadas: []
 };
 
@@ -49,7 +52,7 @@ procesar();
 
 async function procesar() {
   const flujo = await getXlsxStream({
-    filePath: './procesador/Listado de proyectos - 60 años dpto antropología .xlsx',
+    filePath: './procesador/Listado de proyectos - 60 años dpto antropología2901 .xlsx',
     sheet: 'Proyectos',
     withHeader: false,
     ignoreEmpty: true
@@ -60,6 +63,8 @@ async function procesar() {
   flujo.on('data', (fila) => {
     if (numeroFila > datosEmpiezanEnFila) {
       procesarFila(fila.formatted.arr);
+    } else {
+      console.log(fila);
     }
 
     numeroFila++;
@@ -167,8 +172,9 @@ async function procesar() {
 }
 
 function procesarFila(fila: string[]) {
-  const nombreProyecto = fila[0].trim();
+  const nombreProyecto = fila[1].trim();
   const respuesta: Proyecto = {
+    id: +fila[0],
     nombre: { nombre: nombreProyecto, slug: slugificar(nombreProyecto) }
   };
   const años = validarAño(`${fila[2]}`.trim());
