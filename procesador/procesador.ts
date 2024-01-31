@@ -177,7 +177,7 @@ function procesarFila(fila: string[]) {
     id: +fila[0],
     nombre: { nombre: nombreProyecto, slug: slugificar(nombreProyecto) }
   };
-  const años = validarAño(`${fila[2]}`.trim());
+  const años = validarAño(`${fila[3]}`.trim());
   if (años) respuesta.años = años;
 
   camposSingulares.forEach((campo) => {
