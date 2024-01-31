@@ -35,7 +35,6 @@ import LineaTiempo from '@/componentes/LineaTiempo.astro';
     const nodosConectados: HTMLLIElement[] = [];
     const conexiones = nodo.dataset.con?.split(',');
     const contenedor = nodo.parentElement;
-    console.log(contenedor);
 
     if (conexiones) {
       conexiones.forEach((id) => {

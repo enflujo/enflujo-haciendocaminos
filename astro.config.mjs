@@ -9,4 +9,7 @@ export default defineConfig({
   build: {
     assets: 'estaticos',
   },
+  vite: {
+    ssr: { noExternal: ['@enflujo/alquimia'] },
+  },
 });
