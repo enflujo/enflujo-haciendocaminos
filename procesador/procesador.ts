@@ -6,7 +6,8 @@ import type {
   LLavesMultiples,
   Listas,
   LllavesSingulares,
-  Proyecto
+  Proyecto,
+  Lugar
 } from '../src/tipos.ts';
 import { getXlsxStream } from 'xlstream';
 import slugificar from 'slug';
@@ -48,6 +49,8 @@ const listas: Listas = {
   decadas: []
 };
 
+const lugares: Lugar[] = [];
+
 procesar();
 
 async function procesar() {
@@ -58,13 +61,29 @@ async function procesar() {
     ignoreEmpty: true
   });
 
+  const flujoLugares = await getXlsxStream({
+    filePath: './procesador/Listado de proyectos - 60 años dpto antropología3101.xlsx',
+    sheet: 'lugares',
+    withHeader: false,
+    ignoreEmpty: true
+  });
+
   let numeroFila = 1;
+
+  flujoLugares.on('data', (fila) => {
+    if (numeroFila > datosEmpiezanEnFila) {
+      procesarLugar(fila.formatted.arr);
+    } else {
+      console.log(fila);
+    }
+
+    numeroFila++;
+  });
 
   flujo.on('data', (fila) => {
     if (numeroFila > datosEmpiezanEnFila) {
       procesarFila(fila.formatted.arr);
     } else {
-      console.log(fila);
     }
 
     numeroFila++;
@@ -167,7 +186,13 @@ async function procesar() {
 
     guardarJSON(proyectos, 'proyectos');
     guardarJSON(listas, 'listas');
+
     console.log('fin');
+  });
+
+  flujoLugares.on('close', () => {
+    guardarJSON(lugares, 'lugares');
+    console.log('fin de lugares');
   });
 }
 
@@ -191,6 +216,21 @@ function procesarFila(fila: string[]) {
   });
 
   proyectos.push(respuesta);
+}
+
+function procesarLugar(fila: string[]) {
+  const nombreLugar = fila[0].trim();
+  const latitud = fila[5];
+  const longitud = fila[6];
+
+  const respuesta: Lugar = {
+    nombre: nombreLugar,
+    lat: +latitud,
+    lon: +longitud
+  };
+
+  // console.log(respuesta);
+  lugares.push(respuesta);
 }
 
 function validarValorMultiple(valor: string, lista: ElementoLista[]) {

@@ -53,3 +53,9 @@ export type Listas = {
 };
 
 export type Campos = { llave: LllavesSingulares | LLavesMultiples; indice: number }[];
+
+export type Lugar = {
+  nombre: string;
+  lat: number;
+  lon: number;
+};
