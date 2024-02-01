@@ -4,10 +4,13 @@ import Mapa from '@/componentes/Mapa.astro';
 import Plantilla from '@/plantillas/Plantilla.astro';
 import listas from '../../estaticos/listas.json';
 import LineaTiempo from '@/componentes/LineaTiempo.astro';
+import Ficha from '@/componentes/Ficha.astro';
 ---
 
 <Plantilla>
   <main>
+    <Ficha nombre="orueba" />
+
     <div id="contenedorListas" class="todoVisible">
       <ListaNodos id="regiones" titulo="Regiones" lista={listas.regiones} />
       <ListaNodos id="tipos" titulo="Categorías" lista={listas.tipos} />
@@ -30,6 +33,10 @@ import LineaTiempo from '@/componentes/LineaTiempo.astro';
 <script>
   const contenedorListas = document.getElementById('contenedorListas') as HTMLDivElement;
   const nodos = document.querySelectorAll<HTMLLIElement>('.nodo');
+  const fichaTitulo = document.getElementById('tituloFicha') as HTMLDivElement;
+  const ficha = document.getElementById('contenedorFicha') as HTMLDivElement;
+  const botonCerrarFicha = document.getElementById('cerrar') as HTMLDivElement;
+  const conteoFicha = document.getElementById('conteoFicha') as HTMLDivElement;
 
   nodos.forEach((nodo) => {
     const nodosConectados: HTMLLIElement[] = [];
@@ -60,6 +67,18 @@ import LineaTiempo from '@/componentes/LineaTiempo.astro';
       contenedor?.classList.remove('mantener');
       nodo.classList.remove('visible');
       contenedorListas.classList.add('todoVisible');
+    };
+
+    nodo.onclick = () => {
+      const titulo = nodo.querySelector<HTMLTitleElement>('.nombre');
+      fichaTitulo.innerText = titulo ? titulo.innerText : '';
+      const conteo = nodo.querySelector<HTMLSpanElement>('.conteo');
+      conteoFicha.innerText = conteo ? conteo.innerText : '';
+      ficha.style.display = 'block';
+    };
+
+    botonCerrarFicha.onclick = () => {
+      ficha.style.display = 'none';
     };
   });
 </script>

@@ -1,0 +1,35 @@
+---
+interface Props {
+  nombre: string;
+}
+
+const { nombre } = Astro.props;
+---
+
+<section id="contenedorFicha">
+  <button id="cerrar">X</button>
+  <h2 id="tituloFicha"></h2>
+  <div id="conteoFicha"></div>
+</section>
+
+<style lang="scss">
+  #contenedorFicha {
+    height: 80vh;
+    width: 50vw;
+    position: absolute;
+    display: none;
+    overflow-y: scroll;
+    left: 50vw;
+    background-color: var(--papelViejo);
+    z-index: 3;
+    padding: 10px;
+    border-radius: 1.5%;
+    border: 3.5px solid var(--colorFuente);
+  }
+
+  #cerrar {
+    position: absolute;
+    left: 45vw;
+    background-color: (--chalecoCafe);
+  }
+</style>
