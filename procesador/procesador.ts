@@ -6,7 +6,7 @@ import type {
   LLavesMultiples,
   Listas,
   LllavesSingulares,
-  Proyecto,
+  Proyecto
 } from '../src/tipos.ts';
 import { getXlsxStream } from 'xlstream';
 import slugificar from 'slug';
@@ -15,7 +15,7 @@ import { guardarJSON, ordenarListaObjetos } from './ayudas.js';
 const datosEmpiezanEnFila = 2;
 const camposSingulares: Campos = [
   { llave: 'tipos', indice: 1 },
-  { llave: 'roles', indice: 5 },
+  { llave: 'roles', indice: 5 }
 ];
 const camposMultiples: Campos = [
   { llave: 'decadas', indice: 3 },
@@ -25,7 +25,7 @@ const camposMultiples: Campos = [
   { llave: 'temas', indice: 8 },
   { llave: 'objetos', indice: 9 },
   { llave: 'regiones', indice: 10 },
-  { llave: 'lugares', indice: 11 },
+  { llave: 'lugares', indice: 11 }
 ];
 const campos = [...camposSingulares, ...camposMultiples];
 
@@ -42,7 +42,7 @@ const listas: Listas = {
   temas: [],
   objetos: [],
   lugares: [],
-  decadas: [],
+  decadas: []
 };
 
 procesar();
@@ -52,7 +52,7 @@ async function procesar() {
     filePath: './procesador/Listado de proyectos - 60 años dpto antropología .xlsx',
     sheet: 'Proyectos',
     withHeader: false,
-    ignoreEmpty: true,
+    ignoreEmpty: true
   });
 
   let numeroFila = 1;
@@ -105,7 +105,7 @@ async function procesar() {
                         conteo: 1,
                         indice: i,
                         tipo: llaveALlenar,
-                        slug,
+                        slug
                       });
                     } else {
                       existe.conteo++;
@@ -169,7 +169,7 @@ async function procesar() {
 function procesarFila(fila: string[]) {
   const nombreProyecto = fila[0].trim();
   const respuesta: Proyecto = {
-    nombre: { nombre: nombreProyecto, slug: slugificar(nombreProyecto) },
+    nombre: { nombre: nombreProyecto, slug: slugificar(nombreProyecto) }
   };
   const años = validarAño(`${fila[2]}`.trim());
   if (años) respuesta.años = años;
@@ -220,7 +220,7 @@ function validarAño(valorAño: string) {
   const añoProcesado: Año = {
     años: [],
     tipo: 'singular',
-    valor: '',
+    valor: ''
   };
 
   if (valorAño.includes(',')) {
