@@ -56,6 +56,17 @@ export type Campos = { llave: LllavesSingulares | LLavesMultiples; indice: numbe
 
 export type Lugar = {
   nombre: string;
+  slug: string;
   lat: number;
   lon: number;
+  conteo: number;
+};
+
+export type elementoGeoJson = {
+  type: string;
+  properties: {
+    slug: string;
+    conteo: number;
+  };
+  geometry: { type: string; coordinates: [number, number] };
 };

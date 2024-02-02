@@ -7,13 +7,12 @@ import type {
   Listas,
   LllavesSingulares,
   Proyecto,
-  Lugar
+  Lugar,
+  elementoGeoJson
 } from '../src/tipos.ts';
 import { getXlsxStream } from 'xlstream';
 import slugificar from 'slug';
-import { guardarJSON, ordenarListaObjetos } from './ayudas.js';
-import { number } from 'astro/zod';
-import { idText } from 'typescript';
+import { guardarJSON, guardarGEOJSON, ordenarListaObjetos } from './ayudas.js';
 
 const datosEmpiezanEnFila = 2;
 const camposSingulares: Campos = [
@@ -50,6 +49,9 @@ const listas: Listas = {
 };
 
 const lugares: Lugar[] = [];
+const features: Object[] = [];
+
+let geojson = { type: 'FeatureCollection', features: features };
 
 procesar();
 
@@ -62,7 +64,7 @@ async function procesar() {
   });
 
   const flujoLugares = await getXlsxStream({
-    filePath: './procesador/Listado de proyectos - 60 años dpto antropología3101.xlsx',
+    filePath: './procesador/Listado de proyectos - 60 años dpto antropología2402.xlsx',
     sheet: 'lugares',
     withHeader: false,
     ignoreEmpty: true
@@ -71,7 +73,7 @@ async function procesar() {
   let numeroFila = 1;
 
   flujoLugares.on('data', (fila) => {
-    if (numeroFila > datosEmpiezanEnFila) {
+    if (numeroFila > 2) {
       procesarLugar(fila.formatted.arr);
     } else {
       console.log(fila);
@@ -191,7 +193,9 @@ async function procesar() {
   });
 
   flujoLugares.on('close', () => {
-    guardarJSON(lugares, 'lugares');
+    procesarDatosMapa();
+    guardarGEOJSON(geojson, 'datosMapa');
+
     console.log('fin de lugares');
   });
 }
@@ -220,17 +224,23 @@ function procesarFila(fila: string[]) {
 
 function procesarLugar(fila: string[]) {
   const nombreLugar = fila[0].trim();
-  const latitud = fila[5];
-  const longitud = fila[6];
+  const slug = slugificar(nombreLugar);
+  const longitud = fila[8];
+  const latitud = fila[7];
+  const lugar = listas.municipios.filter((elemento) => elemento.slug === slug);
+  const conteo = lugar[0] ? lugar[0].conteo : 0;
 
   const respuesta: Lugar = {
     nombre: nombreLugar,
+    slug: slug,
+    lon: +longitud,
     lat: +latitud,
-    lon: +longitud
+    conteo: conteo
   };
 
-  // console.log(respuesta);
-  lugares.push(respuesta);
+  if (respuesta.lon && respuesta.lat) {
+    lugares.push(respuesta);
+  }
 }
 
 function validarValorMultiple(valor: string, lista: ElementoLista[]) {
@@ -296,4 +306,23 @@ function validarAño(valorAño: string) {
   }
 
   return añoProcesado;
+}
+
+// Función para crear geojson
+function procesarDatosMapa() {
+  let elemento: elementoGeoJson;
+  for (let lugar in lugares) {
+    elemento = {
+      type: 'Feature',
+      properties: {
+        slug: lugares[lugar].slug,
+        conteo: lugares[lugar].conteo
+      },
+      geometry: { type: 'Point', coordinates: [lugares[lugar].lon, lugares[lugar].lat] }
+    };
+
+    if (elemento.properties.conteo > 0) {
+      features.push(elemento);
+    }
+  }
 }

@@ -15,6 +15,7 @@ interface Props {
   import 'mapbox-gl/dist/mapbox-gl.css';
   // import iconoImagen from '~/assets/imgs/icono-imagen.svg';
 
+  const urlBase = import.meta.env.BASE_URL;
   const contenedorMapa = document.getElementById('contenedorMapa') as HTMLDivElement;
   const estilo = 'mapbox://styles/enflujo/clpcruhsj005z01qr10czhk1d';
   mapbox.accessToken = 'pk.eyJ1IjoiZW5mbHVqbyIsImEiOiJjbDNrOXNndXQwMnZsM2lvNDd4N2x0M3dvIn0.eWs4BHs67PcETEUI00T66Q';
@@ -44,14 +45,13 @@ interface Props {
       // Crea la fuente para todas las ubicaciones (puntos).
       mapa.addSource('ubicaciones', {
         type: 'geojson',
-        //   data: props.ubicaciones,
-        data: 'https://docs.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson',
+        data: `${urlBase}/datosMapa.geo.json`,
         cluster: true,
         clusterRadius: 100,
         clusterProperties: {
           // Esto suma la cantidad de obras que tiene un grupo,
           // para poder actualizar los círculos a medida que se hace zoom
-          conteo: ['+', ['get', 'mag']],
+          conteo: ['+', ['get', 'conteo']],
         },
       });
 
@@ -64,15 +64,14 @@ interface Props {
         source: 'ubicaciones',
         filter: ['has', 'point_count'],
         paint: {
-          //'circle-color': ['interpolate', ['linear'], ['get', 'obras'], 0, '#FFE485', props.max, '#D14836'],
-          'circle-color': ['interpolate', ['linear'], ['get', 'conteo'], 0, '#FFE485', 100, '#D14836'],
+          'circle-color': ['interpolate', ['linear'], ['get', 'conteo'], 0, '#FFE485', 20, '#D14836'],
           /**
            * ['step'] | A diferencia de "interpolate", "step" crea una serie de puntos donde algo debe cambiar.
            * ['get', 'obras'] | La cantidad de obras dentro del círculo, sale de "clusterProperties" que definimos al crear la capa.
            * En "step" se pueden crear los cortes que uno quiera, los valores que siguen deben ser impares:
            * anchoMin, corte1, ancho1, corte2, ancho2, ....
            */
-          'circle-radius': ['step', ['get', 'conteo'], 15, 100, 30, 750, 40],
+          'circle-radius': ['step', ['get', 'conteo'], 15, 0, 30, 20, 50],
           'circle-opacity': ['case', ['boolean', ['feature-state', 'activo'], false], 1, 0.8],
         },
       });
@@ -106,8 +105,8 @@ interface Props {
         source: 'ubicaciones',
         filter: ['!', ['has', 'point_count']], // Cuando NO tiene "point_count" ya no es un grupo y es sólo 1 punto.
         paint: {
-          'circle-color': 'white',
-          'circle-radius': 5,
+          'circle-color': 'pink',
+          'circle-radius': 15,
           'circle-opacity': 0.7,
         },
       });
@@ -124,15 +123,16 @@ interface Props {
           'text-field': [
             'format',
             ['get', 'nombre'],
-            { 'font-scale': 0.8 },
+            { 'font-scale': 0.8 }, // ['get', 'conteo'],
+            // { 'font-scale': 0.75 },
             ' ',
             ['get', 'conteo'],
             { 'font-scale': 0.75 },
           ],
         },
         paint: {
-          'text-color': '#fff',
-          'text-halo-color': '#716b6b',
+          'text-color': '#000',
+          // 'text-halo-color': '#716b6b',
           'text-halo-width': ['case', ['boolean', ['feature-state', 'activo'], false], 3, 2],
           'text-halo-blur': 0,
         },
