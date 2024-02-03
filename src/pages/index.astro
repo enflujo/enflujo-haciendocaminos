@@ -9,7 +9,7 @@ import Ficha from '@/componentes/Ficha.astro';
 
 <Plantilla>
   <main>
-    <Ficha nombre="orueba" />
+    <Ficha />
 
     <div id="contenedorListas" class="todoVisible">
       <ListaNodos id="regiones" titulo="Regiones" lista={listas.regiones} />
@@ -35,7 +35,6 @@ import Ficha from '@/componentes/Ficha.astro';
   const nodos = document.querySelectorAll<HTMLLIElement>('.nodo');
   const fichaTitulo = document.getElementById('tituloFicha') as HTMLDivElement;
   const ficha = document.getElementById('contenedorFicha') as HTMLDivElement;
-  const botonCerrarFicha = document.getElementById('cerrar') as HTMLDivElement;
   const conteoFicha = document.getElementById('conteoFicha') as HTMLDivElement;
 
   nodos.forEach((nodo) => {
@@ -75,10 +74,6 @@ import Ficha from '@/componentes/Ficha.astro';
       const conteo = nodo.querySelector<HTMLSpanElement>('.conteo');
       conteoFicha.innerText = conteo ? conteo.innerText : '';
       ficha.style.display = 'block';
-    };
-
-    botonCerrarFicha.onclick = () => {
-      ficha.style.display = 'none';
     };
   });
 </script>
