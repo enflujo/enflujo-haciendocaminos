@@ -7,6 +7,9 @@ export default defineConfig({
   site: 'https://enflujo.com',
   base: '/enflujo-haciendocaminos',
   build: {
-    assets: 'estaticos',
+    assets: 'estaticos'
   },
+  vite: {
+    ssr: { noExternal: ['@enflujo/alquimia'] }
+  }
 });
