@@ -46,6 +46,7 @@ const { lista, titulo, id } = Astro.props;
 </script>
 
 <style lang="scss">
+  @import '@/scss/constantes';
   .contenedorElementos {
     display: contents;
     max-height: 20vh;
@@ -78,8 +79,8 @@ const { lista, titulo, id } = Astro.props;
     align-items: center;
 
     .linea {
-      height: 2px;
-      background-color: aqua;
+      height: 0.25rem;
+      background-color: var(--resaltadoVerde);
     }
 
     .conteo {
