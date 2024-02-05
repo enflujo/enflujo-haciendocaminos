@@ -27,7 +27,7 @@ interface Props {
       container: contenedorMapa,
       style: estilo,
       zoom: 2,
-      attributionControl: false,
+      attributionControl: false
     });
 
     /**
@@ -51,8 +51,8 @@ interface Props {
         clusterProperties: {
           // Esto suma la cantidad de obras que tiene un grupo,
           // para poder actualizar los círculos a medida que se hace zoom
-          conteo: ['+', ['get', 'conteo']],
-        },
+          conteo: ['+', ['get', 'conteo']]
+        }
       });
 
       /**
@@ -72,8 +72,8 @@ interface Props {
            * anchoMin, corte1, ancho1, corte2, ancho2, ....
            */
           'circle-radius': ['step', ['get', 'conteo'], 15, 0, 30, 20, 50],
-          'circle-opacity': ['case', ['boolean', ['feature-state', 'activo'], false], 1, 0.8],
-        },
+          'circle-opacity': ['case', ['boolean', ['feature-state', 'activo'], false], 1, 0.8]
+        }
       });
 
       /**
@@ -92,8 +92,8 @@ interface Props {
            */
           'text-field': ['format', ['get', 'conteo']],
           // 'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-          'text-size': 12,
-        },
+          'text-size': 12
+        }
       });
 
       /**
@@ -107,8 +107,8 @@ interface Props {
         paint: {
           'circle-color': 'pink',
           'circle-radius': 15,
-          'circle-opacity': 0.7,
-        },
+          'circle-opacity': 0.7
+        }
       });
 
       /**
@@ -123,19 +123,19 @@ interface Props {
           'text-field': [
             'format',
             ['get', 'nombre'],
-            { 'font-scale': 0.8 }, // ['get', 'conteo'],
+            { 'font-scale': 0.8 },
             // { 'font-scale': 0.75 },
             ' ',
             ['get', 'conteo'],
-            { 'font-scale': 0.75 },
-          ],
+            { 'font-scale': 0.75 }
+          ]
         },
         paint: {
           'text-color': '#000',
           // 'text-halo-color': '#716b6b',
           'text-halo-width': ['case', ['boolean', ['feature-state', 'activo'], false], 3, 2],
-          'text-halo-blur': 0,
-        },
+          'text-halo-blur': 0
+        }
       });
     });
   }

@@ -76,7 +76,6 @@ async function procesar() {
     if (numeroFila > 2) {
       procesarLugar(fila.formatted.arr);
     } else {
-      console.log(fila);
     }
 
     numeroFila++;
@@ -308,7 +307,7 @@ function validarAño(valorAño: string) {
   return añoProcesado;
 }
 
-// Función para crear geojson
+// Función para crear geojson con lugares y cantidad de proyectos por lugar
 function procesarDatosMapa() {
   let elemento: elementoGeoJson;
   for (let lugar in lugares) {
