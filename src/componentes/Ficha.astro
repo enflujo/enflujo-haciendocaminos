@@ -1,0 +1,60 @@
+---
+
+---
+
+<section id="contenedorFicha">
+  <button id="cerrar">X</button>
+  <h2 id="tituloFicha"></h2>
+  <div id="conteoFicha"></div>
+  <h3>Regiones</h3>
+  <ul id="listaRegiones"></ul>
+  <h3>Categorías</h3>
+  <ul id="listaTipos"></ul>
+  <h3>Líderes de Proyectos</h3>
+  <ul id="listaLideres"></ul>
+  <h3>Roles</h3>
+  <ul id="listaRoles"></ul>
+  <h3>Participantes</h3>
+  <ul id="listaParticipantes"></ul>
+  <h3>Ramas</h3>
+  <ul id="listaRamas"></ul>
+  <h3>Temas</h3>
+  <ul id="listaTemas"></ul>
+  <h3>Objetos</h3>
+  <ul id="listaObjetos"></ul>
+  <h3>Lugares</h3>
+  <ul id="listaLugares"></ul>
+  <h3>Decadas</h3>
+  <ul id="listaDecadas"></ul>
+</section>
+
+<script>
+  const botonCerrarFicha = document.getElementById('cerrar') as HTMLDivElement;
+  const ficha = document.getElementById('contenedorFicha') as HTMLDivElement;
+
+  botonCerrarFicha.onclick = () => {
+    ficha.style.display = 'none';
+  };
+</script>
+
+<style lang="scss">
+  #contenedorFicha {
+    height: 80vh;
+    width: 50vw;
+    position: absolute;
+    display: none;
+    overflow-y: scroll;
+    left: 50vw;
+    background-color: var(--papelViejo);
+    z-index: 3;
+    padding: 10px;
+    border-radius: 1.5%;
+    border: 3.5px solid var(--colorFuente);
+  }
+
+  #cerrar {
+    position: absolute;
+    left: 45vw;
+    background-color: (--chalecoCafe);
+  }
+</style>

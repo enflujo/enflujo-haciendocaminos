@@ -4,10 +4,13 @@ import Mapa from '@/componentes/Mapa.astro';
 import Plantilla from '@/plantillas/Plantilla.astro';
 import listas from '../../estaticos/listas.json';
 import LineaTiempo from '@/componentes/LineaTiempo.astro';
+import Ficha from '@/componentes/Ficha.astro';
 ---
 
 <Plantilla>
   <main>
+    <Ficha />
+
     <div id="contenedorListas" class="todoVisible">
       <ListaNodos id="regiones" titulo="Regiones" lista={listas.regiones} />
       <ListaNodos id="tipos" titulo="Categorías" lista={listas.tipos} />
@@ -30,17 +33,56 @@ import LineaTiempo from '@/componentes/LineaTiempo.astro';
 <script>
   const contenedorListas = document.getElementById('contenedorListas') as HTMLDivElement;
   const nodos = document.querySelectorAll<HTMLLIElement>('.nodo');
+  const fichaTitulo = document.getElementById('tituloFicha') as HTMLDivElement;
+  const ficha = document.getElementById('contenedorFicha') as HTMLDivElement;
+  const conteoFicha = document.getElementById('conteoFicha') as HTMLDivElement;
 
   nodos.forEach((nodo) => {
     const nodosConectados: HTMLLIElement[] = [];
     const conexiones = nodo.dataset.con?.split(',');
     const contenedor = nodo.parentElement;
 
+    //listas independedientes de cada tipo de elemento/nodo
+    const nodosRegiones: HTMLLIElement[] = [];
+    const nodosCategorias: HTMLLIElement[] = [];
+    const nodosLideres: HTMLLIElement[] = [];
+    const nodosRoles: HTMLLIElement[] = [];
+    const nodosParticipantes: HTMLLIElement[] = [];
+    const nodosRamas: HTMLLIElement[] = [];
+    const nodosTemas: HTMLLIElement[] = [];
+    const nodosObjetos: HTMLLIElement[] = [];
+    const nodosLugares: HTMLLIElement[] = [];
+    const nodosDecadas: HTMLLIElement[] = [];
+
     if (conexiones) {
       conexiones.forEach((id) => {
         const elemento = document.getElementById(id) as HTMLLIElement;
 
-        if (elemento) nodosConectados.push(elemento);
+        //Guardar elementos en lista correspondiente a categoria.
+        if (elemento) {
+          nodosConectados.push(elemento);
+          if (id.split('_')[0] == 'regiones') {
+            nodosRegiones.push(elemento);
+          } else if (id.split('_')[0] == 'tipos') {
+            nodosCategorias.push(elemento);
+          } else if (id.split('_')[0] == 'lideres') {
+            nodosLideres.push(elemento);
+          } else if (id.split('_')[0] == 'roles') {
+            nodosRoles.push(elemento);
+          } else if (id.split('_')[0] == 'participantes') {
+            nodosParticipantes.push(elemento);
+          } else if (id.split('_')[0] == 'ramas') {
+            nodosRamas.push(elemento);
+          } else if (id.split('_')[0] == 'temas') {
+            nodosTemas.push(elemento);
+          } else if (id.split('_')[0] == 'objetos') {
+            nodosObjetos.push(elemento);
+          } else if (id.split('_')[0] == 'lugares') {
+            nodosLugares.push(elemento);
+          } else if (id.split('_')[0] == 'decadas') {
+            nodosDecadas.push(elemento);
+          }
+        }
       });
     }
 
@@ -60,6 +102,114 @@ import LineaTiempo from '@/componentes/LineaTiempo.astro';
       contenedor?.classList.remove('mantener');
       nodo.classList.remove('visible');
       contenedorListas.classList.add('todoVisible');
+    };
+
+    nodo.onclick = () => {
+      const titulo = nodo.querySelector<HTMLTitleElement>('.nombre');
+      fichaTitulo.innerText = titulo ? titulo.innerText : '';
+      const conteo = nodo.querySelector<HTMLSpanElement>('.conteo');
+      conteoFicha.innerText = conteo ? conteo.innerText : '';
+      ficha.style.display = 'block';
+
+      //regiones
+      const ulRegiones = document.getElementById('listaRegiones');
+      ulRegiones!.innerHTML = '';
+      nodosRegiones.forEach((nodo) => {
+        let li = document.createElement('li');
+        const nodoRegion = nodo.querySelector<HTMLTitleElement>('.nombre');
+        li.innerText = nodoRegion ? nodoRegion.innerText : '';
+        ulRegiones?.appendChild(li);
+      });
+
+      //categorias
+      const ulCategorias = document.getElementById('listaTipos');
+      ulCategorias!.innerHTML = '';
+      nodosCategorias.forEach((nodo) => {
+        let li = document.createElement('li');
+        const nodoCategoria = nodo.querySelector<HTMLTitleElement>('.nombre');
+        li.innerText = nodoCategoria ? nodoCategoria.innerText : '';
+        ulCategorias?.appendChild(li);
+      });
+
+      //lideres
+      const ulLideres = document.getElementById('listaLideres');
+      ulLideres!.innerHTML = '';
+      nodosLideres.forEach((nodo) => {
+        let li = document.createElement('li');
+        const nodoLider = nodo.querySelector<HTMLTitleElement>('.nombre');
+        li.innerText = nodoLider ? nodoLider.innerText : '';
+        ulLideres?.appendChild(li);
+      });
+
+      //roles
+      const ulRoles = document.getElementById('listaRoles');
+      ulRoles!.innerHTML = '';
+      nodosRoles.forEach((nodo) => {
+        let li = document.createElement('li');
+        const nodoRol = nodo.querySelector<HTMLTitleElement>('.nombre');
+        li.innerText = nodoRol ? nodoRol.innerText : '';
+        ulRoles?.appendChild(li);
+      });
+
+      //participantes
+      const ulParticipantes = document.getElementById('listaParticipantes');
+      ulParticipantes!.innerHTML = '';
+      nodosParticipantes.forEach((nodo) => {
+        let li = document.createElement('li');
+        const nodoParticipante = nodo.querySelector<HTMLTitleElement>('.nombre');
+        li.innerText = nodoParticipante ? nodoParticipante.innerText : '';
+        ulParticipantes?.appendChild(li);
+      });
+
+      //ramas
+      const ulRamas = document.getElementById('listaRamas');
+      ulRamas!.innerHTML = '';
+      nodosRamas.forEach((nodo) => {
+        let li = document.createElement('li');
+        const nodoRama = nodo.querySelector<HTMLTitleElement>('.nombre');
+        li.innerText = nodoRama ? nodoRama.innerText : '';
+        ulRamas?.appendChild(li);
+      });
+
+      //temas
+      const ulTemas = document.getElementById('listaTemas');
+      ulTemas!.innerHTML = '';
+      nodosTemas.forEach((nodo) => {
+        let li = document.createElement('li');
+        const nodoTema = nodo.querySelector<HTMLTitleElement>('.nombre');
+        li.innerText = nodoTema ? nodoTema.innerText : '';
+        ulTemas?.appendChild(li);
+      });
+
+      //objetos
+      const ulObjetos = document.getElementById('listaObjetos');
+      ulObjetos!.innerHTML = '';
+      nodosObjetos.forEach((nodo) => {
+        let li = document.createElement('li');
+        const nodoObjeto = nodo.querySelector<HTMLTitleElement>('.nombre');
+        li.innerText = nodoObjeto ? nodoObjeto.innerText : '';
+        ulObjetos?.appendChild(li);
+      });
+
+      //lugares
+      const ulLugares = document.getElementById('listaLugares');
+      ulLugares!.innerHTML = '';
+      nodosLugares.forEach((nodo) => {
+        let li = document.createElement('li');
+        const nodoLugar = nodo.querySelector<HTMLTitleElement>('.nombre');
+        li.innerText = nodoLugar ? nodoLugar.innerText : '';
+        ulLugares?.appendChild(li);
+      });
+
+      //decadas
+      const ulDecadas = document.getElementById('listaDecadas');
+      ulDecadas!.innerHTML = '';
+      nodosDecadas.forEach((nodo) => {
+        let li = document.createElement('li');
+        const nodoDecada = nodo.querySelector<HTMLTitleElement>('.nombre');
+        li.innerText = nodoDecada ? nodoDecada.innerText : '';
+        ulDecadas?.appendChild(li);
+      });
     };
   });
 </script>
