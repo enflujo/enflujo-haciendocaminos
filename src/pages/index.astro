@@ -51,7 +51,7 @@ import Ficha from '@/componentes/Ficha.astro';
     const nodosRamas: HTMLLIElement[] = [];
     const nodosTemas: HTMLLIElement[] = [];
     const nodosObjetos: HTMLLIElement[] = [];
-    const nodosLugares: HTMLLIElement[] = [];
+    const nodosMunicipios: HTMLLIElement[] = [];
     const nodosDecadas: HTMLLIElement[] = [];
 
     if (conexiones) {
@@ -77,8 +77,8 @@ import Ficha from '@/componentes/Ficha.astro';
             nodosTemas.push(elemento);
           } else if (id.split('_')[0] == 'objetos') {
             nodosObjetos.push(elemento);
-          } else if (id.split('_')[0] == 'lugares') {
-            nodosLugares.push(elemento);
+          } else if (id.split('_')[0] == 'municipios') {
+            nodosMunicipios.push(elemento);
           } else if (id.split('_')[0] == 'decadas') {
             nodosDecadas.push(elemento);
           }
@@ -191,14 +191,14 @@ import Ficha from '@/componentes/Ficha.astro';
         ulObjetos?.appendChild(li);
       });
 
-      //lugares
-      const ulLugares = document.getElementById('listaLugares');
-      ulLugares!.innerHTML = '';
-      nodosLugares.forEach((nodo) => {
+      //Municipios
+      const ulMunicipios = document.getElementById('listaMunicipios');
+      ulMunicipios!.innerHTML = '';
+      nodosMunicipios.forEach((nodo) => {
         let li = document.createElement('li');
-        const nodoLugar = nodo.querySelector<HTMLTitleElement>('.nombre');
-        li.innerText = nodoLugar ? nodoLugar.innerText : '';
-        ulLugares?.appendChild(li);
+        const nodoMunicipio = nodo.querySelector<HTMLTitleElement>('.nombre');
+        li.innerText = nodoMunicipio ? nodoMunicipio.innerText : '';
+        ulMunicipios?.appendChild(li);
       });
 
       //decadas
