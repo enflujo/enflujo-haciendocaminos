@@ -6,32 +6,35 @@ import type {
   LLavesMultiples,
   Listas,
   LllavesSingulares,
-  Proyecto
+  Proyecto,
+  Lugar,
+  elementoGeoJson
 } from '../src/tipos.ts';
 import { getXlsxStream } from 'xlstream';
 import slugificar from 'slug';
-import { guardarJSON, ordenarListaObjetos } from './ayudas.js';
+import { guardarJSON, guardarGEOJSON, ordenarListaObjetos } from './ayudas.js';
 
 const datosEmpiezanEnFila = 2;
 const camposSingulares: Campos = [
-  { llave: 'tipos', indice: 1 },
-  { llave: 'roles', indice: 5 }
+  { llave: 'tipos', indice: 2 },
+  { llave: 'roles', indice: 6 }
 ];
 const camposMultiples: Campos = [
-  { llave: 'decadas', indice: 3 },
-  { llave: 'lideres', indice: 4 },
-  { llave: 'participantes', indice: 6 },
-  { llave: 'ramas', indice: 7 },
-  { llave: 'temas', indice: 8 },
-  { llave: 'objetos', indice: 9 },
-  { llave: 'regiones', indice: 10 },
-  { llave: 'lugares', indice: 11 }
+  { llave: 'decadas', indice: 4 },
+  { llave: 'lideres', indice: 5 },
+  { llave: 'participantes', indice: 7 },
+  { llave: 'ramas', indice: 8 },
+  { llave: 'temas', indice: 9 },
+  { llave: 'objetos', indice: 10 },
+  { llave: 'regiones', indice: 11 },
+  { llave: 'municipios', indice: 14 }
 ];
 const campos = [...camposSingulares, ...camposMultiples];
 
 const proyectos: Proyecto[] = [];
 
 const listas: Listas = {
+  id: [],
   regiones: [],
   años: [],
   tipos: [],
@@ -41,25 +44,47 @@ const listas: Listas = {
   ramas: [],
   temas: [],
   objetos: [],
-  lugares: [],
+  municipios: [],
   decadas: []
 };
+
+const lugares: Lugar[] = [];
+const features: Object[] = [];
+
+let geojson = { type: 'FeatureCollection', features: features };
 
 procesar();
 
 async function procesar() {
   const flujo = await getXlsxStream({
-    filePath: './procesador/Listado de proyectos - 60 años dpto antropología .xlsx',
+    filePath: './procesador/Listado de proyectos - 60 años dpto antropología2402.xlsx',
     sheet: 'Proyectos',
+    withHeader: false,
+    ignoreEmpty: true
+  });
+
+  const flujoLugares = await getXlsxStream({
+    filePath: './procesador/Listado de proyectos - 60 años dpto antropología2402.xlsx',
+    sheet: 'lugares',
     withHeader: false,
     ignoreEmpty: true
   });
 
   let numeroFila = 1;
 
+  flujoLugares.on('data', (fila) => {
+    if (numeroFila > 2) {
+      procesarLugar(fila.formatted.arr);
+    } else {
+    }
+
+    numeroFila++;
+  });
+
   flujo.on('data', (fila) => {
     if (numeroFila > datosEmpiezanEnFila) {
       procesarFila(fila.formatted.arr);
+    } else {
     }
 
     numeroFila++;
@@ -162,16 +187,25 @@ async function procesar() {
 
     guardarJSON(proyectos, 'proyectos');
     guardarJSON(listas, 'listas');
+
     console.log('fin');
+  });
+
+  flujoLugares.on('close', () => {
+    procesarDatosMapa();
+    guardarGEOJSON(geojson, 'datosMapa');
+
+    console.log('fin de lugares');
   });
 }
 
 function procesarFila(fila: string[]) {
-  const nombreProyecto = fila[0].trim();
+  const nombreProyecto = fila[1].trim();
   const respuesta: Proyecto = {
+    id: +fila[0],
     nombre: { nombre: nombreProyecto, slug: slugificar(nombreProyecto) }
   };
-  const años = validarAño(`${fila[2]}`.trim());
+  const años = validarAño(`${fila[3]}`.trim());
   if (años) respuesta.años = años;
 
   camposSingulares.forEach((campo) => {
@@ -185,6 +219,27 @@ function procesarFila(fila: string[]) {
   });
 
   proyectos.push(respuesta);
+}
+
+function procesarLugar(fila: string[]) {
+  const nombreLugar = fila[0].trim();
+  const slug = slugificar(nombreLugar);
+  const longitud = fila[8];
+  const latitud = fila[7];
+  const lugar = listas.municipios.filter((elemento) => elemento.slug === slug);
+  const conteo = lugar[0] ? lugar[0].conteo : 0;
+
+  const respuesta: Lugar = {
+    nombre: nombreLugar,
+    slug: slug,
+    lon: +longitud,
+    lat: +latitud,
+    conteo: conteo
+  };
+
+  if (respuesta.lon && respuesta.lat) {
+    lugares.push(respuesta);
+  }
 }
 
 function validarValorMultiple(valor: string, lista: ElementoLista[]) {
@@ -250,4 +305,23 @@ function validarAño(valorAño: string) {
   }
 
   return añoProcesado;
+}
+
+// Función para crear geojson con lugares y cantidad de proyectos por lugar
+function procesarDatosMapa() {
+  let elemento: elementoGeoJson;
+  for (let lugar in lugares) {
+    elemento = {
+      type: 'Feature',
+      properties: {
+        slug: lugares[lugar].slug,
+        conteo: lugares[lugar].conteo
+      },
+      geometry: { type: 'Point', coordinates: [lugares[lugar].lon, lugares[lugar].lat] }
+    };
+
+    if (elemento.properties.conteo > 0) {
+      features.push(elemento);
+    }
+  }
 }
