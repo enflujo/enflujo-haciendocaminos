@@ -2,3 +2,22 @@ $corte1: 450px;
 $corte2: 760px;
 $corte3: 1000px;
 $corte4: 1333px;
+
+:root {
+  // Paleta
+  --grisMedio: #e0e0e0;
+  --grisClaro: #f5f5f5;
+  --blanco: #ffffff;
+  --magenta: #ff00ff;
+
+  // Fondos
+  --fondoVerdeOscuro: #1a2a22;
+  --fondoAmarilloClaro: #fdf782;
+  --fondoAmarilloClaro2: #ffffde;
+  --fondoVerdeClaro: #c6dc48;
+  --resaltadoVerde: #62e595;
+
+  // Textos
+  --textoOscuro: #1a2a22;
+  --textoClaro: #ffffff;
+}

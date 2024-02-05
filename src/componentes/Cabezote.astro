@@ -35,7 +35,7 @@
     top: 0;
     width: 100%;
     height: 50px;
-    color: white;
+    color: var(--textoClaro);
     z-index: 9;
     text-transform: uppercase;
     display: flex;
@@ -44,12 +44,12 @@
 
     a,
     a:link {
-      color: var(--grisTexto);
+      color: var(--textoClaro);
       transition: all 0.3s ease-in-out;
 
       &:hover {
         opacity: 0.8;
-        color: var(--naranjaMandarina);
+        color: var(--magenta);
       }
     }
 
@@ -58,6 +58,7 @@
       line-height: 1;
     }
 
+    // Por ahora no se usa pero se usará
     .enlaceMenu {
       cursor: pointer;
 
@@ -67,7 +68,7 @@
     }
 
     #encabezado {
-      background-color: #1a2a22;
+      background-color: var(--fondoVerdeOscuro);
       width: calc(100vw - 50px);
       padding: 0em 1em;
       display: flex;
@@ -77,10 +78,19 @@
       max-height: 50px;
     }
 
+    // Botón para cambiar de vista (proyectos / egresados)
+    #botonVista {
+      cursor: pointer;
+
+      &:hover {
+        opacity: 0.6;
+      }
+    }
+
     #menuListas {
       height: 100%;
       width: 50px;
-      background-color: #62e595;
+      background-color: var(--resaltadoVerde);
       display: flex;
       flex-direction: column;
       flex-wrap: nowrap;
@@ -93,7 +103,7 @@
         width: 50%;
         height: 1px;
         display: block;
-        background-color: black;
+        background-color: var(--fondoVerdeOscuro);
       }
     }
   }
