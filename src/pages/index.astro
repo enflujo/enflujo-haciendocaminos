@@ -5,9 +5,11 @@ import Plantilla from '@/plantillas/Plantilla.astro';
 import listas from '../../estaticos/listas.json';
 import LineaTiempo from '@/componentes/LineaTiempo.astro';
 import Ficha from '@/componentes/Ficha.astro';
+import Cabezote from '@/componentes/Cabezote.astro';
 ---
 
 <Plantilla>
+  <Cabezote />
   <main>
     <Ficha />
 
@@ -216,11 +218,13 @@ import Ficha from '@/componentes/Ficha.astro';
 
 <style lang="scss" is:global>
   #contenedorListas {
-    display: flex;
+    display: none;
     flex-wrap: wrap;
     z-index: 2;
     position: relative;
     width: 50vw;
+    height: calc(100vh - 50px);
+    margin-top: 50px;
 
     ul {
       li {
@@ -269,6 +273,10 @@ import Ficha from '@/componentes/Ficha.astro';
         font-size: 1em;
         padding: 0.2em;
       }
+    }
+
+    &.visible {
+      display: flex;
     }
   }
 </style>
