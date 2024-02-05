@@ -5,9 +5,11 @@ import Plantilla from '@/plantillas/Plantilla.astro';
 import listas from '../../estaticos/listas.json';
 import LineaTiempo from '@/componentes/LineaTiempo.astro';
 import Ficha from '@/componentes/Ficha.astro';
+import Cabezote from '@/componentes/Cabezote.astro';
 ---
 
 <Plantilla>
+  <Cabezote />
   <main>
     <Ficha />
 
@@ -26,7 +28,9 @@ import Ficha from '@/componentes/Ficha.astro';
 
     <Mapa />
 
-    <LineaTiempo tiempo={listas.años} decadas={listas.decadas} />
+    <div id="contenedorLineaTiempo">
+      <LineaTiempo tiempo={listas.años} decadas={listas.decadas} />
+    </div>
   </main>
 </Plantilla>
 
@@ -215,12 +219,20 @@ import Ficha from '@/componentes/Ficha.astro';
 </script>
 
 <style lang="scss" is:global>
+  @import '@/scss/constantes';
   #contenedorListas {
-    display: flex;
+    display: none;
+    //flex-direction: column;
     flex-wrap: wrap;
-    z-index: 2;
+    z-index: 4;
     position: relative;
     width: 50vw;
+    // max-width: 500px;
+    height: calc(100vh - 50px);
+    margin-top: 50px;
+    background-color: var(--grisClaro);
+    width: 80vw;
+    padding: 3rem 2rem;
 
     ul {
       li {
@@ -258,17 +270,26 @@ import Ficha from '@/componentes/Ficha.astro';
       position: relative;
       background-color: rgba(255, 255, 255, 0.6);
       flex-basis: 20%;
-      padding-bottom: 3em;
 
       h2 {
         position: sticky;
         top: 0;
-        background-color: var(--bufandaVieja);
+        background-color: var(--fondoVerdeOscuro);
         color: white;
         margin-top: 0;
         font-size: 1em;
         padding: 0.2em;
       }
     }
+
+    &.visible {
+      display: flex;
+    }
+  }
+
+  #contenedorLineaTiempo {
+    position: absolute;
+    bottom: 0;
+    width: 100vw;
   }
 </style>

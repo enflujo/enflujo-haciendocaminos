@@ -38,6 +38,7 @@
 </script>
 
 <style lang="scss">
+  @import '@/scss/constantes';
   #contenedorFicha {
     height: 80vh;
     width: 50vw;
@@ -45,16 +46,21 @@
     display: none;
     overflow-y: scroll;
     left: 50vw;
-    background-color: var(--papelViejo);
-    z-index: 3;
+    background-color: var(--grisClaro);
+    z-index: 5;
     padding: 10px;
     border-radius: 1.5%;
-    border: 3.5px solid var(--colorFuente);
+    border: 3.5px solid var(--fondoVerdeOscuro);
   }
 
   #cerrar {
+    cursor: pointer;
     position: absolute;
-    left: 45vw;
-    background-color: (--chalecoCafe);
+    right: 15px;
+    color: var(--textoOscuro);
+    &:hover {
+      background-color: var(--grisMedio);
+      opacity: 0.7;
+    }
   }
 </style>

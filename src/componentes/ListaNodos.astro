@@ -11,8 +11,8 @@ const { lista, titulo, id } = Astro.props;
 ---
 
 <section id={id} class="lista">
-  <h2>{titulo}</h2>
-  <ul class={id}>
+  <h2 class="titulo" id="titulo">{titulo}</h2>
+  <ul class=`contenedorElementos ${id}`>
     {
       lista.map((elemento, i) => (
         <li
@@ -31,15 +31,42 @@ const { lista, titulo, id } = Astro.props;
   </ul>
 </section>
 
-<script></script>
+<script>
+  const listas = document.querySelectorAll<HTMLElement>('.lista');
+
+  // Función para abrir y cerrar listas. Falta decidir si se usa en teléfonos
+  listas.forEach((lista) => {
+    const titulo = lista.querySelector('.titulo');
+    const contenedorElementos = lista.querySelector('.contenedorElementos');
+
+    titulo?.addEventListener('click', () => {
+      contenedorElementos?.classList.toggle('cerrado');
+    });
+  });
+</script>
 
 <style lang="scss">
+  @import '@/scss/constantes';
+  .contenedorElementos {
+    display: contents;
+    max-height: 20vh;
+    overflow-y: visible;
+
+    &.cerrado {
+      //  display: none;
+    }
+  }
+
   li {
     cursor: pointer;
 
     &:hover {
       background-color: white;
     }
+  }
+
+  .titulo {
+    cursor: pointer;
   }
 
   .nombre {
@@ -52,8 +79,8 @@ const { lista, titulo, id } = Astro.props;
     align-items: center;
 
     .linea {
-      height: 2px;
-      background-color: aqua;
+      height: 0.25rem;
+      background-color: var(--resaltadoVerde);
     }
 
     .conteo {
