@@ -37,6 +37,7 @@ import Cabezote from '@/componentes/Cabezote.astro';
 <script>
   const contenedorListas = document.getElementById('contenedorListas') as HTMLDivElement;
   const nodos = document.querySelectorAll<HTMLLIElement>('.nodo');
+  const fichaLista = document.getElementById('listaFicha') as HTMLDivElement;
   const fichaTitulo = document.getElementById('tituloFicha') as HTMLDivElement;
   const ficha = document.getElementById('contenedorFicha') as HTMLDivElement;
   const conteoFicha = document.getElementById('conteoFicha') as HTMLDivElement;
@@ -109,7 +110,9 @@ import Cabezote from '@/componentes/Cabezote.astro';
     };
 
     nodo.onclick = () => {
+      const listaElegida = nodo.parentElement;
       const titulo = nodo.querySelector<HTMLTitleElement>('.nombre');
+      fichaLista.innerText = listaElegida ? `${listaElegida.dataset.lista}` : '';
       fichaTitulo.innerText = titulo ? titulo.innerText : '';
       const conteo = nodo.querySelector<HTMLSpanElement>('.conteo');
       conteoFicha.innerText = conteo ? conteo.innerText : '';
