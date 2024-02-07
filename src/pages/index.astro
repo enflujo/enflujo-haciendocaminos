@@ -118,105 +118,40 @@ import Cabezote from '@/componentes/Cabezote.astro';
       conteoFicha.innerText = conteo ? conteo.innerText : '';
       ficha.style.display = 'block';
 
-      //regiones
-      const ulRegiones = document.getElementById('listaRegiones');
-      ulRegiones!.innerHTML = '';
-      nodosRegiones.forEach((nodo) => {
-        let li = document.createElement('li');
-        const nodoRegion = nodo.querySelector<HTMLTitleElement>('.nombre');
-        li.innerText = nodoRegion ? nodoRegion.innerText : '';
-        ulRegiones?.appendChild(li);
-      });
+      // Función para llenar las listas
+      function llenarListas(lista: string, nodos: HTMLLIElement[]) {
+        const ul = document.getElementById(`lista${lista}`);
+        const elementoSeccion = document.getElementById(`ficha${lista}`);
 
-      //categorias
-      const ulCategorias = document.getElementById('listaTipos');
-      ulCategorias!.innerHTML = '';
-      nodosCategorias.forEach((nodo) => {
-        let li = document.createElement('li');
-        const nodoCategoria = nodo.querySelector<HTMLTitleElement>('.nombre');
-        li.innerText = nodoCategoria ? nodoCategoria.innerText : '';
-        ulCategorias?.appendChild(li);
-      });
+        if (!ul) return;
+        if (!elementoSeccion) return;
 
-      //lideres
-      const ulLideres = document.getElementById('listaLideres');
-      ulLideres!.innerHTML = '';
-      nodosLideres.forEach((nodo) => {
-        let li = document.createElement('li');
-        const nodoLider = nodo.querySelector<HTMLTitleElement>('.nombre');
-        li.innerText = nodoLider ? nodoLider.innerText : '';
-        ulLideres?.appendChild(li);
-      });
+        ul.innerText = '';
+        if (nodos.length) {
+          if (elementoSeccion.classList.contains('oculta')) {
+            elementoSeccion.classList.remove('oculta');
+          }
+          nodos.forEach((nodo) => {
+            let li = document.createElement('li');
+            const nodoEspecifico = nodo.querySelector<HTMLTitleElement>('.nombre');
+            li.innerText = nodoEspecifico ? nodoEspecifico.innerText : '';
+            ul.appendChild(li);
+          });
+        } else {
+          elementoSeccion?.classList.add('oculta');
+        }
+      }
 
-      //roles
-      const ulRoles = document.getElementById('listaRoles');
-      ulRoles!.innerHTML = '';
-      nodosRoles.forEach((nodo) => {
-        let li = document.createElement('li');
-        const nodoRol = nodo.querySelector<HTMLTitleElement>('.nombre');
-        li.innerText = nodoRol ? nodoRol.innerText : '';
-        ulRoles?.appendChild(li);
-      });
-
-      //participantes
-      const ulParticipantes = document.getElementById('listaParticipantes');
-      ulParticipantes!.innerHTML = '';
-      nodosParticipantes.forEach((nodo) => {
-        let li = document.createElement('li');
-        const nodoParticipante = nodo.querySelector<HTMLTitleElement>('.nombre');
-        li.innerText = nodoParticipante ? nodoParticipante.innerText : '';
-        ulParticipantes?.appendChild(li);
-      });
-
-      //ramas
-      const ulRamas = document.getElementById('listaRamas');
-      ulRamas!.innerHTML = '';
-      nodosRamas.forEach((nodo) => {
-        let li = document.createElement('li');
-        const nodoRama = nodo.querySelector<HTMLTitleElement>('.nombre');
-        li.innerText = nodoRama ? nodoRama.innerText : '';
-        ulRamas?.appendChild(li);
-      });
-
-      //temas
-      const ulTemas = document.getElementById('listaTemas');
-      ulTemas!.innerHTML = '';
-      nodosTemas.forEach((nodo) => {
-        let li = document.createElement('li');
-        const nodoTema = nodo.querySelector<HTMLTitleElement>('.nombre');
-        li.innerText = nodoTema ? nodoTema.innerText : '';
-        ulTemas?.appendChild(li);
-      });
-
-      //objetos
-      const ulObjetos = document.getElementById('listaObjetos');
-      ulObjetos!.innerHTML = '';
-      nodosObjetos.forEach((nodo) => {
-        let li = document.createElement('li');
-        const nodoObjeto = nodo.querySelector<HTMLTitleElement>('.nombre');
-        li.innerText = nodoObjeto ? nodoObjeto.innerText : '';
-        ulObjetos?.appendChild(li);
-      });
-
-      //Municipios
-      const ulMunicipios = document.getElementById('listaMunicipios');
-      ulMunicipios!.innerHTML = '';
-      nodosMunicipios.forEach((nodo) => {
-        let li = document.createElement('li');
-        const nodoMunicipio = nodo.querySelector<HTMLTitleElement>('.nombre');
-        li.innerText = nodoMunicipio ? nodoMunicipio.innerText : '';
-        ulMunicipios?.appendChild(li);
-      });
-
-      //decadas
-      const ulDecadas = document.getElementById('listaDecadas');
-      ulDecadas!.innerHTML = '';
-      nodosDecadas.forEach((nodo) => {
-        let li = document.createElement('li');
-        const nodoDecada = nodo.querySelector<HTMLTitleElement>('.nombre');
-        li.innerText = nodoDecada ? nodoDecada.innerText : '';
-        ulDecadas?.appendChild(li);
-      });
+      llenarListas('Regiones', nodosRegiones);
+      llenarListas('Categorias', nodosCategorias);
+      llenarListas('Lideres', nodosLideres);
+      llenarListas('Roles', nodosRoles);
+      llenarListas('Participantes', nodosParticipantes);
+      llenarListas('Ramas', nodosRamas);
+      llenarListas('Temas', nodosTemas);
+      llenarListas('Objetos', nodosObjetos);
+      llenarListas('Municipios', nodosMunicipios);
+      llenarListas('Decadas', nodosDecadas);
     };
   });
 </script>
