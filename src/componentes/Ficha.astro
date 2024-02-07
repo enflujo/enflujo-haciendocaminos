@@ -4,29 +4,56 @@
 
 <section id="contenedorFicha">
   <button id="cerrar">X</button>
-  <h2 id="listaFicha"></h2>
-  <h2 id="tituloFicha"></h2>
-  <div id="conteoFicha"></div>
-  <h3>Regiones</h3>
-  <ul id="listaRegiones"></ul>
-  <h3>Categorías</h3>
-  <ul id="listaTipos"></ul>
-  <h3>Líderes de Proyectos</h3>
-  <ul id="listaLideres"></ul>
-  <h3>Roles</h3>
-  <ul id="listaRoles"></ul>
-  <h3>Participantes</h3>
-  <ul id="listaParticipantes"></ul>
-  <h3>Ramas</h3>
-  <ul id="listaRamas"></ul>
-  <h3>Temas</h3>
-  <ul id="listaTemas"></ul>
-  <h3>Objetos</h3>
-  <ul id="listaObjetos"></ul>
-  <h3>Municipios</h3>
-  <ul id="listaMunicipios"></ul>
-  <h3>Decadas</h3>
-  <ul id="listaDecadas"></ul>
+  <section id="superior">
+    <div id="contenedorTitulo">
+      <h2 id="listaFicha"></h2>
+      <p id="tituloFicha"></p>
+    </div>
+    <div id="conteoFicha"></div>
+  </section>
+
+  <section id="inferior">
+    <div class="seccionDatos">
+      <h3 class="titulo">Regiones</h3>
+      <ul id="listaRegiones" class="contenido"></ul>
+    </div>
+    <div class="seccionDatos">
+      <h3 class="titulo">Categorías</h3>
+      <ul id="listaTipos" class="contenido"></ul>
+    </div>
+    <div class="seccionDatos">
+      <h3 class="titulo">Líderes de Proyectos</h3>
+      <ul id="listaLideres" class="contenido"></ul>
+    </div>
+    <div class="seccionDatos">
+      <h3 class="titulo">Roles</h3>
+      <ul id="listaRoles" class="contenido"></ul>
+    </div>
+    <div class="seccionDatos">
+      <h3 class="titulo">Participantes</h3>
+      <ul id="listaParticipantes" class="contenido"></ul>
+    </div>
+    <div class="seccionDatos">
+      <h3 class="titulo">Ramas</h3>
+      <ul id="listaRamas" class="contenido"></ul>
+    </div>
+    <div class="seccionDatos">
+      <h3 class="titulo">Temas</h3>
+      <ul id="listaTemas" class="contenido"></ul>
+    </div>
+    <div class="seccionDatos">
+      <h3 class="titulo">Objetos</h3>
+      <ul id="listaObjetos" class="contenido"></ul>
+    </div>
+    <div class="seccionDatos">
+      <h3 class="titulo">Municipios</h3>
+      <ul id="listaMunicipios" class="contenido"></ul>
+    </div>
+    <div class="seccionDatos">
+      <h3 class="titulo">Decadas</h3>
+      <ul id="listaDecadas" class="contenido"></ul>
+    </div>
+  </section>
 </section>
 
 <script>
@@ -53,12 +80,55 @@
     padding: 10px;
     border-radius: 1.5%;
     border: 3.5px solid var(--fondoVerdeOscuro);
+
+    #superior {
+      border: 1px solid var(--resaltadoVerde);
+      margin-bottom: 0.62rem;
+      display: flex;
+      text-align: center;
+      color: var(--textoOscuro);
+      #contenedorTitulo {
+        background-color: var(--resaltadoVerde);
+        flex-basis: 90%;
+        margin: 0;
+      }
+
+      #conteoFicha {
+        margin: auto;
+        color: var(--textoClaro);
+      }
+    }
+
+    #inferior {
+      border: 1px solid var(--resaltadoVerde);
+
+      .seccionDatos {
+        display: flex;
+        width: 90%;
+        border-bottom: 1px solid var(--resaltadoVerde);
+        margin: 0 auto;
+        padding: 0.63rem 0.63rem 0.94rem 0.63rem;
+
+        .titulo {
+          margin: 0;
+          flex-basis: 40%;
+        }
+        li {
+          margin: 0;
+        }
+      }
+
+      .seccionDatos:last-of-type {
+        border: none;
+      }
+    }
   }
 
   #cerrar {
     cursor: pointer;
     position: absolute;
-    right: 15px;
+    left: 15px;
+    top: 15px;
     color: var(--textoOscuro);
     &:hover {
       background-color: var(--grisMedio);

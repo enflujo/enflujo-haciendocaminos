@@ -111,6 +111,7 @@ import Cabezote from '@/componentes/Cabezote.astro';
 
     nodo.onclick = () => {
       const listaElegida = nodo.parentElement;
+      console.log(nodo);
       const titulo = nodo.querySelector<HTMLTitleElement>('.nombre');
       fichaLista.innerText = listaElegida ? `${listaElegida.dataset.lista}` : '';
       fichaTitulo.innerText = titulo ? titulo.innerText : '';
