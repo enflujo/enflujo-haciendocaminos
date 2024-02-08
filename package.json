@@ -11,7 +11,7 @@
     "astro": "astro",
     "lint": "prettier --check .",
     "lint:fix": "prettier --write --list-different .",
-    "datos": "nodemon ./procesador/procesador.ts"
+    "datos": "nodemon --exec node --loader ts-node/esm ./procesador/procesador.ts"
   },
   "dependencies": {
     "@astrojs/check": "^0.4.1",
