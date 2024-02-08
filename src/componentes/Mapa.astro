@@ -80,7 +80,7 @@ interface Props {
        * 🅰 Texto dentro del círculo
        */
       mapa.addLayer({
-        id: 'contadorObras',
+        id: 'slug',
         type: 'symbol',
         source: 'ubicaciones',
         // Sólo mostrarlo cuando tiene más de un lugar agrupado ("point_count" lo crea mapbox y se va actualizando con el zoom).
@@ -115,7 +115,7 @@ interface Props {
        * 🏛 Nombre del lugar
        */
       mapa.addLayer({
-        id: 'nombre',
+        id: 'slug',
         type: 'symbol',
         source: 'ubicaciones',
         filter: ['!', ['has', 'point_count']],
