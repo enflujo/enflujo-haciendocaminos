@@ -3,6 +3,7 @@ import ListaNodos from '@/componentes/ListaNodos.astro';
 import Mapa from '@/componentes/Mapa.astro';
 import Plantilla from '@/plantillas/Plantilla.astro';
 import listas from '../../estaticos/listas.json';
+import proyectos from '../../estaticos/proyectos.json';
 import LineaTiempo from '@/componentes/LineaTiempo.astro';
 import Ficha from '@/componentes/Ficha.astro';
 import Cabezote from '@/componentes/Cabezote.astro';
@@ -27,6 +28,17 @@ import Introduccion from '@/componentes/Introduccion.astro';
       <ListaNodos id="municipios" titulo="Municipios" lista={listas.municipios} />
       <ListaNodos id="decadas" titulo="Decadas" lista={listas.decadas} />
     </div>
+
+    <ul id="listaProyectos">
+      {
+        proyectos &&
+          proyectos.map((proyecto) => (
+            <div>
+              <h3>{proyecto.nombre.nombre}</h3>
+            </div>
+          ))
+      }
+    </ul>
 
     <Mapa />
 
@@ -233,5 +245,17 @@ import Introduccion from '@/componentes/Introduccion.astro';
     position: absolute;
     bottom: 0;
     width: 100vw;
+  }
+
+  #listaProyectos {
+    position: fixed;
+    top: var(--altoMenu);
+    right: 0px;
+    z-index: 3;
+    font-size: 0.65em;
+    height: 70vh;
+    overflow: auto;
+    padding-bottom: 5em;
+    width: 40vw;
   }
 </style>
