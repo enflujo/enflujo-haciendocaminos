@@ -65,7 +65,7 @@
   };
 </script>
 
-<style lang="scss">
+<style lang="scss" is:global>
   @import '@/scss/constantes';
   #contenedorFicha {
     max-height: calc(100vh - 50px);
@@ -88,6 +88,7 @@
       display: flex;
       text-align: center;
       color: var(--textoOscuro);
+      min-height: 80px;
       #contenedorTitulo {
         background-color: var(--resaltadoVerde);
         flex-basis: 90%;
@@ -106,6 +107,7 @@
       #conteoFicha {
         margin: auto;
         color: var(--textoClaro);
+        width: 80px;
       }
     }
 
@@ -118,17 +120,22 @@
         border-bottom: 1px solid var(--resaltadoVerde);
         margin: 0 auto;
         padding: 0.63rem 0.63rem 0.94rem 0.63rem;
-
+        .contenido {
+          li {
+            margin: 0.5em;
+          }
+        }
         .titulo {
           margin: 0;
-          flex-basis: 40%;
-        }
-        li {
-          margin: 0;
+          flex-basis: 45%;
         }
 
         &.oculta {
           display: none;
+        }
+
+        ul {
+          max-width: 55%;
         }
       }
 
