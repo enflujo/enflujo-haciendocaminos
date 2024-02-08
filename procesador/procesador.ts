@@ -57,14 +57,14 @@ procesar();
 
 async function procesar() {
   const flujo = await getXlsxStream({
-    filePath: './procesador/Listado de proyectos - 60 años dpto antropología2402.xlsx',
+    filePath: './procesador/Listado de proyectos - 60 años dpto antropología0802.xlsx',
     sheet: 'Proyectos',
     withHeader: false,
     ignoreEmpty: true
   });
 
   const flujoLugares = await getXlsxStream({
-    filePath: './procesador/Listado de proyectos - 60 años dpto antropología2402.xlsx',
+    filePath: './procesador/Listado de proyectos - 60 años dpto antropología0802.xlsx',
     sheet: 'lugares',
     withHeader: false,
     ignoreEmpty: true
