@@ -12,6 +12,11 @@ body {
     'calt' 1; /* fix for Chrome */
 }
 
+main {
+  height: 100vh;
+  overflow: auto;
+}
+
 h1 {
   font-family: var(--fuenteLogo);
   letter-spacing: 2.42px;
