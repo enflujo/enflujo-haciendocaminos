@@ -1,0 +1,117 @@
+---
+
+---
+
+<div id="mostrarIntro">?</div>
+
+<div id="introduccion">
+  <button id="cerrarIntro">X</button>
+  <h2 id="titulo">Haciendo Caminos</h2>
+  <p>
+    En <span class="resaltado">Haciendo Caminos</span> contamos la historia del <a
+      href="https://cienciassociales.uniandes.edu.co/antropologia/"
+      >Departamento de Antropología de la Universidad de Los Andes</a
+    > haciendo un mapeo de los proyectos de investigación que sus profesores y estudiantes han realizado durante sus XX años
+    de existencia.
+  </p>
+  <p>
+    Quiénes han hecho parte, sobre qué han investigado, en qué lugares se han centrado y cuándo fueron realizadas las
+    investigaciones son algunas de las preguntas que queremos ayudar a responder con esta herramienta.
+  </p>
+  <p>
+    Para navegar selecciona del menú de la izquierda un tema, personaje, fecha, lugar, elemento o proyecto. Se abrirá
+    una ficha con información donde podrás conocerlos en detalle.
+  </p>
+</div>
+
+<script>
+  const botonMostrarIntro = document.getElementById('mostrarIntro') as HTMLDivElement;
+  const botonCerrarIntro = document.getElementById('cerrarIntro') as HTMLDivElement;
+  const intro = document.getElementById('introduccion') as HTMLDivElement;
+
+  botonCerrarIntro.onclick = () => {
+    intro.style.display = 'none';
+  };
+
+  botonMostrarIntro.onclick = () => {
+    intro.style.display = 'block';
+  };
+</script>
+
+<style lang="scss">
+  @import '@/scss/constantes';
+  #mostrarIntro {
+    display: block;
+    position: absolute;
+    right: 2vw;
+    top: 70px;
+    z-index: 3;
+    width: 2em;
+    height: 2em;
+    padding: 0.5em;
+    border-radius: 50%;
+    text-align: center;
+    cursor: pointer;
+    background-color: var(--fondoAmarilloClaro2);
+
+    &:hover {
+      opacity: 0.5;
+    }
+  }
+
+  #introduccion {
+    max-height: calc(100vh - 50px);
+    width: 96vw;
+    position: absolute;
+    display: block;
+    right: 2vw;
+    top: 60px;
+    background-color: var(--fondoVerdeOscuro);
+    color: var(--textoClaro);
+    z-index: 5;
+    padding: 2em 4em;
+    border-radius: 1.5%;
+    border: 3.5px solid var(--fondoVerdeOscuro);
+
+    a {
+      color: var(--resaltadoVerde);
+    }
+    a:visited {
+      color: var(--resaltadoVerde);
+    }
+
+    a:hover {
+      color: var(--fondoVerdeClaro);
+    }
+
+    .resaltado {
+      font-style: oblique;
+    }
+
+    #titulo {
+      text-align: center;
+      margin-bottom: 2em;
+    }
+
+    #cerrarIntro {
+      cursor: pointer;
+      position: absolute;
+      right: 15px;
+      top: 15px;
+      color: var(--textoOscuro);
+      &:hover {
+        background-color: var(--grisMedio);
+        opacity: 0.7;
+      }
+    }
+  }
+
+  // Cambiar estilos según tamaño de pantalla
+  @media screen and (min-width: $corte3) {
+    #introduccion {
+      width: 30vw;
+      right: 10px;
+      padding: 2em 5em;
+    }
+  }
+</style>

@@ -57,10 +57,11 @@ tiempo.forEach((marca, i) => {
 </div>
 
 <style lang="scss">
+  @import '@/scss/constantes';
   #contenedorGrafica {
     height: 150px;
     position: relative;
-    background-color: var(--rosaPigmento);
+    background-color: var(--fondoVerdeOscuro);
     z-index: 3;
   }
   svg {
@@ -69,7 +70,7 @@ tiempo.forEach((marca, i) => {
     left: 0;
 
     path {
-      fill: rgba(210, 76, 76, 0.679);
+      fill: var(--fondoAmarilloClaro2);
     }
 
     text {

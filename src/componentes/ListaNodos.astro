@@ -40,7 +40,7 @@ const { lista, titulo, id } = Astro.props;
     const contenedorElementos = lista.querySelector('.contenedorElementos');
 
     titulo?.addEventListener('click', () => {
-      contenedorElementos?.classList.toggle('cerrado');
+      contenedorElementos?.classList.toggle('abierto');
     });
   });
 </script>
@@ -48,12 +48,12 @@ const { lista, titulo, id } = Astro.props;
 <style lang="scss">
   @import '@/scss/constantes';
   .contenedorElementos {
-    display: contents;
+    display: none;
     max-height: 20vh;
     overflow-y: visible;
 
-    &.cerrado {
-      display: none;
+    &.abierto {
+      display: contents;
     }
   }
 

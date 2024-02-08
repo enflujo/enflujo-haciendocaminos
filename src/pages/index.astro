@@ -6,11 +6,13 @@ import listas from '../../estaticos/listas.json';
 import LineaTiempo from '@/componentes/LineaTiempo.astro';
 import Ficha from '@/componentes/Ficha.astro';
 import Cabezote from '@/componentes/Cabezote.astro';
+import Introduccion from '@/componentes/Introduccion.astro';
 ---
 
 <Plantilla>
   <Cabezote />
   <main>
+    <Introduccion />
     <Ficha />
 
     <div id="contenedorListas" class="todoVisible">
@@ -174,10 +176,12 @@ import Cabezote from '@/componentes/Cabezote.astro';
 
     ul {
       li {
-        display: none;
+        // display: none;
+        opacity: 0.3;
 
         &.visible {
-          display: block;
+          opacity: 1;
+          // display: block;
           // font-size: 0.75em;
         }
       }

@@ -3,7 +3,7 @@
 ---
 
 <section id="contenedorFicha">
-  <button id="cerrar">X</button>
+  <button id="cerrarFicha">X</button>
   <section id="superior">
     <div id="contenedorTitulo">
       <h2 id="listaFicha"></h2>
@@ -57,7 +57,7 @@
 </section>
 
 <script>
-  const botonCerrarFicha = document.getElementById('cerrar') as HTMLDivElement;
+  const botonCerrarFicha = document.getElementById('cerrarFicha') as HTMLDivElement;
   const ficha = document.getElementById('contenedorFicha') as HTMLDivElement;
 
   botonCerrarFicha.onclick = () => {
@@ -178,7 +178,7 @@
     }
   }
 
-  #cerrar {
+  #cerrarFicha {
     cursor: pointer;
     position: absolute;
     left: 15px;
