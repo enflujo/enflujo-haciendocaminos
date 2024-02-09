@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&display=swap');
+@import url('https://use.typekit.net/xvu8mbx.css');
+
 $corte1: 450px;
 $corte2: 760px;
 $corte3: 1000px;
@@ -25,6 +28,9 @@ $corte4: 1333px;
   // Textos
   --textoOscuro: #1a2a22;
   --textoClaro: #ffffff;
+
+  /// Medidas
+  --altoMenu: 50px;
 }
 
 @supports (font-variation-settings: normal) {
