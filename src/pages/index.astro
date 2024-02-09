@@ -1,5 +1,4 @@
 ---
-import ListaNodos from '@/componentes/ListaNodos.astro';
 import Mapa from '@/componentes/Mapa.astro';
 import Plantilla from '@/plantillas/Plantilla.astro';
 import listas from '../../estaticos/listas.json';
@@ -7,6 +6,8 @@ import LineaTiempo from '@/componentes/LineaTiempo.astro';
 import Ficha from '@/componentes/Ficha.astro';
 import Cabezote from '@/componentes/Cabezote.astro';
 import Introduccion from '@/componentes/Introduccion.astro';
+import Listas from '@/componentes/Listas.astro';
+import Proyectos from '@/componentes/Proyectos.astro';
 ---
 
 <Plantilla>
@@ -14,149 +15,12 @@ import Introduccion from '@/componentes/Introduccion.astro';
   <main>
     <Introduccion />
     <Ficha />
-
-    <div id="contenedorListas" class="todoVisible">
-      <ListaNodos id="regiones" titulo="Regiones" lista={listas.regiones} />
-      <ListaNodos id="tipos" titulo="Categorías" lista={listas.tipos} />
-      <ListaNodos id="lideres" titulo="Líderes de Proyectos" lista={listas.lideres} />
-      <ListaNodos id="roles" titulo="Roles" lista={listas.roles} />
-      <ListaNodos id="participantes" titulo="Participantes" lista={listas.participantes} />
-      <ListaNodos id="ramas" titulo="Ramas" lista={listas.ramas} />
-      <ListaNodos id="temas" titulo="Temas" lista={listas.temas} />
-      <ListaNodos id="objetos" titulo="Objetos" lista={listas.objetos} />
-      <ListaNodos id="municipios" titulo="Municipios" lista={listas.municipios} />
-      <ListaNodos id="decadas" titulo="Decadas" lista={listas.decadas} />
-    </div>
-
+    <Listas />
+    <Proyectos />
     <Mapa />
-
-    <div id="contenedorLineaTiempo">
-      <LineaTiempo tiempo={listas.años} decadas={listas.decadas} />
-    </div>
+    <LineaTiempo tiempo={listas.años} decadas={listas.decadas} />
   </main>
 </Plantilla>
-
-<script>
-  const contenedorListas = document.getElementById('contenedorListas') as HTMLDivElement;
-  const nodos = document.querySelectorAll<HTMLLIElement>('.nodo');
-  const fichaLista = document.getElementById('listaFicha') as HTMLDivElement;
-  const fichaTitulo = document.getElementById('tituloFicha') as HTMLDivElement;
-  const ficha = document.getElementById('contenedorFicha') as HTMLDivElement;
-  const conteoFicha = document.getElementById('conteoFicha') as HTMLDivElement;
-
-  nodos.forEach((nodo) => {
-    const nodosConectados: HTMLLIElement[] = [];
-    const conexiones = nodo.dataset.con?.split(',');
-    const contenedor = nodo.parentElement;
-
-    //listas independedientes de cada tipo de elemento/nodo
-    const nodosRegiones: HTMLLIElement[] = [];
-    const nodosCategorias: HTMLLIElement[] = [];
-    const nodosLideres: HTMLLIElement[] = [];
-    const nodosRoles: HTMLLIElement[] = [];
-    const nodosParticipantes: HTMLLIElement[] = [];
-    const nodosRamas: HTMLLIElement[] = [];
-    const nodosTemas: HTMLLIElement[] = [];
-    const nodosObjetos: HTMLLIElement[] = [];
-    const nodosMunicipios: HTMLLIElement[] = [];
-    const nodosDecadas: HTMLLIElement[] = [];
-
-    if (conexiones) {
-      conexiones.forEach((id) => {
-        const elemento = document.getElementById(id) as HTMLLIElement;
-
-        //Guardar elementos en lista correspondiente a categoria.
-        if (elemento) {
-          nodosConectados.push(elemento);
-          if (id.split('_')[0] == 'regiones') {
-            nodosRegiones.push(elemento);
-          } else if (id.split('_')[0] == 'tipos') {
-            nodosCategorias.push(elemento);
-          } else if (id.split('_')[0] == 'lideres') {
-            nodosLideres.push(elemento);
-          } else if (id.split('_')[0] == 'roles') {
-            nodosRoles.push(elemento);
-          } else if (id.split('_')[0] == 'participantes') {
-            nodosParticipantes.push(elemento);
-          } else if (id.split('_')[0] == 'ramas') {
-            nodosRamas.push(elemento);
-          } else if (id.split('_')[0] == 'temas') {
-            nodosTemas.push(elemento);
-          } else if (id.split('_')[0] == 'objetos') {
-            nodosObjetos.push(elemento);
-          } else if (id.split('_')[0] == 'municipios') {
-            nodosMunicipios.push(elemento);
-          } else if (id.split('_')[0] == 'decadas') {
-            nodosDecadas.push(elemento);
-          }
-        }
-      });
-    }
-
-    nodo.onmouseenter = () => {
-      nodosConectados.forEach((nodo) => {
-        nodo.classList.add('visible', 'explotado');
-      });
-      contenedor?.classList.add('mantener');
-      nodo.classList.add('visible');
-      contenedorListas.classList.remove('todoVisible');
-    };
-
-    nodo.onmouseleave = () => {
-      nodosConectados.forEach((nodo) => {
-        nodo.classList.remove('visible', 'explotado');
-      });
-      contenedor?.classList.remove('mantener');
-      nodo.classList.remove('visible');
-      contenedorListas.classList.add('todoVisible');
-    };
-
-    nodo.onclick = () => {
-      const listaElegida = nodo.parentElement;
-      const titulo = nodo.querySelector<HTMLTitleElement>('.nombre');
-      fichaLista.innerText = listaElegida ? `${listaElegida.dataset.lista}` : '';
-      fichaTitulo.innerText = titulo ? titulo.innerText : '';
-      const conteo = nodo.querySelector<HTMLSpanElement>('.conteo');
-      conteoFicha.innerText = conteo ? conteo.innerText : '';
-      ficha.style.display = 'block';
-
-      // Función para llenar las listas
-      function llenarListas(lista: string, nodos: HTMLLIElement[]) {
-        const ul = document.getElementById(`lista${lista}`);
-        const elementoSeccion = document.getElementById(`ficha${lista}`);
-
-        if (!ul) return;
-        if (!elementoSeccion) return;
-
-        ul.innerText = '';
-        if (nodos.length) {
-          if (elementoSeccion.classList.contains('oculta')) {
-            elementoSeccion.classList.remove('oculta');
-          }
-          nodos.forEach((nodo) => {
-            let li = document.createElement('li');
-            const nodoEspecifico = nodo.querySelector<HTMLTitleElement>('.nombre');
-            li.innerText = nodoEspecifico ? nodoEspecifico.innerText : '';
-            ul.appendChild(li);
-          });
-        } else {
-          elementoSeccion?.classList.add('oculta');
-        }
-      }
-
-      llenarListas('Regiones', nodosRegiones);
-      llenarListas('Categorias', nodosCategorias);
-      llenarListas('Lideres', nodosLideres);
-      llenarListas('Roles', nodosRoles);
-      llenarListas('Participantes', nodosParticipantes);
-      llenarListas('Ramas', nodosRamas);
-      llenarListas('Temas', nodosTemas);
-      llenarListas('Objetos', nodosObjetos);
-      llenarListas('Municipios', nodosMunicipios);
-      llenarListas('Decadas', nodosDecadas);
-    };
-  });
-</script>
 
 <style lang="scss" is:global>
   @import '@/scss/constantes';
@@ -166,7 +30,6 @@ import Introduccion from '@/componentes/Introduccion.astro';
     flex-wrap: wrap;
     z-index: 4;
     position: relative;
-    width: 30vw;
     max-width: 400px;
     //height: calc(100vh - 50px);
     margin-top: 50px;
@@ -229,9 +92,47 @@ import Introduccion from '@/componentes/Introduccion.astro';
     }
   }
 
-  #contenedorLineaTiempo {
-    position: absolute;
-    bottom: 0;
-    width: 100vw;
+  #listaProyectos {
+    position: fixed;
+    background-color: var(--fondoVerdeOscuro);
+    color: var(--textoClaro);
+    top: var(--altoMenu);
+    right: 0px;
+    z-index: 4;
+    font-family: var(--fuenteParrafo);
+    height: 70vh;
+    overflow: auto;
+    padding-bottom: 5em;
+    width: 50vw;
+    padding: 3rem 2rem;
+    font-size: 0.8em;
+
+    .nodoProyecto {
+      margin: 0.85em 0;
+      font-size: 1.1em;
+      cursor: pointer;
+
+      &:hover,
+      &.resaltado {
+        background-color: var(--fondoAmarilloClaro);
+        color: var(--textoOscuro);
+      }
+    }
+
+    #titulo {
+      color: var(--fondoVerdeOscuro);
+      background-color: var(--textoClaro);
+      padding: 0.2em;
+    }
+  }
+
+  // Cambiar estilos según tamaño de pantalla
+  @media screen and (min-width: $corte3) {
+    #contenedorListas {
+      width: 30vw;
+    }
+    #listaProyectos {
+      width: 30vw;
+    }
   }
 </style>

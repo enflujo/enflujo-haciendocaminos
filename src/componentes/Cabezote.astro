@@ -8,9 +8,13 @@
     <span class="lineaMenu"></span>
     <span class="lineaMenu"></span>
   </div>
+
   <div id="encabezado">
     <h1>Haciendo Caminos</h1>
-    <div id="botonVista">Proyectos</div>
+    <ul>
+      <li class="botonVista">Proyectos</li>
+      <ul class="botonVista">Egresados</ul>
+    </ul>
   </div>
 </nav>
 
@@ -34,7 +38,7 @@
     position: fixed;
     top: 0;
     width: 100%;
-    height: 50px;
+    height: var(--altoMenu);
     color: var(--textoClaro);
     z-index: 9;
     text-transform: uppercase;
@@ -79,7 +83,7 @@
     }
 
     // Botón para cambiar de vista (proyectos / egresados)
-    #botonVista {
+    .botonVista {
       cursor: pointer;
 
       &:hover {
@@ -88,7 +92,7 @@
     }
 
     #menuListas {
-      height: 100%;
+      height: var(--altoMenu);
       width: 50px;
       background-color: var(--resaltadoVerde);
       display: flex;

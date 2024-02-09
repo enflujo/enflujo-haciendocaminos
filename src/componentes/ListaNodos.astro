@@ -19,6 +19,7 @@ const { lista, titulo, id } = Astro.props;
           id={`${id}_${i}`}
           class="nodo"
           data-con={`${elemento.relaciones.map((rel) => `${rel.tipo}_${rel.indice}`)}`}
+          data-proyectos={elemento.proyectos}
         >
           <h3 class="nombre">{elemento.nombre}</h3>
           <div class="barra">

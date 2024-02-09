@@ -57,12 +57,28 @@
 </section>
 
 <script>
-  const botonCerrarFicha = document.getElementById('cerrarFicha') as HTMLDivElement;
   const ficha = document.getElementById('contenedorFicha') as HTMLDivElement;
+  const lista = document.getElementById('listaFicha') as HTMLTitleElement;
+  const botonCerrarFicha = document.getElementById('cerrarFicha') as HTMLDivElement;
+  import { datosFicha } from '@/utilidades/cerebro';
+
+  const titulo = document.getElementById('tituloFicha') as HTMLParagraphElement;
 
   botonCerrarFicha.onclick = () => {
     ficha.style.display = 'none';
   };
+
+  datosFicha.subscribe((datos) => {
+    if (!datos.visible) {
+      ficha.style.display = 'none';
+      return;
+    }
+
+    ficha.style.display = 'block';
+
+    lista.innerText = datos.lista ? datos.lista : '';
+    titulo.innerText = datos.titulo ? datos.titulo : '';
+  });
 </script>
 
 <style lang="scss" is:global>

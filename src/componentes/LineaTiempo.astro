@@ -32,32 +32,39 @@ tiempo.forEach((marca, i) => {
 });
 ---
 
-<div id="contenedorGrafica">
-  <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
-    <g id="decadas">
+<div id="contenedorLineaTiempo">
+  <div id="contenedorGrafica">
+    <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
+      <g id="decadas">
+        {
+          decadas.map((decada, i) => (
+            <rect x={`${i * anchoDecada}%`} y="0" width={`${anchoDecada}%`} height={`${altoDecada(decada.conteo)}px`} />
+          ))
+        }
+
+        <path d={datosLinea}></path>
+      </g>
+    </svg>
+
+    <svg id="marcas" width="100%" height="100%">
       {
-        decadas.map((decada, i) => (
-          <rect x={`${i * anchoDecada}%`} y="0" width={`${anchoDecada}%`} height={`${altoDecada(decada.conteo)}px`} />
+        tiempo.map((marca) => (
+          <text style={`transform:translate(${posX(+marca.nombre)}%, ${posY(marca.conteo)}%)`} x="0" y="0">
+            {marca.nombre}
+          </text>
         ))
       }
-
-      <path d={datosLinea}></path>
-    </g>
-  </svg>
-
-  <svg id="marcas" width="100%" height="100%">
-    {
-      tiempo.map((marca) => (
-        <text style={`transform:translate(${posX(+marca.nombre)}%, ${posY(marca.conteo)}%)`} x="0" y="0">
-          {marca.nombre}
-        </text>
-      ))
-    }
-  </svg>
+    </svg>
+  </div>
 </div>
 
 <style lang="scss">
-  @import '@/scss/constantes';
+  #contenedorLineaTiempo {
+    position: absolute;
+    bottom: 0;
+    width: 100vw;
+  }
+
   #contenedorGrafica {
     height: 170px;
     position: relative;
