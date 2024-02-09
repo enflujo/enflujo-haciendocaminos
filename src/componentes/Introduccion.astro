@@ -7,6 +7,9 @@
 <div id="introduccion">
   <button id="cerrarIntro">X</button>
   <h2 id="titulo">Haciendo Caminos</h2>
+  <!--  <div>
+    <img id="imagenLogo" src="/enflujo-haciendocaminos/imgs/gusano_1.svg" />
+  </div> -->
   <p>
     <span class="resaltado">Haciendo Caminos</span> es la historia del <a
       href="https://cienciassociales.uniandes.edu.co/antropologia/"
@@ -72,6 +75,19 @@
     border-radius: 1.5%;
     border: 3.5px solid var(--fondoVerdeOscuro);
 
+    &::before {
+      content: '';
+      background-image: url(/enflujo-haciendocaminos/imgs/gusano_1.svg);
+      background-size: contain;
+      width: 40px;
+      height: 90px;
+      margin: 0 1.5vw 0 0;
+      bottom: 0;
+      right: 0;
+      background-repeat: no-repeat;
+      position: absolute;
+    }
+
     a {
       color: var(--resaltadoVerde);
     }
@@ -91,6 +107,8 @@
       font-family: var(--fuenteLogo);
       text-align: center;
       margin-bottom: 2em;
+      text-transform: uppercase;
+      letter-spacing: 0.3em;
     }
 
     #cerrarIntro {
