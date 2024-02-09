@@ -3,6 +3,7 @@ export interface ElementoLista {
   slug: string;
   conteo: number;
   relaciones: { tipo: keyof Listas | string; conteo: number; indice: number; slug: string }[];
+  proyectos: number[];
 }
 export type DefinicionSimple = { nombre: string; slug: string };
 export type Años = [año: number, conteo: number][];

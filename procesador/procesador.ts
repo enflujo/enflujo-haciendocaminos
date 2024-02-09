@@ -96,6 +96,8 @@ async function procesar() {
     }
 
     proyectos.forEach((proyecto) => {
+      const id = proyecto.id;
+
       campos.forEach((campoRelacion) => {
         const datosRelacion = proyecto[campoRelacion.llave];
 
@@ -124,6 +126,10 @@ async function procesar() {
 
                   if (elementoALlenar) {
                     const existe = elementoALlenar.relaciones.find((obj) => obj.slug === slug);
+
+                    if (!elementoALlenar.proyectos.includes(id)) {
+                      elementoALlenar.proyectos.push(id);
+                    }
 
                     if (!existe) {
                       elementoALlenar.relaciones.push({
@@ -262,7 +268,7 @@ function validarValorSingular(valor: string, lista: ElementoLista[]) {
   const existe = lista.find((obj) => obj.slug === slug);
 
   if (!existe) {
-    lista.push({ nombre, conteo: 1, slug, relaciones: [] });
+    lista.push({ nombre, conteo: 1, slug, relaciones: [], proyectos: [] });
   } else {
     existe.conteo++;
   }

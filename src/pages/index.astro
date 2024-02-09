@@ -35,7 +35,7 @@ import Introduccion from '@/componentes/Introduccion.astro';
         proyectos &&
           proyectos.map((proyecto) => (
             <ul>
-              <li class="nodoProyecto" id=`${proyecto.id}`>{proyecto.nombre.nombre}</li>
+              <li class="nodoProyecto" id=`proyecto_${proyecto.id}`>{proyecto.nombre.nombre}</li>
             </ul>
           ))
       }
@@ -51,6 +51,7 @@ import Introduccion from '@/componentes/Introduccion.astro';
 
 <script>
   const contenedorListas = document.getElementById('contenedorListas') as HTMLDivElement;
+  const contenedorProyectos = document.getElementById('listaProyectos') as HTMLDivElement;
   const nodos = document.querySelectorAll<HTMLLIElement>('.nodo');
   const nodosProyectos = document.querySelectorAll<HTMLLIElement>('.nodoProyecto')
   const fichaLista = document.getElementById('listaFicha') as HTMLDivElement;
@@ -63,7 +64,7 @@ import Introduccion from '@/componentes/Introduccion.astro';
   // Poner título de proyecto en ficha
   nodosProyectos.forEach((nodo) => {
     nodo.onclick = () => {
-      const contenedorTitulo = document.getElementById('contenedorTitulo');
+      const contenedorTitulo = document.getElementById('contenedorTitulo') as HTMLDivElement;
       const titulo = nodo.innerText;
       fichaLista.innerText = 'Proyecto';
       fichaTitulo.innerText = titulo ? titulo : '';
@@ -75,7 +76,9 @@ import Introduccion from '@/componentes/Introduccion.astro';
 
   nodos.forEach((nodo) => {
     const nodosConectados: HTMLLIElement[] = [];
+    const proyectosConectados: HTMLLIElement[] = [];
     const conexiones = nodo.dataset.con?.split(',');
+    const proyectos = nodo.dataset.proyectos?.split(',');
     const contenedor = nodo.parentElement;
 
     //listas independedientes de cada tipo de elemento/nodo
@@ -89,6 +92,16 @@ import Introduccion from '@/componentes/Introduccion.astro';
     const nodosObjetos: HTMLLIElement[] = [];
     const nodosMunicipios: HTMLLIElement[] = [];
     const nodosDecadas: HTMLLIElement[] = [];
+
+    if (proyectos) {
+      proyectos.forEach((idProyecto) => {
+        const proyecto = document.getElementById(`proyecto_${idProyecto}`) as HTMLLIElement;
+        
+        if (proyecto) {
+          proyectosConectados.push(proyecto);
+        }
+      })
+    }
 
     if (conexiones) {
       conexiones.forEach((id) => {
@@ -126,6 +139,11 @@ import Introduccion from '@/componentes/Introduccion.astro';
       nodosConectados.forEach((nodo) => {
         nodo.classList.add('visible', 'explotado');
       });
+
+      proyectosConectados.forEach(nodo => {
+        nodo.classList.add('resaltado');
+      })
+
       contenedor?.classList.add('mantener');
       nodo.classList.add('visible');
       contenedorListas.classList.remove('todoVisible');
@@ -135,6 +153,11 @@ import Introduccion from '@/componentes/Introduccion.astro';
       nodosConectados.forEach((nodo) => {
         nodo.classList.remove('visible', 'explotado');
       });
+
+      proyectosConectados.forEach(nodo => {
+        nodo.classList.remove('resaltado');
+      })
+
       contenedor?.classList.remove('mantener');
       nodo.classList.remove('visible');
       contenedorListas.classList.add('todoVisible');
@@ -283,7 +306,7 @@ import Introduccion from '@/componentes/Introduccion.astro';
     font-size: 1.1em;
     cursor: pointer;
 
-    &:hover {
+    &:hover, &.resaltado {
       background-color: var(--fondoAmarilloClaro);
       color: var(--textoOscuro);
     }
