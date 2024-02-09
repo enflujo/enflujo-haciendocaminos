@@ -88,46 +88,79 @@
       display: flex;
       text-align: center;
       color: var(--textoOscuro);
-      min-height: 80px;
+      min-height: 70px;
+      font-family: var(--fuenteNumeros);
+
       #contenedorTitulo {
         background-color: var(--resaltadoVerde);
         flex-basis: 90%;
         margin: 0;
+        display: flex;
         padding: 0.5em 0;
+        gap: 0.15em 0;
+        flex-direction: column;
+        justify-content: center;
       }
 
       #listaFicha {
         margin: 0;
+        font-size: 16px;
+        font-weight: 700;
       }
 
       #tituloFicha {
         margin: 0;
+        font-size: 18px;
       }
 
       #conteoFicha {
         margin: auto;
         color: var(--textoClaro);
-        width: 80px;
+        width: 70px;
+        font-family: var(--fuenteNumeros);
       }
     }
 
     #inferior {
       border: 1px solid var(--resaltadoVerde);
+      display: flex;
+      padding: 10px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      flex: 1 0 0;
+      align-self: stretch;
 
       .seccionDatos {
         display: flex;
-        width: 90%;
+        // width: 90%;
         border-bottom: 1px solid var(--resaltadoVerde);
-        margin: 0 auto;
-        padding: 0.63rem 0.63rem 0.94rem 0.63rem;
+        // margin: 0 auto;
+        // padding: 0.63rem 0.63rem 0.94rem 0.63rem;
+        display: flex;
+        padding: 10px 10px 15px 10px;
+        align-items: flex-start;
+        gap: 10px;
+        align-self: stretch;
         .contenido {
+          display: flex;
+          padding: 0.4em 0;
+          justify-content: center;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 2px;
+          flex: 1 0 0;
+          align-self: stretch;
+
           li {
-            margin: 0.5em;
+            margin-bottom: 0.5em;
           }
         }
+
         .titulo {
           margin: 0;
           flex-basis: 45%;
+          gap: 5px;
         }
 
         &.oculta {
