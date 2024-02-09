@@ -4,6 +4,11 @@ $corte3: 1000px;
 $corte4: 1333px;
 
 :root {
+  /// Fuentes tipográficas hemochas
+  --fuenteParrafo: 'Inter', 'Helvetica', 'Roboto', 'Arial', 'Tahoma', 'Verdana', sans-serif;
+  --fuenteNumeros: 'IBM Plex Mono', 'Courier New', monospace;
+  --fuenteLogo: 'mixta-didone', 'Garamond', 'Georgia', 'Times', serif;
+
   // Paleta
   --grisMedio: #e0e0e0;
   --grisClaro: #f5f5f5;
@@ -20,4 +25,10 @@ $corte4: 1333px;
   // Textos
   --textoOscuro: #1a2a22;
   --textoClaro: #ffffff;
+}
+
+@supports (font-variation-settings: normal) {
+  :root {
+    --fuenteParrafo: InterVariable, 'Helvetica', 'Roboto', 'Arial', 'Tahoma', 'Verdana', sans-serif;
+  }
 }

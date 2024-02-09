@@ -3,10 +3,6 @@
 @import url('https://use.typekit.net/xvu8mbx.css');
 
 :root {
-  /// Fuentes tipográficas hemochas
-  --fuenteParrafo: 'Inter', 'Helvetica', 'Roboto', 'Arial', 'Tahoma', 'Verdana', sans-serif;
-  --fuenteNumeros: 'IBM Plex Mono', 'Courier New', monospace;
-  --fuenteLogo: 'mixta-didone', 'Garamond', 'Georgia', 'Times', serif;
 }
 
 body {
@@ -14,12 +10,6 @@ body {
   font-feature-settings:
     'liga' 1,
     'calt' 1; /* fix for Chrome */
-}
-
-@supports (font-variation-settings: normal) {
-  :root {
-    --fuenteParrafo: InterVariable, 'Helvetica', 'Roboto', 'Arial', 'Tahoma', 'Verdana', sans-serif;
-  }
 }
 
 h1 {
