@@ -1,0 +1,50 @@
+---
+import proyectos from '../../estaticos/proyectos.json';
+---
+
+<div id="listaProyectos">
+  <h2 id="titulo">Proyectos</h2>
+
+  <ul>
+    {
+      proyectos.map((proyecto) => (
+        <li id={`proyecto_${proyecto.id}`} class="nodoProyecto" data-id={proyecto.id}>
+          {proyecto.nombre.nombre}
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<script>
+  import { datosProyectos, datosFicha } from '@/utilidades/cerebro';
+  const nodosProyectos = document.querySelectorAll<HTMLLIElement>('.nodoProyecto');
+  const conteoFicha = document.getElementById('conteoFicha') as HTMLDivElement;
+
+  datosProyectos.subscribe((datos) => {
+    if (!datos.length) return;
+
+    nodosProyectos.forEach((nodoProyecto) => {
+      // Está muy feito pero por ahora...
+      // Poner título de proyecto en ficha
+
+      nodoProyecto.onclick = () => {
+        const contenedorTitulo = document.getElementById('contenedorTitulo') as HTMLDivElement;
+        contenedorTitulo.style.flexBasis = '100%';
+        conteoFicha.style.display = 'none';
+
+        const id = nodoProyecto.dataset.id;
+        if (!id) return;
+        const datosProyecto = datos.find((proyecto) => `${proyecto.id}` === id);
+
+        if (!datosProyecto) return;
+
+        datosFicha.set({
+          visible: true,
+          lista: 'Proyecto',
+          titulo: datosProyecto.nombre.nombre
+        });
+      };
+    });
+  });
+</script>

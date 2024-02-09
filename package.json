@@ -14,9 +14,9 @@
     "datos": "nodemon --exec node --loader ts-node/esm ./procesador/procesador.ts"
   },
   "dependencies": {
-    "@astrojs/check": "^0.4.1",
+    "@astrojs/check": "^0.5.2",
     "@enflujo/alquimia": "^2.0.0",
-    "astro": "^4.2.8",
+    "astro": "^4.3.5",
     "mapbox-gl": "^3.1.2",
     "nanostores": "^0.9.5",
     "typescript": "^5.3.3"
@@ -24,10 +24,10 @@
   "devDependencies": {
     "@types/geojson": "^7946.0.14",
     "@types/mapbox-gl": "^2.7.20",
-    "@types/node": "^20.11.13",
+    "@types/node": "^20.11.17",
     "@types/slug": "^5.0.7",
     "nodemon": "^3.0.3",
-    "prettier": "^3.2.4",
+    "prettier": "^3.2.5",
     "sass": "^1.70.0",
     "slug": "^8.2.3",
     "ts-node": "^10.9.2",

@@ -71,3 +71,10 @@ export type elementoGeoJson = {
   };
   geometry: { type: string; coordinates: [number, number] };
 };
+
+export interface Ficha {
+  lista?: string;
+  titulo?: string;
+  visible: boolean;
+  conteo?: string;
+}
