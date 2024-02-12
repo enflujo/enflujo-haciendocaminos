@@ -15,7 +15,7 @@ import procesarLugares from './lugares.js';
 
 const datosEmpiezanEnFila = 2;
 const camposSingulares: Campos = [
-  { llave: 'tipos', indice: 2 },
+  { llave: 'categorias', indice: 2 },
   { llave: 'roles', indice: 6 }
 ];
 const camposMultiples: Campos = [
@@ -25,7 +25,7 @@ const camposMultiples: Campos = [
   { llave: 'ramas', indice: 8 },
   { llave: 'temas', indice: 9 },
   { llave: 'objetos', indice: 10 },
-  { llave: 'regiones', indice: 11 },
+  { llave: 'paises', indice: 11 },
   { llave: 'municipios', indice: 14 }
 ];
 const campos = [...camposSingulares, ...camposMultiples];
@@ -33,9 +33,9 @@ const campos = [...camposSingulares, ...camposMultiples];
 const proyectos: Proyecto[] = [];
 
 const listas: Listas = {
-  regiones: [],
+  paises: [],
   años: [],
-  tipos: [],
+  categorias: [],
   lideres: [],
   roles: [],
   participantes: [],
