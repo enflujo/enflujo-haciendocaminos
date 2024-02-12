@@ -18,8 +18,8 @@ import listas from '../../estaticos/listas.json';
 
 <script>
   const nodos = document.querySelectorAll<HTMLLIElement>('.nodo');
-  import type { ELementoProyecto, ElementoFicha, Ficha, Listas, Proyecto, RelacionesFicha } from '@/tipos';
-  import { datosFicha, datosListas, datosProyectos } from '@/utilidades/cerebro';
+  import type { ELementoProyecto, Listas, Proyecto, RelacionesFicha } from '@/tipos';
+  import { datosFicha, datosListas, datosProyectos, filtrarMapa } from '@/utilidades/cerebro';
   import { ordenarListaObjetos } from '@/utilidades/ayudas';
 
   datosListas.subscribe((datos) => {
@@ -72,8 +72,8 @@ import listas from '../../estaticos/listas.json';
         if (!indice || !tipo) return;
         const datosNodo = datos[tipo as keyof Listas][+indice];
         const listaProyectos = datosProyectos.value as Proyecto[];
-        const proyectos = datosNodo.proyectos.reduce((lista: ELementoProyecto[], valorActual) => {
-          const proyecto = listaProyectos.find((p) => p.id === valorActual);
+        const proyectos = datosNodo.proyectos?.reduce((lista: ELementoProyecto[], indiceProyecto) => {
+          const proyecto = listaProyectos.find((p) => p.id === indiceProyecto);
           if (proyecto) {
             lista.push({ nombre: proyecto.nombre.nombre, id: proyecto.id });
           }
@@ -97,6 +97,10 @@ import listas from '../../estaticos/listas.json';
 
           return lista;
         }, {});
+
+        const lugaresMapa = datosNodo.relaciones.filter((relacion) => relacion.tipo === 'municipios');
+
+        filtrarMapa(lugaresMapa.map((lugar) => lugar.slug));
 
         const listaElegida = nodo.parentElement;
         const titulo = nodo.querySelector<HTMLTitleElement>('.nombre');

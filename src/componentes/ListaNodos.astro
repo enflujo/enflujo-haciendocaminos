@@ -15,14 +15,7 @@ const { lista, titulo, id } = Astro.props;
   <ul class=`contenedorElementos ${id}` data-lista=`${titulo}`>
     {
       lista.map((elemento, i) => (
-        <li
-          id={`${id}_${i}`}
-          class="nodo"
-          data-tipo={id}
-          data-indice={i}
-          data-con={`${elemento.relaciones.map((rel) => `${rel.tipo}_${rel.indice}`)}`}
-          data-proyectos={elemento.proyectos}
-        >
+        <li id={`${id}_${i}`} class="nodo" data-tipo={id} data-indice={i} data-proyectos={elemento.proyectos}>
           <h3 class="nombre">{elemento.nombre}</h3>
           <div class="barra">
             <span class="linea" style={`width: ${elemento.conteo}%`} />

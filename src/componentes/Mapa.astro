@@ -6,22 +6,35 @@
 
 <script>
   import mapbox from 'mapbox-gl';
+  import type { GeoJSONSource, Map } from 'mapbox-gl';
+  import { geo } from '@/utilidades/cerebro';
   import 'mapbox-gl/dist/mapbox-gl.css';
 
-  const urlBase = import.meta.env.BASE_URL;
+  let mapaCreado = false;
+  let mapa: Map;
   const contenedorMapa = document.getElementById('contenedorMapa') as HTMLDivElement;
   const estilo = 'mapbox://styles/enflujo/clpcruhsj005z01qr10czhk1d';
   mapbox.accessToken = 'pk.eyJ1IjoiZW5mbHVqbyIsImEiOiJjbDNrOXNndXQwMnZsM2lvNDd4N2x0M3dvIn0.eWs4BHs67PcETEUI00T66Q';
 
-  function pintarMapa() {
+  geo.subscribe((datosGeo) => {
+    if (!Object.keys(datosGeo).length) return;
+
     if (!contenedorMapa) return;
 
-    const mapa = new mapbox.Map({
-      container: contenedorMapa,
-      style: estilo,
-      zoom: 2,
-      attributionControl: false
-    });
+    if (!mapaCreado) {
+      mapa = new mapbox.Map({
+        container: contenedorMapa,
+        style: estilo,
+        zoom: 2,
+        attributionControl: false
+      });
+
+      mapaCreado = true;
+    } else {
+      const fuente = mapa.getSource('ubicaciones') as GeoJSONSource;
+      fuente.setData(datosGeo);
+      return;
+    }
 
     /**
      * Esperar a que el mapa de mapbox termine de cargar antes de llenarlo con los datos.
@@ -30,11 +43,11 @@
       // Crea la fuente para todas las ubicaciones (puntos).
       mapa.addSource('ubicaciones', {
         type: 'geojson',
-        data: `${urlBase}/datosMapa.geo.json`,
+        data: datosGeo,
         cluster: true,
         clusterRadius: 100,
         clusterProperties: {
-          // Esto suma la cantidad de obras que tiene un grupo,
+          // Esto suma la cantidad de elementos que tiene un grupo,
           // para poder actualizar los círculos a medida que se hace zoom
           conteo: ['+', ['get', 'conteo']]
         }
@@ -128,9 +141,7 @@
     // mapa.on('mouseenter', 'grupos', (evento) => {
     //   console.log(evento);
     // });
-  }
-
-  pintarMapa();
+  });
 </script>
 
 <style>
