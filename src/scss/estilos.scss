@@ -33,3 +33,13 @@ ul {
   background-color: var(--magenta);
   color: var(--grisClaro);
 }
+
+a,
+a:link {
+  color: var(--resaltadoVerde);
+  font-weight: bold;
+
+  &:hover {
+    color: var(--fondoVerdeClaro);
+  }
+}
