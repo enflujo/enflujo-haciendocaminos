@@ -12,6 +12,7 @@ import { getXlsxStream } from 'xlstream';
 import slugificar from 'slug';
 import { guardarJSON, ordenarListaObjetos } from './ayudas.js';
 import procesarLugares from './lugares.js';
+import procesarEgresados from './egresados.js';
 
 const datosEmpiezanEnFila = 2;
 const camposSingulares: Campos = [
@@ -49,6 +50,7 @@ const listas: Listas = {
 const archivo = './procesador/datos/Listado de proyectos - 60 años dpto antropología0802.xlsx';
 
 async function procesar() {
+  await procesarEgresados(archivo);
   await procesarProyectos();
   console.log('Proyectos procesados');
   await procesarLugares(archivo, listas);
@@ -115,8 +117,8 @@ async function procesarProyectos(): Promise<void> {
                     if (elementoALlenar) {
                       const existe = elementoALlenar.relaciones.find((obj) => obj.slug === slug);
 
-                      if (!elementoALlenar.proyectos.includes(id)) {
-                        elementoALlenar.proyectos.push(id);
+                      if (!elementoALlenar.proyectos?.includes(id)) {
+                        elementoALlenar.proyectos?.push(id);
                       }
 
                       if (!existe) {
