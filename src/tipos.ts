@@ -39,7 +39,6 @@ export type Proyecto = {
 };
 
 export type Listas = {
-  id: ElementoLista[];
   regiones: ElementoLista[];
   años: ElementoLista[];
   tipos: ElementoLista[];
@@ -61,15 +60,6 @@ export type Lugar = {
   lat: number;
   lon: number;
   conteo: number;
-};
-
-export type elementoGeoJson = {
-  type: string;
-  properties: {
-    slug: string;
-    conteo: number;
-  };
-  geometry: { type: string; coordinates: [number, number] };
 };
 
 export interface Ficha {

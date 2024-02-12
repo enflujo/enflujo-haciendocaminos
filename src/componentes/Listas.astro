@@ -18,73 +18,82 @@ import listas from '../../estaticos/listas.json';
 
 <script>
   const nodos = document.querySelectorAll<HTMLLIElement>('.nodo');
-  import { datosFicha } from '@/utilidades/cerebro';
+  import { datosFicha, datosListas } from '@/utilidades/cerebro';
 
-  nodos.forEach((nodo) => {
-    const nodosConectados: HTMLLIElement[] = [];
-    const proyectosConectados: HTMLLIElement[] = [];
-    const conexiones = nodo.dataset.con?.split(',');
-    const proyectos = nodo.dataset.proyectos?.split(',');
-    const contenedor = nodo.parentElement;
+  datosListas.subscribe((datos) => {
+    if (!Object.keys(datos).length) return;
 
-    if (proyectos) {
-      proyectos.forEach((idProyecto) => {
-        const proyecto = document.getElementById(`proyecto_${idProyecto}`) as HTMLLIElement;
+    nodos.forEach((nodo) => {
+      const nodosConectados: HTMLLIElement[] = [];
+      const proyectosConectados: HTMLLIElement[] = [];
+      // const conexiones = nodo.dataset.con?.split(',');
+      const proyectos = nodo.dataset.proyectos?.split(',');
+      const contenedor = nodo.parentElement;
+      const { indice, tipo } = nodo.dataset;
 
-        if (proyecto) {
-          proyectosConectados.push(proyecto);
-        }
-      });
-    }
+      if (proyectos) {
+        proyectos.forEach((idProyecto) => {
+          const proyecto = document.getElementById(`proyecto_${idProyecto}`) as HTMLLIElement;
 
-    if (conexiones) {
-      conexiones.forEach((id) => {
-        const elemento = document.getElementById(id) as HTMLLIElement;
+          if (proyecto) {
+            proyectosConectados.push(proyecto);
+          }
+        });
+      }
 
-        //Guardar elementos en lista correspondiente a categoria.
-        if (elemento) {
-          nodosConectados.push(elemento);
-        }
-      });
-    }
+      // if (conexiones) {
+      //   conexiones.forEach((id) => {
+        
+      //     const elemento = document.getElementById(id) as HTMLLIElement;
 
-    nodo.onmouseenter = () => {
-      nodosConectados.forEach((nodo) => {
-        nodo.classList.add('visible', 'explotado');
-      });
+      //     //Guardar elementos en lista correspondiente a categoria.
+      //     if (elemento) {
+      //       nodosConectados.push(elemento);
+      //     }
+      //   });
+      // }
 
-      proyectosConectados.forEach((nodo) => {
-        nodo.classList.add('resaltado');
-      });
+      nodo.onmouseenter = () => {
+        nodosConectados.forEach((nodo) => {
+          nodo.classList.add('visible', 'explotado');
+        });
 
-      contenedor?.classList.add('mantener');
-      nodo.classList.add('visible');
-    };
+        proyectosConectados.forEach((nodo) => {
+          nodo.classList.add('resaltado');
+        });
 
-    nodo.onmouseleave = () => {
-      nodosConectados.forEach((nodo) => {
-        nodo.classList.remove('visible', 'explotado');
-      });
+        contenedor?.classList.add('mantener');
+        nodo.classList.add('visible');
+      };
 
-      proyectosConectados.forEach((nodo) => {
-        nodo.classList.remove('resaltado');
-      });
+      nodo.onmouseleave = () => {
+        nodosConectados.forEach((nodo) => {
+          nodo.classList.remove('visible', 'explotado');
+        });
 
-      contenedor?.classList.remove('mantener');
-      nodo.classList.remove('visible');
-    };
+        proyectosConectados.forEach((nodo) => {
+          nodo.classList.remove('resaltado');
+        });
 
-    nodo.onclick = () => {
-      const listaElegida = nodo.parentElement;
-      const titulo = nodo.querySelector<HTMLTitleElement>('.nombre');
-      const conteo = nodo.querySelector<HTMLSpanElement>('.conteo');
+        contenedor?.classList.remove('mantener');
+        nodo.classList.remove('visible');
+      };
 
-      datosFicha.set({
-        visible: true,
-        lista: listaElegida ? listaElegida.dataset.lista : '',
-        titulo: titulo?.innerText,
-        conteo: conteo ? conteo.innerText : ''
-      });
-    };
+      nodo.onclick = () => {
+        if (!indice || !tipo) return;
+        const datosNodo = datos[tipo][indice];
+        console.log(datosNodo);
+        const listaElegida = nodo.parentElement;
+        const titulo = nodo.querySelector<HTMLTitleElement>('.nombre');
+        const conteo = nodo.querySelector<HTMLSpanElement>('.conteo');
+
+        datosFicha.set({
+          visible: true,
+          lista: listaElegida ? listaElegida.dataset.lista : '',
+          titulo: titulo?.innerText,
+          conteo: conteo ? conteo.innerText : ''
+        });
+      };
+    });
   });
 </script>

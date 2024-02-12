@@ -4,10 +4,6 @@ export const guardarJSON = (json: any, nombre: string) => {
   writeFileSync(`./estaticos/${nombre}.json`, JSON.stringify(json));
 };
 
-export const guardarGEOJSON = (json: any, nombre: string) => {
-  writeFileSync(`./estaticos/${nombre}.geo.json`, JSON.stringify(json));
-};
-
 export function ordenarListaObjetos(lista: any[], llave: string, descendente = false) {
   lista.sort((a, b) => {
     if (a[llave] < b[llave]) return descendente ? -1 : 1;
