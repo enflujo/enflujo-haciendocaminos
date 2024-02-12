@@ -25,6 +25,7 @@ export type LLavesMultiples =
 export type Proyecto = {
   id: number;
   nombre: DefinicionSimple;
+  descripcion?: string;
   categorias?: DefinicionSimple;
   años?: Año;
   decadas?: DefinicionSimple[];
@@ -36,6 +37,8 @@ export type Proyecto = {
   objetos?: DefinicionSimple[];
   paises?: DefinicionSimple[];
   municipios?: DefinicionSimple[];
+  enlaces?: string[];
+  imagenes?: string[];
 };
 
 export type Listas = {
@@ -65,7 +68,7 @@ export type Lugar = {
 export interface ElementoFicha {
   nombre: string;
   slug: string;
-  conteo: number;
+  conteo?: number;
 }
 
 export interface ELementoProyecto {
@@ -92,4 +95,8 @@ export interface Ficha extends RelacionesFicha {
   titulo?: string;
   visible: boolean;
   conteo?: string;
+  descripcion?: string;
+  enlaces?: string[];
+  imagenes?: string[];
+  id?: number;
 }
