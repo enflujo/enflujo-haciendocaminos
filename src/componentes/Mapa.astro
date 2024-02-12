@@ -24,14 +24,6 @@
     });
 
     /**
-     * Cargar icono de imágenes al mapa
-     */
-    /*   const icono = new Image(15, 15);
-    // Agregar icono a la instancia del mapa (se necesita para usarlo más adelante en las capas).
-    icono.onload = () => mapa.addImage('icono', icono);
-    icono.src = iconoImagen; */
-
-    /**
      * Esperar a que el mapa de mapbox termine de cargar antes de llenarlo con los datos.
      */
     mapa.on('load', () => {
@@ -57,15 +49,17 @@
         source: 'ubicaciones',
         filter: ['has', 'point_count'],
         paint: {
-          'circle-color': ['interpolate', ['linear'], ['get', 'conteo'], 0, '#FFE485', 20, '#D14836'],
+          'circle-stroke-color': '#ff00ff',
+          'circle-stroke-width': 3,
           /**
            * ['step'] | A diferencia de "interpolate", "step" crea una serie de puntos donde algo debe cambiar.
            * ['get', 'obras'] | La cantidad de obras dentro del círculo, sale de "clusterProperties" que definimos al crear la capa.
            * En "step" se pueden crear los cortes que uno quiera, los valores que siguen deben ser impares:
            * anchoMin, corte1, ancho1, corte2, ancho2, ....
            */
-          'circle-radius': ['step', ['get', 'conteo'], 15, 0, 30, 20, 50],
-          'circle-opacity': ['case', ['boolean', ['feature-state', 'activo'], false], 1, 0.8]
+          'circle-radius': ['interpolate', ['linear'], ['get', 'conteo'], 1, 15, 100, 80],
+          'circle-color': '#ff00ff',
+          'circle-opacity': 0.05
         }
       });
 
@@ -84,7 +78,6 @@
            * ['image', 'icono'] | Pone la imagen que registramos antes en la instancia de mapbox.
            */
           'text-field': ['format', ['get', 'conteo']],
-          // 'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
           'text-size': 12
         }
       });
@@ -98,9 +91,11 @@
         source: 'ubicaciones',
         filter: ['!', ['has', 'point_count']], // Cuando NO tiene "point_count" ya no es un grupo y es sólo 1 punto.
         paint: {
-          'circle-color': 'pink',
+          'circle-stroke-color': '#ff00ff',
+          'circle-color': '#ff00ff',
           'circle-radius': 15,
-          'circle-opacity': 0.7
+          'circle-stroke-width': 2,
+          'circle-opacity': 0.05
         }
       });
 
@@ -117,7 +112,6 @@
             'format',
             ['get', 'nombre'],
             { 'font-scale': 0.8 },
-            // { 'font-scale': 0.75 },
             ' ',
             ['get', 'conteo'],
             { 'font-scale': 0.75 }
@@ -125,12 +119,15 @@
         },
         paint: {
           'text-color': '#000',
-          // 'text-halo-color': '#716b6b',
           'text-halo-width': ['case', ['boolean', ['feature-state', 'activo'], false], 3, 2],
           'text-halo-blur': 0
         }
       });
     });
+
+    // mapa.on('mouseenter', 'grupos', (evento) => {
+    //   console.log(evento);
+    // });
   }
 
   pintarMapa();
