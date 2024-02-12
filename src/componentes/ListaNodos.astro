@@ -18,6 +18,8 @@ const { lista, titulo, id } = Astro.props;
         <li
           id={`${id}_${i}`}
           class="nodo"
+          data-tipo={id}
+          data-indice={i}
           data-con={`${elemento.relaciones.map((rel) => `${rel.tipo}_${rel.indice}`)}`}
           data-proyectos={elemento.proyectos}
         >

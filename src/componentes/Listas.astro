@@ -4,8 +4,8 @@ import listas from '../../estaticos/listas.json';
 ---
 
 <div id="contenedorListas" class="todoVisible">
-  <ListaNodos id="regiones" titulo="Regiones" lista={listas.regiones} />
-  <ListaNodos id="tipos" titulo="Categorías" lista={listas.tipos} />
+  <ListaNodos id="paises" titulo="Países" lista={listas.paises} />
+  <ListaNodos id="categorias" titulo="Categorías" lista={listas.categorias} />
   <ListaNodos id="lideres" titulo="Líderes de Proyectos" lista={listas.lideres} />
   <ListaNodos id="roles" titulo="Roles" lista={listas.roles} />
   <ListaNodos id="participantes" titulo="Participantes" lista={listas.participantes} />
@@ -18,73 +18,108 @@ import listas from '../../estaticos/listas.json';
 
 <script>
   const nodos = document.querySelectorAll<HTMLLIElement>('.nodo');
-  import { datosFicha } from '@/utilidades/cerebro';
+  import type { ELementoProyecto, ElementoFicha, Ficha, Listas, Proyecto, RelacionesFicha } from '@/tipos';
+  import { datosFicha, datosListas, datosProyectos } from '@/utilidades/cerebro';
+  import { ordenarListaObjetos } from '@/utilidades/ayudas';
 
-  nodos.forEach((nodo) => {
-    const nodosConectados: HTMLLIElement[] = [];
-    const proyectosConectados: HTMLLIElement[] = [];
-    const conexiones = nodo.dataset.con?.split(',');
-    const proyectos = nodo.dataset.proyectos?.split(',');
-    const contenedor = nodo.parentElement;
+  datosListas.subscribe((datos) => {
+    if (!Object.keys(datos).length) return;
 
-    if (proyectos) {
-      proyectos.forEach((idProyecto) => {
-        const proyecto = document.getElementById(`proyecto_${idProyecto}`) as HTMLLIElement;
+    nodos.forEach((nodo) => {
+      const nodosConectados: HTMLLIElement[] = [];
+      const proyectosConectados: HTMLLIElement[] = [];
+      const proyectos = nodo.dataset.proyectos?.split(',');
+      const contenedor = nodo.parentElement;
+      const { indice, tipo } = nodo.dataset;
 
-        if (proyecto) {
-          proyectosConectados.push(proyecto);
-        }
-      });
-    }
+      if (proyectos) {
+        proyectos.forEach((idProyecto) => {
+          const proyecto = document.getElementById(`proyecto_${idProyecto}`) as HTMLLIElement;
 
-    if (conexiones) {
-      conexiones.forEach((id) => {
-        const elemento = document.getElementById(id) as HTMLLIElement;
+          if (proyecto) {
+            proyectosConectados.push(proyecto);
+          }
+        });
+      }
 
-        //Guardar elementos en lista correspondiente a categoria.
-        if (elemento) {
-          nodosConectados.push(elemento);
-        }
-      });
-    }
+      nodo.onmouseenter = () => {
+        nodosConectados.forEach((nodo) => {
+          nodo.classList.add('visible', 'explotado');
+        });
 
-    nodo.onmouseenter = () => {
-      nodosConectados.forEach((nodo) => {
-        nodo.classList.add('visible', 'explotado');
-      });
+        proyectosConectados.forEach((nodo) => {
+          nodo.classList.add('resaltado');
+        });
 
-      proyectosConectados.forEach((nodo) => {
-        nodo.classList.add('resaltado');
-      });
+        contenedor?.classList.add('mantener');
+        nodo.classList.add('visible');
+      };
 
-      contenedor?.classList.add('mantener');
-      nodo.classList.add('visible');
-    };
+      nodo.onmouseleave = () => {
+        nodosConectados.forEach((nodo) => {
+          nodo.classList.remove('visible', 'explotado');
+        });
 
-    nodo.onmouseleave = () => {
-      nodosConectados.forEach((nodo) => {
-        nodo.classList.remove('visible', 'explotado');
-      });
+        proyectosConectados.forEach((nodo) => {
+          nodo.classList.remove('resaltado');
+        });
 
-      proyectosConectados.forEach((nodo) => {
-        nodo.classList.remove('resaltado');
-      });
+        contenedor?.classList.remove('mantener');
+        nodo.classList.remove('visible');
+      };
 
-      contenedor?.classList.remove('mantener');
-      nodo.classList.remove('visible');
-    };
+      nodo.onclick = () => {
+        if (!indice || !tipo) return;
+        const datosNodo = datos[tipo as keyof Listas][+indice];
+        const listaProyectos = datosProyectos.value as Proyecto[];
+        const proyectos = datosNodo.proyectos.reduce((lista: ELementoProyecto[], valorActual) => {
+          const proyecto = listaProyectos.find((p) => p.id === valorActual);
+          if (proyecto) {
+            lista.push({ nombre: proyecto.nombre.nombre, id: proyecto.id });
+          }
 
-    nodo.onclick = () => {
-      const listaElegida = nodo.parentElement;
-      const titulo = nodo.querySelector<HTMLTitleElement>('.nombre');
-      const conteo = nodo.querySelector<HTMLSpanElement>('.conteo');
+          ordenarListaObjetos(lista, 'nombre', true);
+          return lista;
+        }, []);
 
-      datosFicha.set({
-        visible: true,
-        lista: listaElegida ? listaElegida.dataset.lista : '',
-        titulo: titulo?.innerText,
-        conteo: conteo ? conteo.innerText : ''
-      });
-    };
+        const relaciones: RelacionesFicha = datosNodo.relaciones.reduce((lista, valorActual) => {
+          if (!lista[valorActual.tipo]) {
+            lista[valorActual.tipo] = [];
+          }
+
+          lista[valorActual.tipo].push({
+            slug: valorActual.slug,
+            conteo: valorActual.conteo,
+            nombre: datos[valorActual.tipo][valorActual.indice].nombre
+          });
+
+          ordenarListaObjetos(lista[valorActual.tipo], 'slug', true);
+
+          return lista;
+        }, {});
+
+        const listaElegida = nodo.parentElement;
+        const titulo = nodo.querySelector<HTMLTitleElement>('.nombre');
+        const conteo = nodo.querySelector<HTMLSpanElement>('.conteo');
+
+        datosFicha.set({
+          visible: true,
+          lista: listaElegida ? listaElegida.dataset.lista : '',
+          titulo: titulo?.innerText,
+          conteo: conteo ? conteo.innerText : '',
+          paises: relaciones.paises ? relaciones.paises : [],
+          categorias: relaciones.categorias ? relaciones.categorias : [],
+          lideres: relaciones.lideres ? relaciones.lideres : [],
+          roles: relaciones.roles ? relaciones.roles : [],
+          participantes: relaciones.participantes ? relaciones.participantes : [],
+          ramas: relaciones.ramas ? relaciones.ramas : [],
+          temas: relaciones.temas ? relaciones.temas : [],
+          objetos: relaciones.objetos ? relaciones.objetos : [],
+          municipios: relaciones.municipios ? relaciones.municipios : [],
+          decadas: relaciones.decadas ? relaciones.decadas : [],
+          proyecto: proyectos
+        });
+      };
+    });
   });
 </script>

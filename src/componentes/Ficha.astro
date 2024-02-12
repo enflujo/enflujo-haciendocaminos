@@ -13,9 +13,13 @@
   </section>
 
   <section id="inferior">
-    <div class="seccionDatos" id="fichaRegiones">
-      <h3 class="titulo">Regiones</h3>
-      <ul id="listaRegiones" class="contenido"></ul>
+    <div class="seccionDatos" id="fichaProyecto">
+      <h3 class="titulo">Proyectos</h3>
+      <ul id="listaProyecto" class="contenido"></ul>
+    </div>
+    <div class="seccionDatos" id="fichaPaises">
+      <h3 class="titulo">Países</h3>
+      <ul id="listaPaises" class="contenido"></ul>
     </div>
     <div class="seccionDatos" id="fichaCategorias">
       <h3 class="titulo">Categorías</h3>
@@ -50,19 +54,20 @@
       <ul id="listaMunicipios" class="contenido"></ul>
     </div>
     <div class="seccionDatos" id="fichaDecadas">
-      <h3 class="titulo">Decadas</h3>
+      <h3 class="titulo">Décadas</h3>
       <ul id="listaDecadas" class="contenido"></ul>
     </div>
   </section>
 </section>
 
 <script>
+  import { datosFicha } from '@/utilidades/cerebro';
+  import type { Ficha } from '@/tipos';
   const ficha = document.getElementById('contenedorFicha') as HTMLDivElement;
   const lista = document.getElementById('listaFicha') as HTMLTitleElement;
   const botonCerrarFicha = document.getElementById('cerrarFicha') as HTMLDivElement;
-  import { datosFicha } from '@/utilidades/cerebro';
-
   const titulo = document.getElementById('tituloFicha') as HTMLParagraphElement;
+  const conteoFicha = document.getElementById('conteoFicha') as HTMLDivElement;
 
   botonCerrarFicha.onclick = () => {
     ficha.style.display = 'none';
@@ -78,7 +83,42 @@
 
     lista.innerText = datos.lista ? datos.lista : '';
     titulo.innerText = datos.titulo ? datos.titulo : '';
+    conteoFicha.innerText = datos.conteo ? datos.conteo : '';
+
+    llenarCampos('proyecto', datos);
+    llenarCampos('paises', datos);
+    llenarCampos('categorias', datos);
+    llenarCampos('lideres', datos);
+    llenarCampos('roles', datos);
+    llenarCampos('participantes', datos);
+    llenarCampos('ramas', datos);
+    llenarCampos('temas', datos);
+    llenarCampos('objetos', datos);
+    llenarCampos('municipios', datos);
+    llenarCampos('decadas', datos);
   });
+
+  function llenarCampos(campo: keyof Ficha, datos: Ficha) {
+    const primeraLetra = campo.charAt(0).toUpperCase();
+    const campoMayuscula = primeraLetra + campo.slice(1);
+
+    const listaCampo = document.getElementById(`lista${campoMayuscula}`) as HTMLUListElement;
+    const contenedorCampo = document.getElementById(`ficha${campoMayuscula}`) as HTMLDivElement;
+    contenedorCampo.style.display = 'flex';
+
+    listaCampo.innerText = '';
+
+    if (datos[campo] && datos[campo].length) {
+      datos[campo].forEach((dato) => {
+        const fila = document.createElement('li');
+        fila.innerText = '';
+        fila.innerText = dato.nombre;
+        listaCampo.appendChild(fila);
+      });
+    } else {
+      contenedorCampo.style.display = 'none';
+    }
+  }
 </script>
 
 <style lang="scss" is:global>
@@ -153,7 +193,6 @@
         border-bottom: 1px solid var(--resaltadoVerde);
         // margin: 0 auto;
         // padding: 0.63rem 0.63rem 0.94rem 0.63rem;
-        display: flex;
         padding: 10px 10px 15px 10px;
         align-items: flex-start;
         gap: 10px;

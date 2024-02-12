@@ -11,7 +11,7 @@ export type Año = { años: number[]; tipo: 'singular' | 'rango' | 'multiples'; 
 export type Regiones = { nombre: string; slug: string; lon: number; lat: number; conteo: number }[];
 export type Municipios = { nombre: string; slug: string; lon: number; lat: number; conteo: number }[];
 
-export type LllavesSingulares = 'tipos' | 'roles';
+export type LllavesSingulares = 'categorias' | 'roles';
 export type LLavesMultiples =
   | 'decadas'
   | 'lideres'
@@ -19,13 +19,13 @@ export type LLavesMultiples =
   | 'ramas'
   | 'temas'
   | 'objetos'
-  | 'regiones'
+  | 'paises'
   | 'municipios';
 
 export type Proyecto = {
   id: number;
   nombre: DefinicionSimple;
-  tipos?: DefinicionSimple;
+  categorias?: DefinicionSimple;
   años?: Año;
   decadas?: DefinicionSimple[];
   lideres?: DefinicionSimple[];
@@ -34,15 +34,14 @@ export type Proyecto = {
   ramas?: DefinicionSimple[];
   temas?: DefinicionSimple[];
   objetos?: DefinicionSimple[];
-  regiones?: DefinicionSimple[];
+  paises?: DefinicionSimple[];
   municipios?: DefinicionSimple[];
 };
 
 export type Listas = {
-  id: ElementoLista[];
-  regiones: ElementoLista[];
+  paises: ElementoLista[];
   años: ElementoLista[];
-  tipos: ElementoLista[];
+  categorias: ElementoLista[];
   lideres: ElementoLista[];
   roles: ElementoLista[];
   participantes: ElementoLista[];
@@ -63,16 +62,32 @@ export type Lugar = {
   conteo: number;
 };
 
-export type elementoGeoJson = {
-  type: string;
-  properties: {
-    slug: string;
-    conteo: number;
-  };
-  geometry: { type: string; coordinates: [number, number] };
-};
+export interface ElementoFicha {
+  nombre: string;
+  slug: string;
+  conteo: number;
+}
 
-export interface Ficha {
+export interface ELementoProyecto {
+  nombre: string;
+  id: number;
+}
+
+export interface RelacionesFicha {
+  paises?: ElementoFicha[];
+  categorias?: ElementoFicha[];
+  lideres?: ElementoFicha[];
+  roles?: ElementoFicha[];
+  participantes?: ElementoFicha[];
+  ramas?: ElementoFicha[];
+  temas?: ElementoFicha[];
+  objetos?: ElementoFicha[];
+  municipios?: ElementoFicha[];
+  decadas?: ElementoFicha[];
+  proyecto?: ELementoProyecto[];
+}
+
+export interface Ficha extends RelacionesFicha {
   lista?: string;
   titulo?: string;
   visible: boolean;
