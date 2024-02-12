@@ -82,6 +82,7 @@
       const contenedorDescripcion = document.getElementById('fichaDescripcion') as HTMLDivElement;
       const descripcionFicha = document.getElementById('descripcion') as HTMLParagraphElement;
       const seccionEnlaces = document.getElementById('fichaEnlaces') as HTMLDivElement;
+      const listaEnlaces = document.getElementById('listaEnlaces') as HTMLUListElement;
       const seccionImagenes = document.getElementById('fichaImagenes') as HTMLDivElement;
       const contenedorImagenes = document.getElementById('listaImagenes') as HTMLDivElement;
 
@@ -119,7 +120,7 @@
             enlace.innerText = elemento;
             enlace.target = '_blank';
             fila.append(enlace);
-            seccionEnlaces.append(fila);
+            listaEnlaces.append(fila);
           });
         } else {
           seccionEnlaces.style.display = 'none';
