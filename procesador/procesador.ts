@@ -47,7 +47,7 @@ const listas: Listas = {
   decadas: []
 };
 
-const archivo = './procesador/datos/Listado de proyectos - 60 años dpto antropología0802.xlsx';
+const archivo = './procesador/datos/Listado de proyectos - 60 años dpto antropología1202.xlsx';
 
 async function procesar() {
   await procesarEgresados(archivo);
@@ -192,7 +192,10 @@ function procesarFila(fila: string[]) {
   const nombreProyecto = fila[1].trim();
   const respuesta: Proyecto = {
     id: +fila[0],
-    nombre: { nombre: nombreProyecto, slug: slugificar(nombreProyecto) }
+    nombre: { nombre: nombreProyecto, slug: slugificar(nombreProyecto) },
+    descripcion: fila[16],
+    enlaces: fila[17] && fila[17] !== 'No aplica' ? fila[17].trim().split(' ') : [],
+    imagenes: fila[19] && fila[19] !== 'No aplica' ? fila[19].trim().split(',') : []
   };
   const años = validarAño(`${fila[3]}`.trim());
   if (años) respuesta.años = años;

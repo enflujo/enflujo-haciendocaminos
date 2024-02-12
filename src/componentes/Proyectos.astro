@@ -25,9 +25,6 @@ import proyectos from '../../estaticos/proyectos.json';
     if (!datos.length) return;
 
     nodosProyectos.forEach((nodoProyecto) => {
-      // Está muy feito pero por ahora...
-      // Poner título de proyecto en ficha
-
       nodoProyecto.onclick = () => {
         const contenedorTitulo = document.getElementById('contenedorTitulo') as HTMLDivElement;
         contenedorTitulo.style.flexBasis = '100%';
@@ -42,7 +39,21 @@ import proyectos from '../../estaticos/proyectos.json';
         datosFicha.set({
           visible: true,
           lista: 'Proyecto',
-          titulo: datosProyecto.nombre.nombre
+          id: datosProyecto.id,
+          titulo: datosProyecto.nombre.nombre,
+          descripcion: datosProyecto.descripcion ? datosProyecto.descripcion : '',
+          paises: datosProyecto.paises ? datosProyecto.paises : [],
+          categorias: datosProyecto.categorias ? [datosProyecto.categorias] : [],
+          lideres: datosProyecto.lideres ? datosProyecto.lideres : [],
+          roles: datosProyecto.roles ? [datosProyecto.roles] : [],
+          participantes: datosProyecto.participantes ? datosProyecto.participantes : [],
+          ramas: datosProyecto.ramas ? datosProyecto.ramas : [],
+          temas: datosProyecto.temas ? datosProyecto.temas : [],
+          objetos: datosProyecto.objetos ? datosProyecto.objetos : [],
+          municipios: datosProyecto.municipios ? datosProyecto.municipios : [],
+          decadas: datosProyecto.decadas ? datosProyecto.decadas : [],
+          enlaces: datosProyecto.enlaces ? datosProyecto.enlaces : [],
+          imagenes: datosProyecto.imagenes ? datosProyecto.imagenes : []
         });
       };
     });
