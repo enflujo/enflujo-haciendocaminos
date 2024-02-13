@@ -1,7 +1,0 @@
-{
-  "type": "FeatureCollection",
-  "features": [
-    { "type": "Feature", "properties": { "conteo": 2, "lugar": "suarez"}, "geometry": { "type": "Point", "coordinates": [ -76.6943,  2.9545 ] } },
-    { "type": "Feature", "properties": { "conteo": 3, "lugar": "bogota"}, "geometry": { "type": "Point", "coordinates": [ -75.6962,  6.9545 ] } },
-    { "type": "Feature", "properties": { "conteo": 1, "lugar": "medellin"}, "geometry": { "type": "Point", "coordinates": [ -74.6463, 4.2545 ] } }
-   ]}
