@@ -78,8 +78,7 @@
       <ul id="listaDecadas" class="contenido"></ul>
     </div>
     <div class="seccionDatos" id="fichaImagenes">
-      <h3 class="titulo">Imágenes</h3>
-      <div id="listaImagenes" class="contenido"><div></div></div>
+      <div id="listaImagenes" class="contenido imagenes"></div>
     </div>
   </section>
 </div>
@@ -359,19 +358,16 @@
           top: 2em;
         }
 
+        .imagenes {
+          display: flex;
+          flex-wrap: wrap;
+          flex-direction: row;
+          justify-content: space-around;
+        }
         .imagenFicha {
           position: relative;
-          width: 100%;
-          margin-bottom: 0.25em;
-          border-radius: 10px;
-
-          // Clase para agrandar imágenes, por definir
-          // &.grande {
-          //   position: absolute;
-          //   width: 100%;
-          //   left: 0;
-          //   z-index: 5;
-          // }
+          width: 45%;
+          margin: 0.62em 0;
         }
 
         &.oculta {
