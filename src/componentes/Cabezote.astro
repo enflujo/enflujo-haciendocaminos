@@ -11,6 +11,13 @@
 
   <div id="encabezado">
     <h1>Haciendo Caminos</h1>
+    <div class="cajaGusanos">
+      <img
+        class="gusanos"
+        src={`${import.meta.env.BASE_URL}/imgs/gusanitos.svg`}
+        alt="Gráficas decorativas de caminos"
+      />
+    </div>
     <ul>
       <li class="botonVista">Proyectos</li>
       <li class="botonVista">Egresados</li>
@@ -80,6 +87,23 @@
       justify-content: space-around;
       height: 100%;
       max-height: 50px;
+
+      h1 {
+        z-index: 3;
+      }
+      .cajaGusanos {
+        display: flex;
+        max-height: 50px;
+        width: 100%;
+        z-index: 0;
+        position: absolute;
+
+        .gusanos {
+          height: 50px;
+          width: 100%;
+          object-fit: none;
+        }
+      }
     }
 
     // Botón para cambiar de vista (proyectos / egresados)
