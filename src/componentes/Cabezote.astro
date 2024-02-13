@@ -24,7 +24,13 @@
 
   if (menuListas) {
     menuListas.addEventListener('click', () => {
-      contenedorListas.classList.toggle('visible');
+      if (contenedorListas.classList.contains('visible')) {
+        contenedorListas.classList.remove('visible');
+        menuListas.classList.remove('abierto');
+      } else {
+        contenedorListas.classList.add('visible');
+        menuListas.classList.add('abierto');
+      }
     });
   }
 </script>
@@ -108,6 +114,27 @@
         display: block;
         margin-bottom: 5px;
         background-color: var(--fondoVerdeOscuro);
+        transition: all 0.25s ease-out;
+      }
+
+      &.abierto {
+        position: relative;
+        .lineaMenu {
+          display: none;
+          position: absolute;
+
+          &:first-child {
+            display: block;
+            transform: rotate(45deg);
+            top: 23px;
+          }
+
+          &:last-child {
+            display: block;
+            top: 23px;
+            transform: rotate(-45deg);
+          }
+        }
       }
     }
   }
