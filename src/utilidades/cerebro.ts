@@ -14,13 +14,7 @@ onMount(datosListas, () => {
     datosListas.set(res);
 
     pedirDatos<Proyecto[]>(`${import.meta.env.BASE_URL}/proyectos.json`).then((res) => {
-      const datosOrdenados = res.sort((a, b) => {
-        if (a.nombre.slug < b.nombre.slug) return -1;
-        else if (a.nombre.slug > b.nombre.slug) return 1;
-        return 0;
-      });
-
-      datosProyectos.set(datosOrdenados);
+      datosProyectos.set(res);
     });
   });
 });

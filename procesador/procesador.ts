@@ -181,6 +181,19 @@ async function procesarProyectos(): Promise<void> {
         }
       });
 
+      proyectos.sort((a, b) => {
+        if (a.nombre.slug < b.nombre.slug) return -1;
+        else if (a.nombre.slug > b.nombre.slug) return 1;
+        return 0;
+      });
+
+      proyectos.forEach((proyecto) => {
+        camposMultiples.forEach((campo) => {
+          if (proyecto[campo.llave as LLavesMultiples])
+            ordenarListaObjetos(proyecto[campo.llave as LLavesMultiples] as DefinicionSimple[], 'slug', true);
+        });
+      });
+
       guardarJSON(proyectos, 'proyectos');
       guardarJSON(listas, 'listas');
       resolver();
