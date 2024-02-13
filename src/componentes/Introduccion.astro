@@ -6,16 +6,21 @@
 
 <div id="introduccion">
   <button id="cerrarIntro">X</button>
-  <!-- <h2 id="titulo">Haciendo Caminos</h2> -->
+
   <p>
     <div class="espacioLogoIntroduccion">
-      <img class="logoIntroduccion" src="/estaticos/imgs/logo_antro_blanco.svg" alt="logoIntroduccion" />
+      <img
+        class="logoIntroduccion"
+        src={`${import.meta.env.BASE_URL}/imgs/logo_antro_blanco.svg`}
+        alt="Logo de introducción: 60 años, haciendo caminos"
+      />
     </div>
     <span class="resaltado">Haciendo Caminos</span> es la historia del <a
       href="https://cienciassociales.uniandes.edu.co/antropologia/"
       >Departamento de Antropología de la Universidad de Los Andes</a
     > contada a través de los proyectos de investigación que sus profesores y estudiantes han realizado desde su creación.
   </p>
+
   <p>
     Quiénes han hecho parte, sobre qué han investigado, en qué lugares se han centrado y cuándo fueron realizadas las
     investigaciones son algunas de las preguntas que queremos ayudar a responder con esta herramienta.
