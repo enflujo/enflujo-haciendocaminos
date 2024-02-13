@@ -6,8 +6,11 @@
 
 <div id="introduccion">
   <button id="cerrarIntro">X</button>
-  <h2 id="titulo">Haciendo Caminos</h2>
+  <!-- <h2 id="titulo">Haciendo Caminos</h2> -->
   <p>
+    <div class="espacioLogoIntroduccion">
+      <img class="logoIntroduccion" src="/estaticos/imgs/logo_antro_blanco.svg" alt="logoIntroduccion" />
+    </div>
     <span class="resaltado">Haciendo Caminos</span> es la historia del <a
       href="https://cienciassociales.uniandes.edu.co/antropologia/"
       >Departamento de Antropología de la Universidad de Los Andes</a
@@ -71,6 +74,7 @@
     padding: 2em 4em;
     border-radius: 1.5%;
     border: 3.5px solid var(--fondoVerdeOscuro);
+    line-height: 1.4em;
 
     &::before {
       content: '';
@@ -97,7 +101,9 @@
     }
 
     .resaltado {
-      font-style: oblique;
+      text-transform: uppercase;
+      font-family: var(--fuenteLogo);
+      letter-spacing: 2.42px;
     }
 
     #titulo {
@@ -106,6 +112,12 @@
       margin-bottom: 2em;
       text-transform: uppercase;
       letter-spacing: 0.3em;
+    }
+
+    .espacioLogoIntroduccion {
+      padding: 20px 20px 20px 20px;
+      .logoIntroduccion {
+      }
     }
 
     #cerrarIntro {
