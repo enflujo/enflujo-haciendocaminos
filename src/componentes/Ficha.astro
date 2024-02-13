@@ -2,33 +2,45 @@
 
 ---
 
-<section id="contenedorFicha">
-  <button id="cerrarFicha">X</button>
+<div id="contenedorFicha">
+  <div id="botonesFicha">
+    <span id="cerrarFicha">X</span>
+
+    <!-- <div class="navegacionProyectos">
+      <span class="botonNavegacion izquierda"></span>
+      <span class="botonNavegacion derecha"></span>
+    </div> -->
+  </div>
+
   <section id="superior">
     <div id="contenedorTitulo">
       <h2 id="listaFicha"></h2>
       <p id="tituloFicha"></p>
     </div>
+
     <div id="conteoFicha"></div>
   </section>
 
   <section id="inferior">
     <div class="seccionDatos" id="fichaDescripcion">
-      <h3 class="titulo">Descripción</h3>
       <p id="descripcion" class="contenido descripcion"></p>
     </div>
+
     <div class="seccionDatos" id="fichaEnlaces">
       <h3 class="titulo">Enlaces</h3>
       <ul id="listaEnlaces" class="contenido enlaces"></ul>
     </div>
+
     <div class="seccionDatos" id="fichaProyecto">
       <h3 class="titulo">Proyectos</h3>
       <ul id="listaProyecto" class="contenido"></ul>
     </div>
+
     <div class="seccionDatos" id="fichaPaises">
       <h3 class="titulo">Países</h3>
       <ul id="listaPaises" class="contenido"></ul>
     </div>
+
     <div class="seccionDatos" id="fichaCategorias">
       <h3 class="titulo">Categorías</h3>
       <ul id="listaCategorias" class="contenido"></ul>
@@ -69,272 +81,318 @@
       <h3 class="titulo">Imágenes</h3>
       <div id="listaImagenes" class="contenido"><div></div></div>
     </div>
+  </section>
+</div>
 
-    <script>
-      import { datosFicha } from '@/utilidades/cerebro';
-      import type { Ficha } from '@/tipos';
-      const urlBase = import.meta.env.BASE_URL;
-      const ficha = document.getElementById('contenedorFicha') as HTMLDivElement;
-      const lista = document.getElementById('listaFicha') as HTMLTitleElement;
-      const botonCerrarFicha = document.getElementById('cerrarFicha') as HTMLDivElement;
-      const titulo = document.getElementById('tituloFicha') as HTMLParagraphElement;
-      const conteoFicha = document.getElementById('conteoFicha') as HTMLDivElement;
-      const contenedorDescripcion = document.getElementById('fichaDescripcion') as HTMLDivElement;
-      const descripcionFicha = document.getElementById('descripcion') as HTMLParagraphElement;
-      const seccionEnlaces = document.getElementById('fichaEnlaces') as HTMLDivElement;
-      const listaEnlaces = document.getElementById('listaEnlaces') as HTMLUListElement;
-      const seccionImagenes = document.getElementById('fichaImagenes') as HTMLDivElement;
-      const contenedorImagenes = document.getElementById('listaImagenes') as HTMLDivElement;
+<script>
+  import { datosFicha } from '@/utilidades/cerebro';
+  import type { Ficha } from '@/tipos';
+  import { marked } from 'marked';
+  const urlBase = import.meta.env.BASE_URL;
+  const ficha = document.getElementById('contenedorFicha') as HTMLDivElement;
+  const lista = document.getElementById('listaFicha') as HTMLTitleElement;
+  const botonCerrarFicha = document.getElementById('cerrarFicha') as HTMLDivElement;
+  const titulo = document.getElementById('tituloFicha') as HTMLParagraphElement;
+  const conteoFicha = document.getElementById('conteoFicha') as HTMLDivElement;
+  const contenedorDescripcion = document.getElementById('fichaDescripcion') as HTMLDivElement;
+  const descripcionFicha = document.getElementById('descripcion') as HTMLParagraphElement;
+  const seccionEnlaces = document.getElementById('fichaEnlaces') as HTMLDivElement;
+  const listaEnlaces = document.getElementById('listaEnlaces') as HTMLUListElement;
+  const seccionImagenes = document.getElementById('fichaImagenes') as HTMLDivElement;
+  const contenedorImagenes = document.getElementById('listaImagenes') as HTMLDivElement;
 
-      botonCerrarFicha.onclick = () => {
-        ficha.style.display = 'none';
-      };
+  botonCerrarFicha.onclick = () => {
+    ficha.style.display = 'none';
+  };
 
-      datosFicha.subscribe((datos) => {
-        if (!datos.visible) {
-          ficha.style.display = 'none';
-          return;
-        }
+  datosFicha.subscribe((datos) => {
+    if (!datos.visible) {
+      ficha.style.display = 'none';
+      return;
+    }
 
-        ficha.style.display = 'block';
+    ficha.style.display = 'block';
+    ficha.scroll({ top: 0, behavior: 'smooth' });
 
-        lista.innerText = datos.lista ? datos.lista : '';
-        titulo.innerText = datos.titulo ? datos.titulo : '';
-        conteoFicha.innerText = datos.conteo ? datos.conteo : '';
+    lista.innerText = datos.lista ? datos.lista : '';
+    titulo.innerText = datos.titulo ? datos.titulo : '';
 
-        // Llenar descripción, si tiene
-        if (datos.descripcion) {
-          contenedorDescripcion.style.display = 'flex';
-          descripcionFicha.innerText = datos.descripcion;
-        } else {
-          contenedorDescripcion.style.display = 'none';
-        }
+    if (datos.conteo) {
+      conteoFicha.style.display = 'block';
+      conteoFicha.innerText = datos.conteo;
+    } else {
+      conteoFicha.style.display = 'none';
+    }
 
-        // Llenar enlaces, si tiene
-        if (datos.enlaces && datos.enlaces.length) {
-          seccionEnlaces.style.display = 'flex';
-          datos.enlaces.forEach((elemento) => {
-            const fila = document.createElement('li');
-            const enlace = document.createElement('a');
-            enlace.href = elemento;
-            enlace.innerText = elemento;
-            enlace.target = '_blank';
-            fila.append(enlace);
-            listaEnlaces.append(fila);
-          });
-        } else {
-          seccionEnlaces.style.display = 'none';
-        }
+    // Llenar descripción, si tiene
+    if (datos.descripcion) {
+      contenedorDescripcion.style.display = 'flex';
+      descripcionFicha.innerHTML = marked.parse(datos.descripcion) as string;
+    } else {
+      contenedorDescripcion.style.display = 'none';
+    }
 
-        // Llenar imágenes, si hay
-        if (datos.imagenes && datos.imagenes.length) {
-          contenedorImagenes.innerHTML = '';
-          seccionImagenes.style.display = 'flex';
-          datos.imagenes.forEach((elemento) => {
-            const imagen = document.createElement('img');
-            const rutaImg = `${urlBase}/imgs/fotos/${datos.id}/${elemento}.jpg`;
-            imagen.classList.add('imagenFicha');
-            imagen.src = rutaImg;
-            contenedorImagenes.append(imagen);
-
-            imagen.addEventListener('click', () => {
-              imagen.classList.toggle('grande');
-            });
-          });
-        } else {
-          seccionImagenes.style.display = 'none';
-        }
-
-        // Llenar el resto de los campos
-        llenarCampos('proyecto', datos);
-        llenarCampos('paises', datos);
-        llenarCampos('categorias', datos);
-        llenarCampos('lideres', datos);
-        llenarCampos('roles', datos);
-        llenarCampos('participantes', datos);
-        llenarCampos('ramas', datos);
-        llenarCampos('temas', datos);
-        llenarCampos('objetos', datos);
-        llenarCampos('municipios', datos);
-        llenarCampos('decadas', datos);
+    // Llenar enlaces, si tiene
+    if (datos.enlaces && datos.enlaces.length) {
+      seccionEnlaces.style.display = 'flex';
+      datos.enlaces.forEach((elemento) => {
+        const fila = document.createElement('li');
+        const enlace = document.createElement('a');
+        enlace.href = elemento;
+        enlace.innerText = elemento;
+        enlace.target = '_blank';
+        fila.append(enlace);
+        listaEnlaces.append(fila);
       });
+    } else {
+      seccionEnlaces.style.display = 'none';
+    }
 
-      function llenarCampos(campo: keyof Ficha, datos: Ficha) {
-        const primeraLetra = campo.charAt(0).toUpperCase();
-        const campoMayuscula = primeraLetra + campo.slice(1);
+    // Llenar imágenes, si hay
+    if (datos.imagenes && datos.imagenes.length) {
+      contenedorImagenes.innerHTML = '';
+      seccionImagenes.style.display = 'flex';
+      datos.imagenes.forEach((elemento) => {
+        const imagen = document.createElement('img');
+        const rutaImg = `${urlBase}/imgs/fotos/${datos.id}/${elemento}.jpg`;
+        imagen.classList.add('imagenFicha');
+        imagen.src = rutaImg;
+        contenedorImagenes.append(imagen);
 
-        const listaCampo = document.getElementById(`lista${campoMayuscula}`) as HTMLUListElement;
-        const contenedorCampo = document.getElementById(`ficha${campoMayuscula}`) as HTMLDivElement;
-        contenedorCampo.style.display = 'flex';
+        imagen.addEventListener('click', () => {
+          imagen.classList.toggle('grande');
+        });
+      });
+    } else {
+      seccionImagenes.style.display = 'none';
+    }
 
-        listaCampo.innerText = '';
+    // Llenar el resto de los campos
+    llenarCampos('proyecto', datos);
+    llenarCampos('paises', datos);
+    llenarCampos('categorias', datos);
+    llenarCampos('lideres', datos);
+    llenarCampos('roles', datos);
+    llenarCampos('participantes', datos);
+    llenarCampos('ramas', datos);
+    llenarCampos('temas', datos);
+    llenarCampos('objetos', datos);
+    llenarCampos('municipios', datos);
+    llenarCampos('decadas', datos);
+  });
 
-        if (datos[campo] && datos[campo].length) {
-          datos[campo].forEach((dato) => {
-            const fila = document.createElement('li');
-            fila.innerText = '';
-            fila.innerText = dato.nombre;
-            listaCampo.appendChild(fila);
-          });
-        } else {
-          contenedorCampo.style.display = 'none';
+  function llenarCampos(campo: keyof Ficha, datos: Ficha) {
+    const primeraLetra = campo.charAt(0).toUpperCase();
+    const campoMayuscula = primeraLetra + campo.slice(1);
+
+    const listaCampo = document.getElementById(`lista${campoMayuscula}`) as HTMLUListElement;
+    const contenedorCampo = document.getElementById(`ficha${campoMayuscula}`) as HTMLDivElement;
+    contenedorCampo.style.display = 'flex';
+
+    listaCampo.innerText = '';
+
+    if (datos[campo] && datos[campo].length) {
+      datos[campo].forEach((dato) => {
+        const fila = document.createElement('li');
+        fila.innerText = '';
+        fila.innerText = dato.nombre;
+        listaCampo.appendChild(fila);
+      });
+    } else {
+      contenedorCampo.style.display = 'none';
+    }
+  }
+</script>
+
+<style lang="scss" is:global>
+  @import '@/scss/constantes';
+
+  #contenedorFicha {
+    max-height: calc(100vh - 70px);
+    position: absolute;
+    display: none;
+    overflow-y: auto;
+    top: 60px;
+    background-color: var(--fondoVerdeOscuro);
+    color: var(--textoClaro);
+    z-index: 5;
+    padding: 10px;
+    border-radius: 1.5%;
+    border: 3.5px solid var(--fondoVerdeOscuro);
+
+    #botonesFicha {
+      position: sticky;
+      top: -10px;
+      color: var(--textoOscuro);
+      display: flex;
+      justify-content: space-between;
+      z-index: 99;
+    }
+
+    #cerrarFicha {
+      cursor: pointer;
+      margin: 0;
+      color: var(--textoOscuro);
+      font-size: 1.5em;
+      background-color: var(--resaltadoVerde);
+      padding: 5px 10px 0 10px;
+
+      &:hover {
+        background-color: var(--grisMedio);
+        opacity: 0.7;
+      }
+    }
+
+    .navegacionProyectos {
+      display: flex;
+      justify-content: space-between;
+      width: 40%;
+      background-color: var(--resaltadoVerde);
+
+      .botonNavegacion {
+        width: 20px;
+        height: 20px;
+        border-top: 2px solid var(--textoOscuro);
+        border-left: 2px solid var(--textoOscuro);
+        cursor: pointer;
+        opacity: 0.6;
+        transition: opacity 0.25s ease-in-out;
+        margin: 10px 20px 10px 20px;
+
+        &:hover {
+          opacity: 1;
+        }
+
+        &.derecha {
+          transform: rotate(135deg);
+        }
+
+        &.izquierda {
+          transform: rotate(-45deg);
         }
       }
-    </script>
+    }
 
-    <style lang="scss" is:global>
-      @import '@/scss/constantes';
-      #contenedorFicha {
-        max-height: calc(100vh - 50px);
-        width: 96vw;
-        position: absolute;
-        display: none;
-        overflow-y: scroll;
-        right: 2vw;
-        top: 60px;
-        background-color: var(--fondoVerdeOscuro);
+    #superior {
+      border: 1px solid var(--resaltadoVerde);
+      margin-bottom: 0.62rem;
+      display: flex;
+      text-align: center;
+      color: var(--textoOscuro);
+      min-height: 70px;
+      font-family: var(--fuenteNumeros);
+
+      #contenedorTitulo {
+        background-color: var(--resaltadoVerde);
+        flex-basis: 90%;
+        margin: 0;
+        display: flex;
+        padding: 0.5em 0;
+        gap: 0.15em 0;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      #listaFicha {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 700;
+      }
+
+      #tituloFicha {
+        margin: 0;
+        font-size: 18px;
+      }
+
+      #conteoFicha {
+        margin: auto;
         color: var(--textoClaro);
-        z-index: 5;
-        padding: 10px;
-        border-radius: 1.5%;
-        border: 3.5px solid var(--fondoVerdeOscuro);
+        width: 70px;
+        font-family: var(--fuenteNumeros);
+      }
+    }
 
-        #superior {
-          border: 1px solid var(--resaltadoVerde);
-          margin-bottom: 0.62rem;
+    #inferior {
+      border: 1px solid var(--resaltadoVerde);
+      display: flex;
+      padding: 10px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      flex: 1 0 0;
+      align-self: stretch;
+
+      .seccionDatos {
+        display: flex;
+        border-bottom: 1px solid var(--resaltadoVerde);
+        padding: 10px 10px 15px 10px;
+        align-items: flex-start;
+        align-self: stretch;
+
+        .contenido {
           display: flex;
-          text-align: center;
-          color: var(--textoOscuro);
-          min-height: 70px;
-          font-family: var(--fuenteNumeros);
-
-          #contenedorTitulo {
-            background-color: var(--resaltadoVerde);
-            flex-basis: 90%;
-            margin: 0;
-            display: flex;
-            padding: 0.5em 0;
-            gap: 0.15em 0;
-            flex-direction: column;
-            justify-content: center;
-          }
-
-          #listaFicha {
-            margin: 0;
-            font-size: 16px;
-            font-weight: 700;
-          }
-
-          #tituloFicha {
-            margin: 0;
-            font-size: 18px;
-          }
-
-          #conteoFicha {
-            margin: auto;
-            color: var(--textoClaro);
-            width: 70px;
-            font-family: var(--fuenteNumeros);
-          }
-        }
-
-        #inferior {
-          border: 1px solid var(--resaltadoVerde);
-          display: flex;
-          padding: 10px;
+          padding: 0.4em 0;
+          justify-content: center;
           flex-direction: column;
           align-items: flex-start;
-          gap: 10px;
+          gap: 2px;
           flex: 1 0 0;
           align-self: stretch;
 
-          .seccionDatos {
-            display: flex;
-            // width: 90%;
-            border-bottom: 1px solid var(--resaltadoVerde);
-            // margin: 0 auto;
-            // padding: 0.63rem 0.63rem 0.94rem 0.63rem;
-            padding: 10px 10px 15px 10px;
-            align-items: flex-start;
-            gap: 10px;
-            align-self: stretch;
-            .contenido {
-              display: flex;
-              padding: 0.4em 0;
-              justify-content: center;
-              flex-direction: column;
-              align-items: flex-start;
-              gap: 2px;
-              flex: 1 0 0;
-              align-self: stretch;
-
-              li {
-                margin-bottom: 0.5em;
-              }
-            }
-
-            .descripcion {
-              font-size: 0.8em;
-              margin: 0;
-            }
-
-            .titulo {
-              margin: 0;
-              flex-basis: 45%;
-              gap: 5px;
-              font-size: 1em;
-            }
-
-            .imagenFicha {
-              position: relative;
-              width: 100%;
-              margin-bottom: 0.25em;
-              border-radius: 10px;
-
-              // Clase para agrandar imágenes, por definir
-              // &.grande {
-              //   position: absolute;
-              //   width: 100%;
-              //   left: 0;
-              //   z-index: 5;
-              // }
-            }
-
-            &.oculta {
-              display: none;
-            }
-
-            ul {
-              max-width: 55%;
-            }
-          }
-
-          .seccionDatos:last-of-type {
-            border: none;
+          li {
+            margin-bottom: 0.5em;
           }
         }
-      }
 
-      #cerrarFicha {
-        cursor: pointer;
-        position: absolute;
-        left: 15px;
-        top: 15px;
-        color: var(--textoOscuro);
-        &:hover {
-          background-color: var(--grisMedio);
-          opacity: 0.7;
+        .descripcion {
+          font-size: 0.8em;
+          margin: 0;
+        }
+
+        .titulo {
+          margin: 0;
+          flex-basis: 35%;
+          font-size: 1em;
+          position: sticky;
+          top: 2em;
+        }
+
+        .imagenFicha {
+          position: relative;
+          width: 100%;
+          margin-bottom: 0.25em;
+          border-radius: 10px;
+
+          // Clase para agrandar imágenes, por definir
+          // &.grande {
+          //   position: absolute;
+          //   width: 100%;
+          //   left: 0;
+          //   z-index: 5;
+          // }
+        }
+
+        &.oculta {
+          display: none;
+        }
+
+        ul {
+          max-width: 55%;
         }
       }
 
-      // Cambiar estilos según tamaño de pantalla
-      @media screen and (min-width: $corte3) {
-        #contenedorFicha {
-          max-height: calc(100vh - 60px);
-          width: 35vw;
-          right: 0;
-        }
+      .seccionDatos:last-of-type {
+        border: none;
       }
-    </style>
-  </section>
-</section>
+    }
+  }
+
+  // Cambiar estilos según tamaño de pantalla
+  @media screen and (min-width: $corte3) {
+    #contenedorFicha {
+      max-height: calc(100vh - 60px);
+      width: 35vw;
+      right: 0;
+    }
+  }
+</style>
