@@ -38,6 +38,7 @@ a,
 a:link {
   color: var(--resaltadoVerde);
   font-weight: bold;
+  overflow-wrap: anywhere;
 
   &:hover {
     color: var(--fondoVerdeClaro);
