@@ -35,7 +35,7 @@ tiempo.forEach((marca, i) => {
 <div id="contenedorLineaTiempo">
   <div id="contenedorGrafica">
     <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
-      <g id="decadas">
+      <g id="grupoDecadas">
         {
           decadas.map((decada, i) => (
             <rect x={`${i * anchoDecada}%`} y="0" width={`${anchoDecada}%`} height={`${altoDecada(decada.conteo)}px`} />

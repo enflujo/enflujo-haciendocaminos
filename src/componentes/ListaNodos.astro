@@ -11,7 +11,7 @@ const { lista, titulo, id } = Astro.props;
 ---
 
 <section id={id} class="lista">
-  <h2 class="titulo" id="titulo">{titulo}</h2>
+  <h2 class="titulo">{titulo}</h2>
   <ul class=`contenedorElementos ${id}` data-lista=`${titulo}`>
     {
       lista.map((elemento, i) => (
@@ -29,14 +29,18 @@ const { lista, titulo, id } = Astro.props;
 
 <script>
   const listas = document.querySelectorAll<HTMLElement>('.lista');
-
+  const contenedorListas = document.getElementById('contenedorListas') as HTMLDivElement;
   // Función para abrir y cerrar listas. Falta decidir si se usa en teléfonos
   listas.forEach((lista) => {
     const titulo = lista.querySelector('.titulo');
     const contenedorElementos = lista.querySelector('.contenedorElementos');
 
     titulo?.addEventListener('click', () => {
-      contenedorElementos?.classList.toggle('abierto');
+      const listaAbierta = contenedorListas.querySelector('.abierto');
+      if (listaAbierta && !contenedorElementos?.classList.contains('abierto')) {
+        listaAbierta.classList.remove('abierto');
+        contenedorElementos?.classList.add('abierto');
+      } else contenedorElementos?.classList.toggle('abierto');
     });
   });
 </script>

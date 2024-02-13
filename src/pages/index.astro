@@ -24,28 +24,26 @@ import Proyectos from '@/componentes/Proyectos.astro';
 
 <style lang="scss" is:global>
   @import '@/scss/constantes';
+
   #contenedorListas {
     display: none;
     flex-direction: column;
-    flex-wrap: wrap;
     z-index: 4;
     position: relative;
     max-width: 400px;
-    //height: calc(100vh - 50px);
+    height: calc(100vh - 50px);
     margin-top: 50px;
     background-color: var(--grisClaro);
     width: 80vw;
     padding: 3rem 2rem;
+    overflow: auto;
 
     ul {
       li {
-        // display: none;
         opacity: 0.3;
 
         &.visible {
           opacity: 1;
-          // display: block;
-          // font-size: 0.75em;
         }
       }
 
@@ -69,9 +67,6 @@ import Proyectos from '@/componentes/Proyectos.astro';
     }
 
     .lista {
-      height: calc((100vh - 150px) / 2);
-      overflow-y: auto;
-      overflow-x: hidden;
       position: relative;
       background-color: rgba(255, 255, 255, 0.6);
       flex-basis: 20%;
@@ -117,12 +112,6 @@ import Proyectos from '@/componentes/Proyectos.astro';
         background-color: var(--fondoAmarilloClaro);
         color: var(--textoOscuro);
       }
-    }
-
-    #titulo {
-      color: var(--fondoVerdeOscuro);
-      background-color: var(--textoClaro);
-      padding: 0.2em;
     }
   }
 
