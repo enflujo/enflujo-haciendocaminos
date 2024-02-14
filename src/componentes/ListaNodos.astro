@@ -1,18 +1,18 @@
 ---
 import type { ElementoLista, Listas } from '@/tipos';
+import { nombresListasProyectos } from '@/utilidades/cerebro';
 
 interface Props {
   id: keyof Listas;
-  titulo: string;
   lista: ElementoLista[];
 }
 
-const { lista, titulo, id } = Astro.props;
+const { lista, id } = Astro.props;
 ---
 
 <section id={id} class="lista">
-  <h2 class="titulo">{titulo}</h2>
-  <ul class=`contenedorElementos ${id}` data-lista=`${titulo}`>
+  <h2 class="titulo">{nombresListasProyectos[id]}</h2>
+  <ul class=`contenedorElementos ${id}`>
     {
       lista.map((elemento, i) => (
         <li id={`${id}_${i}`} class="nodo" data-tipo={id} data-indice={i} data-proyectos={elemento.proyectos}>

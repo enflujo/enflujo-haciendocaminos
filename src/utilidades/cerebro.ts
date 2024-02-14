@@ -1,21 +1,66 @@
 import { atom, map, onMount } from 'nanostores';
 import { ordenarListaObjetos, pedirDatos } from './ayudas';
-import type { Listas, Ficha, Proyecto, ELementoProyecto, RelacionesFicha, ElementoFicha } from '@/tipos';
+import type {
+  Listas,
+  Ficha,
+  Proyecto,
+  ELementoProyecto,
+  RelacionesFicha,
+  ElementoFicha,
+  ElementoBuscador
+} from '@/tipos';
 import type { FeatureCollection, Point } from 'geojson';
 
 export const datosProyectos = atom<Proyecto[]>([]);
 export const datosFicha = map<Ficha>({ visible: false });
 export const datosListas = map<Listas>();
 export const geo = map<FeatureCollection<Point>>();
-export const elementoSeleccionado = map<{ tipo: string; id: string; lista: string }>();
+export const elementoSeleccionado = map<{ tipo: string; id: string }>();
+export const opcionesBuscador = atom<ElementoBuscador[] | null>(null);
 let _copiaDatosMapa: FeatureCollection<Point>;
 
-onMount(datosListas, () => {
-  pedirDatos<Listas>(`${import.meta.env.BASE_URL}/listas.json`).then((res) => {
-    datosListas.set(res);
+export const nombresListasProyectos = {
+  proyecto: 'Proyecto',
+  paises: 'Países',
+  categorias: 'Categorías',
+  lideres: 'Líderes de Proyectos',
+  roles: 'Roles',
+  participantes: 'Participantes',
+  ramas: 'Ramas',
+  temas: 'Temas',
+  objetos: 'Objetos',
+  municipios: 'Municipios',
+  decadas: 'Décadas',
+  años: 'Años'
+};
 
-    pedirDatos<Proyecto[]>(`${import.meta.env.BASE_URL}/proyectos.json`).then((res) => {
-      datosProyectos.set(res);
+onMount(datosListas, () => {
+  pedirDatos<Listas>(`${import.meta.env.BASE_URL}/listas.json`).then((listas) => {
+    datosListas.set(listas);
+
+    pedirDatos<Proyecto[]>(`${import.meta.env.BASE_URL}/proyectos.json`).then((proyectos) => {
+      datosProyectos.set(proyectos);
+
+      const opciones: ElementoBuscador[] = [];
+
+      for (const llaveLista in listas) {
+        const lista = listas[llaveLista as keyof Listas];
+        lista.forEach((elemento, i) => {
+          const opcion = document.createElement('option');
+          opcion.value = elemento.nombre;
+
+          const elementoBuscador: ElementoBuscador = {
+            nombre: elemento.nombre,
+            tipo: llaveLista,
+            indice: i,
+            opcion
+          };
+          opciones.push(elementoBuscador);
+        });
+      }
+
+      opcionesBuscador.set(opciones);
+      console.log(opciones);
     });
   });
 });
@@ -41,7 +86,7 @@ export function filtrarMapa(lugares?: string[]) {
 elementoSeleccionado.subscribe((elemento) => {
   if (!Object.keys(elemento).length) return;
 
-  const { tipo, id, lista } = elemento;
+  const { tipo, id } = elemento;
 
   if (tipo === 'proyecto') {
     const datosProyecto = datosProyectos.get()[+id];
@@ -106,7 +151,7 @@ elementoSeleccionado.subscribe((elemento) => {
 
       datosFicha.set({
         visible: true,
-        lista,
+        lista: nombresListasProyectos[tipo as keyof Listas],
         titulo: datos.nombre,
         conteo: `${datos.conteo}`,
         paises: relaciones.paises ? relaciones.paises : [],

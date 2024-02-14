@@ -4,16 +4,16 @@ import listas from '../../estaticos/listas.json';
 ---
 
 <div id="contenedorListas" class="todoVisible">
-  <ListaNodos id="paises" titulo="Países" lista={listas.paises} />
-  <ListaNodos id="categorias" titulo="Categorías" lista={listas.categorias} />
-  <ListaNodos id="lideres" titulo="Líderes de Proyectos" lista={listas.lideres} />
-  <ListaNodos id="roles" titulo="Roles" lista={listas.roles} />
-  <ListaNodos id="participantes" titulo="Participantes" lista={listas.participantes} />
-  <ListaNodos id="ramas" titulo="Ramas" lista={listas.ramas} />
-  <ListaNodos id="temas" titulo="Temas" lista={listas.temas} />
-  <ListaNodos id="objetos" titulo="Objetos" lista={listas.objetos} />
-  <ListaNodos id="municipios" titulo="Municipios" lista={listas.municipios} />
-  <ListaNodos id="decadas" titulo="Décadas" lista={listas.decadas} />
+  <ListaNodos id="paises" lista={listas.paises} />
+  <ListaNodos id="categorias" lista={listas.categorias} />
+  <ListaNodos id="lideres" lista={listas.lideres} />
+  <ListaNodos id="roles" lista={listas.roles} />
+  <ListaNodos id="participantes" lista={listas.participantes} />
+  <ListaNodos id="ramas" lista={listas.ramas} />
+  <ListaNodos id="temas" lista={listas.temas} />
+  <ListaNodos id="objetos" lista={listas.objetos} />
+  <ListaNodos id="municipios" lista={listas.municipios} />
+  <ListaNodos id="decadas" lista={listas.decadas} />
 </div>
 
 <script>
@@ -68,7 +68,7 @@ import listas from '../../estaticos/listas.json';
 
       nodo.onclick = () => {
         if (!indice || !tipo) return;
-        elementoSeleccionado.set({ tipo, id: indice, lista: nodo.parentElement?.dataset.lista || '' });
+        elementoSeleccionado.set({ tipo, id: indice });
       };
     });
   });
