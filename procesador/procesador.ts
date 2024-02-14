@@ -47,7 +47,7 @@ const listas: Listas = {
   decadas: []
 };
 
-const archivo = './procesador/datos/Listado de proyectos - 60 años dpto antropología1202.xlsx';
+const archivo = './procesador/datos/Listado de proyectos - 60 años dpto antropología .xlsx';
 
 async function procesar() {
   await procesarEgresados(archivo);
