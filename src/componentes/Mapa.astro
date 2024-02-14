@@ -9,6 +9,7 @@
   import type { GeoJSONSource, Map } from 'mapbox-gl';
   import { geo } from '@/utilidades/cerebro';
   import 'mapbox-gl/dist/mapbox-gl.css';
+  import type { Point } from 'geojson';
 
   let mapaCreado = false;
   let mapa: Map;
@@ -25,14 +26,25 @@
       mapa = new mapbox.Map({
         container: contenedorMapa,
         style: estilo,
-        zoom: 2,
+        zoom: 1,
         attributionControl: false
       });
 
       mapaCreado = true;
     } else {
       const fuente = mapa.getSource('ubicaciones') as GeoJSONSource;
+
       fuente.setData(datosGeo);
+
+      const primerPunto = datosGeo.features[0];
+
+      if (primerPunto) {
+        mapa.flyTo({
+          center: primerPunto.geometry.coordinates as [number, number],
+          essential: true
+        });
+      }
+
       return;
     }
 
