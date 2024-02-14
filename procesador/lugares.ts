@@ -5,7 +5,7 @@ import { guardarJSON } from './ayudas.js';
 import type { Feature, FeatureCollection, Point } from 'geojson';
 
 export default async function procesarLugares(archivo: string, listas: Listas): Promise<void> {
-  return new Promise(async (resolver, rechazar) => {
+  return new Promise(async (resolver) => {
     const flujoLugares = await getXlsxStream({
       filePath: archivo,
       sheet: 'lugares',

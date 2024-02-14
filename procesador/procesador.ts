@@ -71,7 +71,7 @@ async function procesarProyectos(): Promise<void> {
 
   let numeroFila = 1;
 
-  return new Promise((resolver, rechazar) => {
+  return new Promise((resolver) => {
     flujo.on('data', (fila) => {
       if (numeroFila > datosEmpiezanEnFila) {
         procesarFila(fila.formatted.arr);

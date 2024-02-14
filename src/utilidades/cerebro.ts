@@ -1,7 +1,7 @@
 import { atom, map, onMount } from 'nanostores';
 import { ordenarListaObjetos, pedirDatos } from './ayudas';
 import type { Listas, Ficha, Proyecto, ELementoProyecto, RelacionesFicha, ElementoFicha } from '@/tipos';
-import type { FeatureCollection, Geometry, Point } from 'geojson';
+import type { FeatureCollection, Point } from 'geojson';
 
 export const datosProyectos = atom<Proyecto[]>([]);
 export const datosFicha = map<Ficha>({ visible: false });

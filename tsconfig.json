@@ -6,5 +6,6 @@
     "paths": {
       "@/*": ["./src/*"]
     }
-  }
+  },
+  "exclude": ["publico", "node_modules"]
 }

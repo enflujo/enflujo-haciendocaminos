@@ -32,7 +32,7 @@ const listasEgresados: ListasEgresados = {
 export default async function procesarEgresados(archivo: string): Promise<void> {
   const egresados: Egresado[] = [];
 
-  return new Promise(async (resolver, rechazar) => {
+  return new Promise(async (resolver) => {
     const flujo = await getXlsxStream({
       filePath: archivo,
       sheet: 'Egresados',
