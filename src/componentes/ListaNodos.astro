@@ -48,12 +48,14 @@ const { lista, titulo, id } = Astro.props;
 <style lang="scss">
   @import '@/scss/constantes';
   .contenedorElementos {
-    display: none;
-    max-height: 20vh;
-    overflow-y: visible;
+    height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: opacity 0.35s ease-in-out;
 
     &.abierto {
-      display: contents;
+      height: 100%;
+      opacity: 1;
     }
   }
 
