@@ -18,9 +18,7 @@ import listas from '../../estaticos/listas.json';
 
 <script>
   const nodos = document.querySelectorAll<HTMLLIElement>('.nodo');
-  import type { ELementoProyecto, Listas, Proyecto, RelacionesFicha } from '@/tipos';
-  import { datosFicha, datosListas, datosProyectos, filtrarMapa } from '@/utilidades/cerebro';
-  import { ordenarListaObjetos } from '@/utilidades/ayudas';
+  import { datosListas, elementoSeleccionado } from '@/utilidades/cerebro';
 
   datosListas.subscribe((datos) => {
     if (!Object.keys(datos).length) return;
@@ -70,59 +68,7 @@ import listas from '../../estaticos/listas.json';
 
       nodo.onclick = () => {
         if (!indice || !tipo) return;
-        const datosNodo = datos[tipo as keyof Listas][+indice];
-        const listaProyectos = datosProyectos.value as Proyecto[];
-        const proyectos = datosNodo.proyectos?.reduce((lista: ELementoProyecto[], indiceProyecto) => {
-          const proyecto = listaProyectos.find((p) => p.id === indiceProyecto);
-          if (proyecto) {
-            lista.push({ nombre: proyecto.nombre.nombre, id: proyecto.id });
-          }
-
-          ordenarListaObjetos(lista, 'nombre', true);
-          return lista;
-        }, []);
-
-        const relaciones: RelacionesFicha = datosNodo.relaciones.reduce((lista, valorActual) => {
-          if (!lista[valorActual.tipo]) {
-            lista[valorActual.tipo] = [];
-          }
-
-          lista[valorActual.tipo].push({
-            slug: valorActual.slug,
-            conteo: valorActual.conteo,
-            nombre: datos[valorActual.tipo][valorActual.indice].nombre
-          });
-
-          ordenarListaObjetos(lista[valorActual.tipo], 'slug', true);
-
-          return lista;
-        }, {});
-
-        const lugaresMapa = datosNodo.relaciones.filter((relacion) => relacion.tipo === 'municipios');
-
-        filtrarMapa(lugaresMapa.map((lugar) => lugar.slug));
-
-        const listaElegida = nodo.parentElement;
-        const titulo = nodo.querySelector<HTMLTitleElement>('.nombre');
-        const conteo = nodo.querySelector<HTMLSpanElement>('.conteo');
-
-        datosFicha.set({
-          visible: true,
-          lista: listaElegida ? listaElegida.dataset.lista : '',
-          titulo: titulo?.innerText,
-          conteo: conteo ? conteo.innerText : '',
-          paises: relaciones.paises ? relaciones.paises : [],
-          categorias: relaciones.categorias ? relaciones.categorias : [],
-          lideres: relaciones.lideres ? relaciones.lideres : [],
-          roles: relaciones.roles ? relaciones.roles : [],
-          participantes: relaciones.participantes ? relaciones.participantes : [],
-          ramas: relaciones.ramas ? relaciones.ramas : [],
-          temas: relaciones.temas ? relaciones.temas : [],
-          objetos: relaciones.objetos ? relaciones.objetos : [],
-          municipios: relaciones.municipios ? relaciones.municipios : [],
-          decadas: relaciones.decadas ? relaciones.decadas : [],
-          proyecto: proyectos
-        });
+        elementoSeleccionado.set({ tipo, id: indice, lista: nodo.parentElement?.dataset.lista || '' });
       };
     });
   });

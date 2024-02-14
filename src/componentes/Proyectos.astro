@@ -7,8 +7,8 @@ import proyectos from '../../estaticos/proyectos.json';
 
   <ul>
     {
-      proyectos.map((proyecto) => (
-        <li id={`proyecto_${proyecto.id}`} class="nodoProyecto" data-id={proyecto.id}>
+      proyectos.map((proyecto, i) => (
+        <li id={`proyecto_${proyecto.id}`} class="nodoProyecto" data-indice={i}>
           {proyecto.nombre.nombre}
         </li>
       ))
@@ -17,7 +17,7 @@ import proyectos from '../../estaticos/proyectos.json';
 </div>
 
 <script>
-  import { datosProyectos, datosFicha } from '@/utilidades/cerebro';
+  import { datosProyectos, elementoSeleccionado } from '@/utilidades/cerebro';
   const nodosProyectos = document.querySelectorAll<HTMLLIElement>('.nodoProyecto');
   const conteoFicha = document.getElementById('conteoFicha') as HTMLDivElement;
 
@@ -30,31 +30,10 @@ import proyectos from '../../estaticos/proyectos.json';
         contenedorTitulo.style.flexBasis = '100%';
         conteoFicha.style.display = 'none';
 
-        const id = nodoProyecto.dataset.id;
+        const id = nodoProyecto.dataset.indice;
         if (!id) return;
-        const datosProyecto = datos.find((proyecto) => `${proyecto.id}` === id);
 
-        if (!datosProyecto) return;
-
-        datosFicha.set({
-          visible: true,
-          lista: 'Proyecto',
-          id: datosProyecto.id,
-          titulo: datosProyecto.nombre.nombre,
-          descripcion: datosProyecto.descripcion ? datosProyecto.descripcion : '',
-          paises: datosProyecto.paises ? datosProyecto.paises : [],
-          categorias: datosProyecto.categorias ? [datosProyecto.categorias] : [],
-          lideres: datosProyecto.lideres ? datosProyecto.lideres : [],
-          roles: datosProyecto.roles ? [datosProyecto.roles] : [],
-          participantes: datosProyecto.participantes ? datosProyecto.participantes : [],
-          ramas: datosProyecto.ramas ? datosProyecto.ramas : [],
-          temas: datosProyecto.temas ? datosProyecto.temas : [],
-          objetos: datosProyecto.objetos ? datosProyecto.objetos : [],
-          municipios: datosProyecto.municipios ? datosProyecto.municipios : [],
-          decadas: datosProyecto.decadas ? datosProyecto.decadas : [],
-          enlaces: datosProyecto.enlaces ? datosProyecto.enlaces : [],
-          imagenes: datosProyecto.imagenes ? datosProyecto.imagenes : []
-        });
+        elementoSeleccionado.set({ tipo: 'proyecto', id, lista: 'Proyecto' });
       };
     });
   });

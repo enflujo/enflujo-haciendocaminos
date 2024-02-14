@@ -6,10 +6,10 @@
   <div id="botonesFicha">
     <span id="cerrarFicha">X</span>
 
-    <!-- <div class="navegacionProyectos">
-      <span class="botonNavegacion izquierda"></span>
-      <span class="botonNavegacion derecha"></span>
-    </div> -->
+    <div class="navegacionProyectos">
+      <span id="fichaElementoAnterior" class="botonNavegacion izquierda"></span>
+      <span id="fichaElementoSiguiente" class="botonNavegacion derecha"></span>
+    </div>
   </div>
 
   <section id="superior">
@@ -84,8 +84,8 @@
 </div>
 
 <script>
-  import { datosFicha } from '@/utilidades/cerebro';
-  import type { Ficha } from '@/tipos';
+  import { datosFicha, datosProyectos, datosListas, elementoSeleccionado } from '@/utilidades/cerebro';
+  import type { Ficha, LLavesMultiples, Listas, LllavesSingulares } from '@/tipos';
   import { marked } from 'marked';
   const urlBase = import.meta.env.BASE_URL;
   const ficha = document.getElementById('contenedorFicha') as HTMLDivElement;
@@ -99,6 +99,27 @@
   const listaEnlaces = document.getElementById('listaEnlaces') as HTMLUListElement;
   const seccionImagenes = document.getElementById('fichaImagenes') as HTMLDivElement;
   const contenedorImagenes = document.getElementById('listaImagenes') as HTMLDivElement;
+
+  const siguiente = document.getElementById('fichaElementoSiguiente') as HTMLSpanElement;
+  const anterior = document.getElementById('fichaElementoAnterior') as HTMLSpanElement;
+
+  siguiente.onclick = () => {
+    const actual = elementoSeleccionado.get();
+    if (!actual) return;
+
+    const lista = actual.tipo !== 'proyecto' ? datosListas.get()[actual.tipo as keyof Listas] : datosProyectos.get();
+    const siguienteI = lista.length - 1 > +actual.id ? +actual.id + 1 : 0;
+    elementoSeleccionado.setKey('id', `${siguienteI}`);
+  };
+
+  anterior.onclick = () => {
+    const actual = elementoSeleccionado.get();
+    if (!actual) return;
+
+    const lista = actual.tipo !== 'proyecto' ? datosListas.get()[actual.tipo as keyof Listas] : datosProyectos.get();
+    const anteriorI = +actual.id > 0 ? +actual.id - 1 : lista.length - 1;
+    elementoSeleccionado.setKey('id', `${anteriorI}`);
+  };
 
   botonCerrarFicha.onclick = () => {
     ficha.style.display = 'none';
@@ -180,7 +201,7 @@
     llenarCampos('decadas', datos);
   });
 
-  function llenarCampos(campo: keyof Ficha, datos: Ficha) {
+  function llenarCampos(campo: LLavesMultiples | LllavesSingulares | 'proyecto', datos: Ficha) {
     const primeraLetra = campo.charAt(0).toUpperCase();
     const campoMayuscula = primeraLetra + campo.slice(1);
 
@@ -190,8 +211,8 @@
 
     listaCampo.innerText = '';
 
-    if (datos[campo] && datos[campo].length) {
-      datos[campo].forEach((dato) => {
+    if (datos[campo] && datos[campo]?.length) {
+      datos[campo]?.forEach((dato) => {
         const fila = document.createElement('li');
         fila.innerText = '';
         fila.innerText = dato.nombre;
@@ -254,7 +275,7 @@
         border-top: 2px solid var(--textoOscuro);
         border-left: 2px solid var(--textoOscuro);
         cursor: pointer;
-        opacity: 0.6;
+        opacity: 0.3;
         transition: opacity 0.25s ease-in-out;
         margin: 10px 20px 10px 20px;
 
