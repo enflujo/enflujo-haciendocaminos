@@ -107,3 +107,15 @@ export interface Ficha extends RelacionesFicha {
   imagenes?: DatosImg[];
   id?: number;
 }
+
+// Tipos egresados
+export type CamposEgresados = { llave: LLavesMultiplesEgresados; indice: number }[];
+export type LLavesMultiplesEgresados = 'ambitos' | 'temas' | 'paises';
+
+export interface ElementoListaEgresados {
+  nombre: string;
+  slug: string;
+  conteo: number;
+  relaciones: { tipo: keyof Listas | string; conteo: number; indice: number; slug: string }[];
+  egresados?: number[];
+}

@@ -8,6 +8,8 @@ import Cabezote from '@/componentes/Cabezote.astro';
 import Introduccion from '@/componentes/Introduccion.astro';
 import Listas from '@/componentes/Listas.astro';
 import Proyectos from '@/componentes/Proyectos.astro';
+import Egresados from '@/componentes/Egresados.astro';
+import ListasEgresados from '@/componentes/ListasEgresados.astro';
 ---
 
 <Plantilla>
@@ -16,7 +18,9 @@ import Proyectos from '@/componentes/Proyectos.astro';
     <Introduccion />
     <Ficha />
     <Listas />
+    <ListasEgresados />
     <Proyectos />
+    <Egresados />
     <Mapa />
     <LineaTiempo tiempo={listas.años} decadas={listas.decadas} />
   </main>
@@ -70,8 +74,64 @@ import Proyectos from '@/componentes/Proyectos.astro';
       background-color: rgba(255, 255, 255, 0.6);
 
       h2 {
-        // position: sticky;
-        // top: 0;
+        background-color: var(--fondoVerdeOscuro);
+        color: white;
+        margin-top: 0;
+        font-size: 1em;
+        padding: 0.2em;
+      }
+    }
+
+    &.visible {
+      display: block;
+    }
+  }
+
+  #contenedorListasEgresados {
+    display: none;
+    z-index: 4;
+    position: relative;
+    max-width: 400px;
+    height: calc(100vh - 50px);
+    margin-top: 50px;
+    background-color: var(--grisClaro);
+    padding: 3rem 2rem;
+    overflow: auto;
+
+    ul {
+      li {
+        opacity: 0.3;
+
+        &.visible {
+          opacity: 1;
+        }
+      }
+
+      &.mantener {
+        li {
+          opacity: 0.3;
+          display: block;
+
+          &.visible {
+            opacity: 1;
+            background: var(--fondoAmarilloClaro2);
+          }
+        }
+      }
+    }
+
+    &.todoVisible {
+      li {
+        opacity: 1;
+        display: block;
+      }
+    }
+
+    .lista {
+      position: relative;
+      background-color: rgba(255, 255, 255, 0.6);
+
+      h2 {
         background-color: var(--fondoVerdeOscuro);
         color: white;
         margin-top: 0;
@@ -86,6 +146,7 @@ import Proyectos from '@/componentes/Proyectos.astro';
   }
 
   #listaProyectos {
+    display: block;
     position: fixed;
     background-color: var(--fondoVerdeOscuro);
     color: var(--textoClaro);
@@ -110,6 +171,42 @@ import Proyectos from '@/componentes/Proyectos.astro';
         background-color: var(--fondoAmarilloClaro);
         color: var(--textoOscuro);
       }
+    }
+    &.oculta {
+      display: none;
+    }
+  }
+
+  #listaEgresados {
+    display: block;
+    position: fixed;
+    background-color: var(--fondoVerdeOscuro);
+    color: var(--textoClaro);
+    top: var(--altoMenu);
+    right: 0px;
+    z-index: 4;
+    font-family: var(--fuenteParrafo);
+    height: 70vh;
+    overflow: auto;
+    padding-bottom: 5em;
+    width: 50vw;
+    padding: 3rem 2rem;
+    font-size: 0.8em;
+
+    .nodoProyecto {
+      margin: 0.85em 0;
+      font-size: 1.1em;
+      cursor: pointer;
+
+      &:hover,
+      &.resaltado {
+        background-color: var(--fondoAmarilloClaro);
+        color: var(--textoOscuro);
+      }
+    }
+
+    &.oculta {
+      display: none;
     }
   }
 

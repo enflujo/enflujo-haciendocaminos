@@ -1,0 +1,40 @@
+---
+import egresados from '../../estaticos/egresados.json';
+---
+
+<div id="listaEgresados">
+  <h2>Egresados</h2>
+
+  <ul>
+    {
+      egresados.map((egresado, i) => (
+        <li id={`egresado_${egresado.id}`} class="nodoEgresado" data-indice={i}>
+          {egresado.nombre}
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<script>
+  import { datosEgresados, elementoSeleccionado } from '@/utilidades/cerebro';
+  const nodosEgresados = document.querySelectorAll<HTMLLIElement>('.nodoEgresado');
+  const conteoFicha = document.getElementById('conteoFicha') as HTMLDivElement;
+
+  datosEgresados.subscribe((datos) => {
+    if (!datos.length) return;
+
+    nodosEgresados.forEach((nodoEgresado) => {
+      nodoEgresado.onclick = () => {
+        const contenedorTitulo = document.getElementById('contenedorTitulo') as HTMLDivElement;
+        contenedorTitulo.style.flexBasis = '100%';
+        conteoFicha.style.display = 'none';
+
+        const id = nodoEgresado.dataset.indice;
+        if (!id) return;
+
+        elementoSeleccionado.set({ tipo: 'egresado', id, lista: 'Egresado' });
+      };
+    });
+  });
+</script>

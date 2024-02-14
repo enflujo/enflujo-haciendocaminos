@@ -10,10 +10,14 @@ import type {
   ElementoBuscador
 } from '@/tipos';
 import type { FeatureCollection, Point } from 'geojson';
+import type { Egresado } from '../../procesador/egresados';
+import type { ListasEgresados } from '../../procesador/egresados';
 
 export const datosProyectos = atom<Proyecto[]>([]);
 export const datosFicha = map<Ficha>({ visible: false });
 export const datosListas = map<Listas>();
+export const datosEgresados = atom<Egresado[]>([]);
+export const datosListasEgresados = map<ListasEgresados>();
 export const geo = map<FeatureCollection<Point>>();
 export const elementoSeleccionado = map<{ tipo: string; id: string }>();
 export const opcionesBuscador = atom<ElementoBuscador[] | null>(null);
@@ -61,6 +65,14 @@ onMount(datosListas, () => {
 
       opcionesBuscador.set(opciones);
       console.log(opciones);
+    });
+  });
+
+  pedirDatos<ListasEgresados>(`${import.meta.env.BASE_URL}/listasEgresados.json`).then((res) => {
+    datosListasEgresados.set(res);
+
+    pedirDatos<Egresado[]>(`${import.meta.env.BASE_URL}/egresados.json`).then((res) => {
+      datosEgresados.set(res);
     });
   });
 });

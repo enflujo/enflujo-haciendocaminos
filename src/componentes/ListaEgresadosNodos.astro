@@ -1,0 +1,99 @@
+---
+import type { ElementoListaEgresados } from '@/tipos';
+import type { ListasEgresados } from 'procesador/egresados';
+
+interface Props {
+  id: keyof ListasEgresados;
+  titulo: string;
+  lista: ElementoListaEgresados[];
+}
+
+const { lista, titulo, id } = Astro.props;
+---
+
+<section id=`${String(id)}` class="listaEgresados">
+  <h2 class="titulo">{titulo}</h2>
+  <ul class=`contenedorElementos ${String(id)}` data-lista=`${titulo}`>
+    {
+      lista.map((elemento, i) => (
+        <li
+          id={`${String(id)}_${i}`}
+          class="nodoEgresado"
+          data-tipo={id}
+          data-indice={i}
+          data-egresados={elemento.egresados}
+        >
+          <h3 class="nombre">{elemento.nombre}</h3>
+          <div class="barra">
+            <span class="linea" style={`width: ${elemento.conteo}%`} />
+            <span class="conteo">{elemento.conteo}</span>
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<script>
+  const listas = document.querySelectorAll<HTMLElement>('.listaEgresados');
+  const contenedorListas = document.getElementById('contenedorListas') as HTMLDivElement;
+  // Función para abrir y cerrar listas. Falta decidir si se usa en teléfonos
+  listas.forEach((lista) => {
+    const titulo = lista.querySelector('.titulo');
+    const contenedorElementos = lista.querySelector('.contenedorElementos');
+
+    titulo?.addEventListener('click', () => {
+      const listaAbierta = contenedorListas.querySelector('.abierto');
+      if (listaAbierta && !contenedorElementos?.classList.contains('abierto')) {
+        listaAbierta.classList.remove('abierto');
+        contenedorElementos?.classList.add('abierto');
+      } else contenedorElementos?.classList.toggle('abierto');
+    });
+  });
+</script>
+
+<style lang="scss">
+  @import '@/scss/constantes';
+  .contenedorElementos {
+    height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: opacity 0.35s ease-in-out;
+
+    &.abierto {
+      height: 100%;
+      opacity: 1;
+    }
+  }
+
+  li {
+    cursor: pointer;
+
+    &:hover {
+      background-color: white;
+    }
+  }
+
+  .titulo {
+    cursor: pointer;
+  }
+
+  .nombre {
+    margin: 0;
+    font-size: 0.85em;
+  }
+
+  .barra {
+    display: flex;
+    align-items: center;
+
+    .linea {
+      height: 0.25rem;
+      background-color: var(--resaltadoVerde);
+    }
+
+    .conteo {
+      margin-left: 3px;
+    }
+  }
+</style>

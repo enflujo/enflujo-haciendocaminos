@@ -13,8 +13,8 @@
     <h1>Haciendo Caminos</h1>
     <span class="cajaGusanos"></span>
     <ul>
-      <li class="botonVista">Proyectos</li>
-      <li class="botonVista">Egresados</li>
+      <li class="botonVista" id="botonProyectos">Proyectos</li>
+      <li class="botonVista" id="botonEgresados">Egresados</li>
     </ul>
   </div>
 </nav>
@@ -22,15 +22,51 @@
 <script>
   const menuListas = document.getElementById('menuListas') as HTMLDivElement;
   const contenedorListas = document.getElementById('contenedorListas') as HTMLDivElement;
+  const contenedorListasEgresados = document.getElementById('contenedorListasEgresados') as HTMLDivElement;
+  const botonProyectos = document.getElementById('botonProyectos') as HTMLLIElement;
+  const botonEgresados = document.getElementById('botonEgresados') as HTMLLIElement;
+  const listaProyectos = document.getElementById('listaProyectos') as HTMLDivElement;
+  const listaEgresados = document.getElementById('listaEgresados') as HTMLDivElement;
 
+  let vista = 'proyectos';
+
+  botonProyectos.onclick = () => {
+    console.log(listaProyectos);
+    vista = 'proyectos';
+    listaEgresados.classList.add('oculta');
+    if (listaProyectos.classList.contains('oculta')) {
+      listaProyectos.classList.remove('oculta');
+    }
+  };
+
+  botonEgresados.onclick = () => {
+    console.log(listaEgresados);
+    vista = 'egresados';
+    listaProyectos.classList.add('oculta');
+    if (listaEgresados.classList.contains('oculta')) {
+      listaEgresados.classList.remove('oculta');
+    }
+  };
+
+  // POR HACER: Cambiar menú al cambiar de vista sin cerrar menú
   if (menuListas) {
     menuListas.addEventListener('click', () => {
-      if (contenedorListas.classList.contains('visible')) {
-        contenedorListas.classList.remove('visible');
-        menuListas.classList.remove('abierto');
-      } else {
-        contenedorListas.classList.add('visible');
-        menuListas.classList.add('abierto');
+      if (vista === 'proyectos') {
+        if (contenedorListas.classList.contains('visible')) {
+          contenedorListas.classList.remove('visible');
+          menuListas.classList.remove('abierto');
+        } else {
+          contenedorListas.classList.add('visible');
+          menuListas.classList.add('abierto');
+        }
+      } else if (vista === 'egresados') {
+        if (contenedorListasEgresados.classList.contains('visible')) {
+          contenedorListasEgresados.classList.remove('visible');
+          menuListas.classList.remove('abierto');
+        } else {
+          contenedorListasEgresados.classList.add('visible');
+          menuListas.classList.add('abierto');
+        }
       }
     });
   }
