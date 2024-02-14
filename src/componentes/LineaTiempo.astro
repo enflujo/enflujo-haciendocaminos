@@ -68,9 +68,14 @@ tiempo.forEach((marca, i) => {
   #contenedorGrafica {
     height: 170px;
     position: relative;
-    background-color: rgba(0, 0, 0, 0.2);
+
+    background-color: rgba(245, 245, 245, 0.8);
     z-index: 3;
+    #decadas {
+      fill: rgba(26, 42, 34, 0.3);
+    }
   }
+
   svg {
     position: absolute;
     bottom: 0;
@@ -81,9 +86,9 @@ tiempo.forEach((marca, i) => {
     }
 
     text {
-      font-size: 8px;
-      fill: white;
-      text-shadow: 1px 1px 2px black;
+      font-size: 8.5px;
+      fill: rgba(255, 255, 222, 1);
+      text-shadow: 1px 1px 1px rgba(26, 42, 34, 1);
     }
   }
 </style>

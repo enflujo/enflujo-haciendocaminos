@@ -11,6 +11,7 @@
 
   <div id="encabezado">
     <h1>Haciendo Caminos</h1>
+    <span class="cajaGusanos"></span>
     <ul>
       <li class="botonVista">Proyectos</li>
       <li class="botonVista">Egresados</li>
@@ -86,6 +87,44 @@
       justify-content: space-around;
       height: 100%;
       max-height: 50px;
+
+      h1 {
+        z-index: 3;
+      }
+
+      .cajaGusanos {
+        // content: '';
+        background-image: url(/enflujo-haciendocaminos/imgs/gusanitos.svg);
+        position: absolute;
+        height: 50px;
+        width: 100px;
+        background-repeat: no-repeat;
+      }
+
+      // Lo mismo pero con psuedo elemento ::before, en este caso, en el HTML no va nada de esto.
+
+      // &::before {
+      //   content: '';
+      //   background-image: url(/enflujo-haciendocaminos/imgs/gusanitos.svg);
+      //   position: absolute;
+      //   height: 50px;
+      //   width: 100px;
+      //   background-repeat: no-repeat;
+      // }
+
+      // .cajaGusanos {
+      //   display: flex;
+      //   max-height: 50px;
+      //   width: 100%;
+      //   z-index: 0;
+      //   position: absolute;
+
+      //   .gusanos {
+      //     height: 50px;
+      //     width: 100%;
+      //     object-fit: none;
+      //   }
+      // }
     }
 
     // Botón para cambiar de vista (proyectos / egresados)
