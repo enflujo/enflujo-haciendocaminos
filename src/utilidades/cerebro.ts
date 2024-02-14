@@ -1,14 +1,14 @@
 import { atom, map, onMount } from 'nanostores';
 import { ordenarListaObjetos, pedirDatos } from './ayudas';
 import type { Listas, Ficha, Proyecto, ELementoProyecto, RelacionesFicha, ElementoFicha } from '@/tipos';
-import type { FeatureCollection } from 'geojson';
+import type { FeatureCollection, Geometry, Point } from 'geojson';
 
 export const datosProyectos = atom<Proyecto[]>([]);
 export const datosFicha = map<Ficha>({ visible: false });
 export const datosListas = map<Listas>();
-export const geo = map<FeatureCollection>();
+export const geo = map<FeatureCollection<Point>>();
 export const elementoSeleccionado = map<{ tipo: string; id: string; lista: string }>();
-let _copiaDatosMapa: FeatureCollection;
+let _copiaDatosMapa: FeatureCollection<Point>;
 
 onMount(datosListas, () => {
   pedirDatos<Listas>(`${import.meta.env.BASE_URL}/listas.json`).then((res) => {
@@ -21,16 +21,20 @@ onMount(datosListas, () => {
 });
 
 onMount(geo, () => {
-  pedirDatos<FeatureCollection>(`${import.meta.env.BASE_URL}/datosMapa.geo.json`).then((res) => {
+  pedirDatos<FeatureCollection<Point>>(`${import.meta.env.BASE_URL}/datosMapa.geo.json`).then((res) => {
     geo.set(res);
     _copiaDatosMapa = res;
   });
 });
 
-export function filtrarMapa(lugares: string[]) {
-  const lugaresFiltrados = _copiaDatosMapa?.features.filter((lugar) => lugares.includes(lugar.properties?.slug));
-  if (lugaresFiltrados) {
-    geo.setKey('features', lugaresFiltrados);
+export function filtrarMapa(lugares?: string[]) {
+  if (lugares) {
+    const lugaresFiltrados = _copiaDatosMapa?.features.filter((lugar) => lugares.includes(lugar.properties?.slug));
+    if (lugaresFiltrados) {
+      geo.setKey('features', lugaresFiltrados);
+    }
+  } else {
+    geo.setKey('features', _copiaDatosMapa?.features);
   }
 }
 

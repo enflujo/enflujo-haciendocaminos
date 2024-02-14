@@ -84,7 +84,7 @@
 </div>
 
 <script>
-  import { datosFicha, datosProyectos, datosListas, elementoSeleccionado } from '@/utilidades/cerebro';
+  import { datosFicha, datosProyectos, datosListas, elementoSeleccionado, filtrarMapa } from '@/utilidades/cerebro';
   import type { Ficha, LLavesMultiples, Listas, LllavesSingulares } from '@/tipos';
   import { marked } from 'marked';
   const urlBase = import.meta.env.BASE_URL;
@@ -123,6 +123,7 @@
 
   botonCerrarFicha.onclick = () => {
     ficha.style.display = 'none';
+    filtrarMapa();
   };
 
   datosFicha.subscribe((datos) => {
