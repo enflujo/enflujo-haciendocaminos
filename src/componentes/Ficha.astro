@@ -90,6 +90,9 @@
   import 'photoswipe/style.css';
   import Galeria from 'photoswipe/lightbox';
 
+  import 'photoswipe/style.css';
+  import Galeria from 'photoswipe/lightbox';
+
   const urlBase = import.meta.env.BASE_URL;
   const ficha = document.getElementById('contenedorFicha') as HTMLDivElement;
   const lista = document.getElementById('listaFicha') as HTMLTitleElement;
@@ -185,7 +188,14 @@
       datos.imagenes.forEach((elemento) => {
         const imagenAncho = document.createElement('a');
         imagenAncho.classList.add('imagenAncho');
+        const imagenAncho = document.createElement('a');
+        imagenAncho.classList.add('imagenAncho');
         const rutaImg = `${urlBase}/imgs/fotos/${datos.id}/${elemento}.jpg`;
+        imagenAncho.href = rutaImg;
+        imagenAncho.setAttribute('data-pswp-width', '1600'); //#TODO hacer que estos atributos sean dependientes de las medidas de cada fotografía.
+        imagenAncho.setAttribute('data-pswp-height', '1200');
+
+        const imagen = document.createElement('img');
         imagenAncho.href = rutaImg;
         imagenAncho.setAttribute('data-pswp-width', '1600'); //#TODO hacer que estos atributos sean dependientes de las medidas de cada fotografía.
         imagenAncho.setAttribute('data-pswp-height', '1200');
@@ -193,6 +203,10 @@
         const imagen = document.createElement('img');
         imagen.classList.add('imagenFicha');
         imagen.src = rutaImg;
+        imagen.alt = '';
+
+        imagenAncho.appendChild(imagen);
+        contenedorImagenes.append(imagenAncho);
         imagen.alt = '';
 
         imagenAncho.appendChild(imagen);
@@ -405,6 +419,12 @@
           justify-content: space-around;
         }
         .imagenFicha {
+          position: relative;
+          width: 100%;
+          margin: 0.62em 0;
+        }
+
+        .imagenAncho {
           position: relative;
           width: 100%;
           margin: 0.62em 0;
