@@ -146,3 +146,46 @@ li {
     margin-left: 3px;
   }
 }
+
+// Listas proyectos y egresados
+#listaProyectos {
+  display: block;
+  position: fixed;
+  background-color: var(--fondoVerdeOscuro);
+  color: var(--textoClaro);
+  top: var(--altoMenu);
+  right: 0px;
+  z-index: 4;
+  font-family: var(--fuenteParrafo);
+  height: 70vh;
+  overflow: auto;
+  padding-bottom: 5em;
+  width: 50vw;
+  padding: 3rem 2rem;
+  font-size: 0.8em;
+
+  .nodoProyecto {
+    margin: 0.85em 0;
+    font-size: 1.1em;
+    cursor: pointer;
+
+    &:hover,
+    &.resaltado {
+      background-color: var(--fondoAmarilloClaro);
+      color: var(--textoOscuro);
+    }
+  }
+  &.oculta {
+    display: none;
+  }
+}
+
+// Cambiar estilos según tamaño de pantalla
+@media screen and (min-width: $corte3) {
+  #contenedorListas {
+    width: 30vw;
+  }
+  #listaProyectos {
+    width: 30vw;
+  }
+}

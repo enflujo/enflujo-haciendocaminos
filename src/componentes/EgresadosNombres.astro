@@ -2,13 +2,13 @@
 import egresados from '../../estaticos/egresados.json';
 ---
 
-<div id="listaEgresados">
+<div id="listaProyectos">
   <h2>Egresados</h2>
 
   <ul>
     {
       egresados.map((egresado, i) => (
-        <li id={`egresado_${egresado.id}`} class="nodoEgresado" data-indice={i}>
+        <li id={`egresado_${egresado.id}`} class="nodoProyecto" data-indice={i}>
           {egresado.nombre}
         </li>
       ))
