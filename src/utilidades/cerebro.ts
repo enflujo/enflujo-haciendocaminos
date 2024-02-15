@@ -19,6 +19,7 @@ export const datosListas = map<Listas>();
 export const datosEgresados = atom<Egresado[]>([]);
 export const datosListasEgresados = map<ListasEgresados>();
 export const geo = map<FeatureCollection<Point>>();
+export const geoEgresados = map<FeatureCollection<Point>>();
 export const elementoSeleccionado = map<{ tipo: string; id: string }>();
 export const opcionesBuscador = atom<ElementoBuscador[] | null>(null);
 let _copiaDatosMapa: FeatureCollection<Point>;
@@ -35,7 +36,10 @@ export const nombresListasProyectos = {
   objetos: 'Objetos',
   municipios: 'Municipios',
   decadas: 'Décadas',
-  años: 'Años'
+  años: 'Años',
+  egresado: 'Egresado',
+  ambitos: 'Ámbitos',
+  ciudades: 'Ciudades'
 };
 
 onMount(datosListas, () => {
@@ -80,6 +84,14 @@ onMount(datosListas, () => {
 onMount(geo, () => {
   pedirDatos<FeatureCollection<Point>>(`${import.meta.env.BASE_URL}/datosMapa.geo.json`).then((res) => {
     geo.set(res);
+    _copiaDatosMapa = res;
+  });
+});
+
+// Pedir datos egresados
+onMount(geoEgresados, () => {
+  pedirDatos<FeatureCollection<Point>>(`${import.meta.env.BASE_URL}/datosMapaEgresados.geo.json`).then((res) => {
+    geoEgresados.set(res);
     _copiaDatosMapa = res;
   });
 });

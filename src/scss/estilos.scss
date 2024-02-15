@@ -44,3 +44,105 @@ a:link {
     color: var(--fondoVerdeClaro);
   }
 }
+
+#contenedorListas {
+  display: none;
+  z-index: 4;
+  position: relative;
+  max-width: 400px;
+  height: calc(100vh - 50px);
+  margin-top: 50px;
+  background-color: var(--grisClaro);
+  padding: 3rem 2rem;
+  overflow: auto;
+
+  ul {
+    li {
+      opacity: 0.3;
+
+      &.visible {
+        opacity: 1;
+      }
+    }
+
+    &.mantener {
+      li {
+        opacity: 0.3;
+        display: block;
+
+        &.visible {
+          opacity: 1;
+          background: var(--fondoAmarilloClaro2);
+        }
+      }
+    }
+  }
+
+  &.todoVisible {
+    li {
+      opacity: 1;
+      display: block;
+    }
+  }
+
+  .lista {
+    position: relative;
+    background-color: rgba(255, 255, 255, 0.6);
+
+    h2 {
+      background-color: var(--fondoVerdeOscuro);
+      color: white;
+      margin-top: 0;
+      font-size: 1em;
+      padding: 0.2em;
+    }
+  }
+
+  &.visible {
+    display: block;
+  }
+}
+
+// Nodos listas
+.contenedorElementos {
+  height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: opacity 0.35s ease-in-out;
+
+  &.abierto {
+    height: 100%;
+    opacity: 1;
+  }
+}
+
+li {
+  cursor: pointer;
+
+  &:hover {
+    background-color: white;
+  }
+}
+
+.titulo {
+  cursor: pointer;
+}
+
+.nombre {
+  margin: 0;
+  font-size: 0.85em;
+}
+
+.barra {
+  display: flex;
+  align-items: center;
+
+  .linea {
+    height: 0.25rem;
+    background-color: var(--resaltadoVerde);
+  }
+
+  .conteo {
+    margin-left: 3px;
+  }
+}

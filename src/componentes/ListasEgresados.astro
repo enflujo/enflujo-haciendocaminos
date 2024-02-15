@@ -3,10 +3,11 @@ import ListaEgresadosNodos from '@/componentes/ListaEgresadosNodos.astro';
 import listasEgresados from '../../estaticos/listasEgresados.json';
 ---
 
-<div id="contenedorListasEgresados" class="todoVisible">
-  <ListaEgresadosNodos id="paises" titulo="Países" lista={listasEgresados.paises} />
-  <ListaEgresadosNodos id="temas" titulo="Temas" lista={listasEgresados.temas} />
-  <ListaEgresadosNodos id="ambitos" titulo="Objetos" lista={listasEgresados.ambitos} />
+<div id="contenedorListas" class="todoVisible">
+  <ListaEgresadosNodos id="paises" lista={listasEgresados.paises} />
+  <ListaEgresadosNodos id="temas" lista={listasEgresados.temas} />
+  <ListaEgresadosNodos id="ambitos" lista={listasEgresados.ambitos} />
+  <ListaEgresadosNodos id="ciudades" lista={listasEgresados.ciudades} />
 </div>
 
 <script>
@@ -61,7 +62,7 @@ import listasEgresados from '../../estaticos/listasEgresados.json';
 
       nodo.onclick = () => {
         if (!indice || !tipo) return;
-        elementoSeleccionado.set({ tipo, id: indice, lista: nodo.parentElement?.dataset.lista || '' });
+        elementoSeleccionado.set({ tipo, id: indice });
       };
     });
   });

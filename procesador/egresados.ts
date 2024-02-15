@@ -10,7 +10,7 @@ export interface Egresado {
   institucion?: DefinicionSimple;
   temas?: DefinicionSimple[];
   ambitos?: DefinicionSimple[];
-  ciudad?: DefinicionSimple;
+  ciudades?: DefinicionSimple;
   paises?: DefinicionSimple[];
 }
 
@@ -18,18 +18,21 @@ export interface ListasEgresados {
   temas: ElementoLista[];
   ambitos: ElementoLista[];
   paises: ElementoLista[];
+  ciudades: ElementoLista[];
 }
 
 const listasEgresados: ListasEgresados = {
   temas: [],
   ambitos: [],
-  paises: []
+  paises: [],
+  ciudades: []
 };
 
 const camposMultiplesEgresados: CamposEgresados = [
   { llave: 'ambitos', indice: 4 },
   { llave: 'paises', indice: 6 },
-  { llave: 'temas', indice: 3 }
+  { llave: 'temas', indice: 3 },
+  { llave: 'ciudades', indice: 5 }
 ];
 
 const camposEgresados = [...camposMultiplesEgresados];
@@ -65,8 +68,8 @@ export default async function procesarEgresados(archivo: string): Promise<void> 
         const ambitos = validarValorMultiple(datosFila[4], listasEgresados.ambitos);
         if (ambitos && ambitos.length) egresado.ambitos = ambitos;
 
-        const ciudad = validarValorSingular(datosFila[5]);
-        if (ciudad) egresado.ciudad = ciudad;
+        const ciudades = validarValorSingular(datosFila[5], listasEgresados.ciudades);
+        if (ciudades) egresado.ciudades = ciudades;
 
         const paises = validarValorMultiple(datosFila[6], listasEgresados.paises);
         if (paises) egresado.paises = paises;

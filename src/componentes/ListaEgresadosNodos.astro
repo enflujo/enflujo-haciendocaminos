@@ -1,19 +1,19 @@
 ---
 import type { ElementoListaEgresados } from '@/tipos';
 import type { ListasEgresados } from 'procesador/egresados';
+import { nombresListasProyectos } from '@/utilidades/cerebro';
 
 interface Props {
   id: keyof ListasEgresados;
-  titulo: string;
   lista: ElementoListaEgresados[];
 }
 
-const { lista, titulo, id } = Astro.props;
+const { lista, id } = Astro.props;
 ---
 
-<section id=`${String(id)}` class="listaEgresados">
-  <h2 class="titulo">{titulo}</h2>
-  <ul class=`contenedorElementos ${String(id)}` data-lista=`${titulo}`>
+<section id=`${String(id)}` class="lista">
+  <h2 class="titulo">{nombresListasProyectos[id]}</h2>
+  <ul class=`contenedorElementos ${String(id)}`>
     {
       lista.map((elemento, i) => (
         <li
@@ -35,7 +35,7 @@ const { lista, titulo, id } = Astro.props;
 </section>
 
 <script>
-  const listas = document.querySelectorAll<HTMLElement>('.listaEgresados');
+  const listas = document.querySelectorAll<HTMLElement>('.lista');
   const contenedorListas = document.getElementById('contenedorListas') as HTMLDivElement;
   // Función para abrir y cerrar listas. Falta decidir si se usa en teléfonos
   listas.forEach((lista) => {

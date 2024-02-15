@@ -110,7 +110,7 @@ export interface Ficha extends RelacionesFicha {
 
 // Tipos egresados
 export type CamposEgresados = { llave: LLavesMultiplesEgresados; indice: number }[];
-export type LLavesMultiplesEgresados = 'ambitos' | 'temas' | 'paises';
+export type LLavesMultiplesEgresados = 'ambitos' | 'temas' | 'paises' | 'ciudades';
 
 export interface ElementoListaEgresados {
   nombre: string;
