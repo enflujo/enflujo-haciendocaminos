@@ -95,7 +95,7 @@ async function procesarProyectos(): Promise<void> {
           const datosRelacion = proyecto[campoRelacion.llave];
 
           campos.forEach((campo) => {
-            // Agregar datos de cada campo en todos los otros, excepto en si mismo.
+            // Agregar datos de cada campo en todos los otros, excepto en sí mismo.
             if (campoRelacion.llave !== campo.llave && datosRelacion) {
               const llaveALlenar = campo.llave;
               const llaveDondeLllenar = campoRelacion.llave;

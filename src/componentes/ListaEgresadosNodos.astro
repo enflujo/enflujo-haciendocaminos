@@ -1,21 +1,22 @@
 ---
-import type { ElementoLista, Listas } from '@/tipos';
-import { nombresListasProyectos } from '@/utilidades/cerebro';
+import type { ElementoListaEgresados } from '@/tipos';
+import type { ListasEgresados } from 'procesador/egresados';
+import { nombresListasEgresados } from '@/utilidades/cerebro';
 
 interface Props {
-  id: keyof Listas;
-  lista: ElementoLista[];
+  id: keyof ListasEgresados;
+  lista: ElementoListaEgresados[];
 }
 
 const { lista, id } = Astro.props;
 ---
 
 <section id={id} class="lista">
-  <h2 class="titulo">{nombresListasProyectos[id]}</h2>
+  <h2 class="titulo">{nombresListasEgresados[id]}</h2>
   <ul class=`contenedorElementos ${id}`>
     {
       lista.map((elemento, i) => (
-        <li id={`${id}_${i}`} class="nodo" data-tipo={id} data-indice={i} data-proyectos={elemento.proyectos}>
+        <li id={`${id}_${i}`} class="nodo" data-tipo={id} data-indice={i} data-egresados={elemento.egresados}>
           <h3 class="nombre">{elemento.nombre}</h3>
           <div class="barra">
             <span class="linea" style={`width: ${elemento.conteo}%`} />
@@ -47,4 +48,46 @@ const { lista, id } = Astro.props;
 
 <style lang="scss">
   @import '@/scss/constantes';
+  .contenedorElementos {
+    height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: opacity 0.35s ease-in-out;
+
+    &.abierto {
+      height: 100%;
+      opacity: 1;
+    }
+  }
+
+  li {
+    cursor: pointer;
+
+    &:hover {
+      background-color: white;
+    }
+  }
+
+  .titulo {
+    cursor: pointer;
+  }
+
+  .nombre {
+    margin: 0;
+    font-size: 0.85em;
+  }
+
+  .barra {
+    display: flex;
+    align-items: center;
+
+    .linea {
+      height: 0.25rem;
+      background-color: var(--resaltadoVerde);
+    }
+
+    .conteo {
+      margin-left: 3px;
+    }
+  }
 </style>

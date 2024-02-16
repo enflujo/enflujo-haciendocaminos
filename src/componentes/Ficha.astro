@@ -65,6 +65,10 @@
       <h3 class="titulo">Temas</h3>
       <ul id="listaTemas" class="contenido"></ul>
     </div>
+    <div class="seccionDatos" id="fichaAmbitos">
+      <h3 class="titulo">Ámbitos</h3>
+      <ul id="listaAmbitos" class="contenido"></ul>
+    </div>
     <div class="seccionDatos" id="fichaObjetos">
       <h3 class="titulo">Objetos</h3>
       <ul id="listaObjetos" class="contenido"></ul>
@@ -72,6 +76,10 @@
     <div class="seccionDatos" id="fichaMunicipios">
       <h3 class="titulo">Municipios</h3>
       <ul id="listaMunicipios" class="contenido"></ul>
+    </div>
+    <div class="seccionDatos" id="fichaCiudades">
+      <h3 class="titulo">Ciudades</h3>
+      <ul id="listaCiudades" class="contenido"></ul>
     </div>
     <div class="seccionDatos" id="fichaDecadas">
       <h3 class="titulo">Décadas</h3>
@@ -84,12 +92,21 @@
 </div>
 
 <script>
-  import { datosFicha, datosProyectos, datosListas, elementoSeleccionado, filtrarMapa } from '@/utilidades/cerebro';
+  import {
+    datosFicha,
+    datosProyectos,
+    datosListas,
+    datosEgresados,
+    datosListasEgresados,
+    elementoSeleccionado,
+    filtrarMapa
+  } from '@/utilidades/cerebro';
   import type { Ficha, LLavesMultiples, Listas, LllavesSingulares } from '@/tipos';
   import { marked } from 'marked';
   import 'photoswipe/style.css';
   import Galeria from 'photoswipe/lightbox';
 
+  import type { ListasEgresados } from 'procesador/egresados';
   const urlBase = import.meta.env.BASE_URL;
   const ficha = document.getElementById('contenedorFicha') as HTMLDivElement;
   const lista = document.getElementById('listaFicha') as HTMLTitleElement;
@@ -112,20 +129,39 @@
   const siguiente = document.getElementById('fichaElementoSiguiente') as HTMLSpanElement;
   const anterior = document.getElementById('fichaElementoAnterior') as HTMLSpanElement;
 
+  // Cargar ficha anterior o ficha siguiente al hace click en los botones
   siguiente.onclick = () => {
+    let lista = [];
     const actual = elementoSeleccionado.get();
     if (!actual) return;
 
-    const lista = actual.tipo !== 'proyecto' ? datosListas.get()[actual.tipo as keyof Listas] : datosProyectos.get();
+    if (actual.vista === 'proyectos') {
+      lista = actual.tipo !== 'proyecto' ? datosListas.get()[actual.tipo as keyof Listas] : datosProyectos.get();
+    } else if (actual.vista === 'egresados') {
+      lista =
+        actual.tipo !== 'egresado'
+          ? datosListasEgresados.get()[actual.tipo as keyof ListasEgresados]
+          : datosEgresados.get();
+    }
+
     const siguienteI = lista.length - 1 > +actual.id ? +actual.id + 1 : 0;
     elementoSeleccionado.setKey('id', `${siguienteI}`);
   };
 
   anterior.onclick = () => {
+    let lista = [];
     const actual = elementoSeleccionado.get();
     if (!actual) return;
 
-    const lista = actual.tipo !== 'proyecto' ? datosListas.get()[actual.tipo as keyof Listas] : datosProyectos.get();
+    if (actual.vista === 'proyectos') {
+      lista = actual.tipo !== 'proyecto' ? datosListas.get()[actual.tipo as keyof Listas] : datosProyectos.get();
+    } else if (actual.vista === 'egresados') {
+      lista =
+        actual.tipo !== 'egresado'
+          ? datosListasEgresados.get()[actual.tipo as keyof ListasEgresados]
+          : datosEgresados.get();
+    }
+
     const anteriorI = +actual.id > 0 ? +actual.id - 1 : lista.length - 1;
     elementoSeleccionado.setKey('id', `${anteriorI}`);
   };
@@ -219,9 +255,14 @@
     llenarCampos('objetos', datos);
     llenarCampos('municipios', datos);
     llenarCampos('decadas', datos);
+    llenarCampos('ambitos', datos);
+    llenarCampos('ciudades', datos);
   });
 
-  function llenarCampos(campo: LLavesMultiples | LllavesSingulares | 'proyecto', datos: Ficha) {
+  function llenarCampos(
+    campo: LLavesMultiples | LllavesSingulares | 'proyecto' | 'ambitos' | 'ciudades',
+    datos: Ficha
+  ) {
     const primeraLetra = campo.charAt(0).toUpperCase();
     const campoMayuscula = primeraLetra + campo.slice(1);
 

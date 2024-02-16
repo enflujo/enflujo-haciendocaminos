@@ -1,5 +1,5 @@
 ---
-
+const urlBase = import.meta.env.BASE_URL;
 ---
 
 <nav id="menu">
@@ -13,8 +13,8 @@
     <h1>Haciendo Caminos</h1>
     <span class="cajaGusanos"></span>
     <ul>
-      <li class="botonVista">Proyectos</li>
-      <li class="botonVista">Egresados</li>
+      <li class="botonVista" id="botonProyectos"><a href=`${urlBase}/`>Proyectos</a></li>
+      <li class="botonVista" id="botonEgresados"><a href=`${urlBase}/egresados`>Egresados</a></li>
     </ul>
   </div>
 </nav>
@@ -67,15 +67,6 @@
     p {
       margin: 0;
       line-height: 1;
-    }
-
-    // Por ahora no se usa pero se usará
-    .enlaceMenu {
-      cursor: pointer;
-
-      &:hover {
-        opacity: 0.6;
-      }
     }
 
     #encabezado {

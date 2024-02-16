@@ -1,0 +1,69 @@
+---
+import ListaEgresadosNodos from '@/componentes/ListaEgresadosNodos.astro';
+import listasEgresados from '../../estaticos/listasEgresados.json';
+---
+
+<div id="contenedorListas" class="todoVisible">
+  <ListaEgresadosNodos id="paises" lista={listasEgresados.paises} />
+  <ListaEgresadosNodos id="temas" lista={listasEgresados.temas} />
+  <ListaEgresadosNodos id="ambitos" lista={listasEgresados.ambitos} />
+  <ListaEgresadosNodos id="ciudades" lista={listasEgresados.ciudades} />
+</div>
+
+<script>
+  const nodos = document.querySelectorAll<HTMLLIElement>('.nodo');
+  import { datosListasEgresados, elementoSeleccionado } from '@/utilidades/cerebro';
+
+  datosListasEgresados.subscribe((datos) => {
+    if (!Object.keys(datos).length) return;
+
+    nodos.forEach((nodo) => {
+      const nodosConectados: HTMLLIElement[] = [];
+      const egresadosConectados: HTMLLIElement[] = [];
+      const egresados = nodo.dataset.egresados?.split(',');
+      const contenedor = nodo.parentElement;
+      const { indice, tipo } = nodo.dataset;
+
+      if (egresados) {
+        egresados.forEach((idEgresado) => {
+          const egresado = document.getElementById(`egresado_${idEgresado}`) as HTMLLIElement;
+
+          if (egresado) {
+            egresadosConectados.push(egresado);
+          }
+        });
+      }
+
+      nodo.onmouseenter = () => {
+        nodosConectados.forEach((nodo) => {
+          nodo.classList.add('visible', 'explotado');
+        });
+
+        egresadosConectados.forEach((nodo) => {
+          nodo.classList.add('resaltado');
+        });
+
+        contenedor?.classList.add('mantener');
+        nodo.classList.add('visible');
+      };
+
+      nodo.onmouseleave = () => {
+        nodosConectados.forEach((nodo) => {
+          nodo.classList.remove('visible', 'explotado');
+        });
+
+        egresadosConectados.forEach((nodo) => {
+          nodo.classList.remove('resaltado');
+        });
+
+        contenedor?.classList.remove('mantener');
+        nodo.classList.remove('visible');
+      };
+
+      nodo.onclick = () => {
+        if (!indice || !tipo) return;
+        elementoSeleccionado.set({ vista: 'egresados', tipo, id: indice });
+      };
+    });
+  });
+</script>

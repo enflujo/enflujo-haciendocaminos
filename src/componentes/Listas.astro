@@ -68,7 +68,7 @@ import listas from '../../estaticos/listas.json';
 
       nodo.onclick = () => {
         if (!indice || !tipo) return;
-        elementoSeleccionado.set({ tipo, id: indice });
+        elementoSeleccionado.set({ vista: 'proyectos', tipo, id: indice });
       };
     });
   });
