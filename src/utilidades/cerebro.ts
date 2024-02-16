@@ -22,6 +22,7 @@ export const geo = map<FeatureCollection<Point>>();
 export const geoEgresados = map<FeatureCollection<Point>>();
 export const elementoSeleccionado = map<{ vista: string; tipo: string; id: string }>();
 export const opcionesBuscador = atom<ElementoBuscador[] | null>(null);
+export const vista = map<String>();
 let _copiaDatosMapa: FeatureCollection<Point>;
 
 export const nombresListasProyectos = {

@@ -11,11 +11,12 @@ import type {
 import { getXlsxStream } from 'xlstream';
 import slugificar from 'slug';
 import { guardarJSON, ordenarListaObjetos } from './ayudas.js';
-import procesarLugares from './lugares.js';
+import { procesarLugares, procesarLugaresEgresados } from './lugares.js';
 import procesarEgresados from './egresados.js';
 import { existsSync, readdirSync } from 'fs';
 import { resolve } from 'path';
 import { imageSize } from 'image-size';
+import type { ListasEgresados } from './egresados.js';
 
 const datosEmpiezanEnFila = 2;
 const camposSingulares: Campos = [
@@ -50,6 +51,13 @@ const listas: Listas = {
   decadas: []
 };
 
+const listasEgresados: ListasEgresados = {
+  paises: [],
+  temas: [],
+  ambitos: [],
+  ciudades: []
+};
+
 const archivo = './procesador/datos/Listado de proyectos - 60 años dpto antropología .xlsx';
 
 async function procesar() {
@@ -57,8 +65,9 @@ async function procesar() {
   await procesarProyectos();
   console.log('Proyectos procesados');
   await procesarLugares(archivo, listas);
-  console.log('fin de lugares');
 
+  console.log('fin de lugares');
+  await procesarLugaresEgresados(archivo, listasEgresados);
   console.log('fin');
 }
 

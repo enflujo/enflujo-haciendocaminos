@@ -22,6 +22,11 @@ import Proyectos from '@/componentes/Proyectos.astro';
   </main>
 </Plantilla>
 
+<script>
+  import { vista } from '@/utilidades/cerebro';
+  vista.set('proyectos');
+</script>
+
 <style lang="scss" is:global>
   @import '@/scss/constantes';
 </style>

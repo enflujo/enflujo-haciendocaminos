@@ -21,9 +21,11 @@ import ListasEgresados from '@/componentes/ListasEgresados.astro';
 </Plantilla>
 
 <script>
-  import { datosEgresados, elementoSeleccionado } from '@/utilidades/cerebro';
+  import { datosEgresados, elementoSeleccionado, vista } from '@/utilidades/cerebro';
   const nodosEgresados = document.querySelectorAll<HTMLLIElement>('.nodoEgresado');
   const conteoFicha = document.getElementById('conteoFicha') as HTMLDivElement;
+
+  vista.set('egresados');
 
   datosEgresados.subscribe((datos) => {
     if (!datos.length) return;
