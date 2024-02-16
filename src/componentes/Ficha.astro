@@ -90,9 +90,6 @@
   import 'photoswipe/style.css';
   import Galeria from 'photoswipe/lightbox';
 
-  import 'photoswipe/style.css';
-  import Galeria from 'photoswipe/lightbox';
-
   const urlBase = import.meta.env.BASE_URL;
   const ficha = document.getElementById('contenedorFicha') as HTMLDivElement;
   const lista = document.getElementById('listaFicha') as HTMLTitleElement;
@@ -185,32 +182,22 @@
     if (datos.imagenes && datos.imagenes.length) {
       contenedorImagenes.innerHTML = '';
       seccionImagenes.style.display = 'flex';
+
       datos.imagenes.forEach((elemento) => {
         const imagenAncho = document.createElement('a');
         imagenAncho.classList.add('imagenAncho');
-        const imagenAncho = document.createElement('a');
-        imagenAncho.classList.add('imagenAncho');
-        const rutaImg = `${urlBase}/imgs/fotos/${datos.id}/${elemento}.jpg`;
-        imagenAncho.href = rutaImg;
-        imagenAncho.setAttribute('data-pswp-width', '1600'); //#TODO hacer que estos atributos sean dependientes de las medidas de cada fotografía.
-        imagenAncho.setAttribute('data-pswp-height', '1200');
-
-        const imagen = document.createElement('img');
-        imagenAncho.href = rutaImg;
-        imagenAncho.setAttribute('data-pswp-width', '1600'); //#TODO hacer que estos atributos sean dependientes de las medidas de cada fotografía.
-        imagenAncho.setAttribute('data-pswp-height', '1200');
+        imagenAncho.href = `${urlBase}/imgs/fotos/${datos.id}/${elemento.grande}`;
+        imagenAncho.setAttribute('data-pswp-width', `${elemento.ancho}`);
+        imagenAncho.setAttribute('data-pswp-height', `${elemento.alto}`);
 
         const imagen = document.createElement('img');
         imagen.classList.add('imagenFicha');
-        imagen.src = rutaImg;
+        imagen.src = `${urlBase}/imgs/fotos/${datos.id}/${elemento.peque}`;
         imagen.alt = '';
 
         imagenAncho.appendChild(imagen);
         contenedorImagenes.append(imagenAncho);
         imagen.alt = '';
-
-        imagenAncho.appendChild(imagen);
-        contenedorImagenes.append(imagenAncho);
 
         imagen.addEventListener('click', () => {
           imagen.classList.toggle('grande');
