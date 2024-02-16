@@ -77,6 +77,10 @@
       <h3 class="titulo">Municipios</h3>
       <ul id="listaMunicipios" class="contenido"></ul>
     </div>
+    <div class="seccionDatos" id="fichaCiudades">
+      <h3 class="titulo">Ciudades</h3>
+      <ul id="listaCiudades" class="contenido"></ul>
+    </div>
     <div class="seccionDatos" id="fichaDecadas">
       <h3 class="titulo">Décadas</h3>
       <ul id="listaDecadas" class="contenido"></ul>
@@ -224,7 +228,7 @@
     llenarCampos('municipios', datos);
     llenarCampos('decadas', datos);
     llenarCampos('ambitos', datos);
-    // llenarCampos('ciudades', datos);
+    llenarCampos('ciudades', datos);
   });
 
   function llenarCampos(

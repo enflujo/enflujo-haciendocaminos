@@ -214,7 +214,7 @@ elementoSeleccionado.subscribe((elemento) => {
         titulo: datosEgresado.nombre,
         paises: datosEgresado.paises ? datosEgresado.paises : [],
         temas: datosEgresado.temas ? datosEgresado.temas : [],
-        // ciudades: datosEgresado.ciudades ? datosEgresado.ciudades : [],
+        ciudades: datosEgresado.ciudades ? datosEgresado.ciudades : [],
         ambitos: datosEgresado.ambitos ? datosEgresado.ambitos : []
       });
     } else {

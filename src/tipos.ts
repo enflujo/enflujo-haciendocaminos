@@ -103,7 +103,7 @@ export interface RelacionesFicha {
   proyecto?: ElementoProyecto[];
   egresado?: ElementoEgresado[];
   ambitos?: ElementoFicha[];
-  // ciudades?: ElementoFicha[];
+  ciudades?: ElementoFicha[];
 }
 
 export interface Ficha extends RelacionesFicha {
