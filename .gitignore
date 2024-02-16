@@ -1,10 +1,10 @@
-# build output
+# resultados del 'build'
 publico/
 
-# generated types
+# tipos generados
 .astro/
 
-# dependencies
+# dependencias
 node_modules/
 
 # logs
@@ -13,9 +13,12 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# environment variables
+# variables del ambiente
 .env
 .env.production
 
-# macOS-specific files
+# archivos específicos de macOS
 .DS_Store
+
+# archivos temporales
+*~
