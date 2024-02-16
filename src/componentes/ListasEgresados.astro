@@ -11,7 +11,7 @@ import listasEgresados from '../../estaticos/listasEgresados.json';
 </div>
 
 <script>
-  const nodos = document.querySelectorAll<HTMLLIElement>('.nodoEgresado');
+  const nodos = document.querySelectorAll<HTMLLIElement>('.nodo');
   import { datosListasEgresados, elementoSeleccionado } from '@/utilidades/cerebro';
 
   datosListasEgresados.subscribe((datos) => {
@@ -62,7 +62,7 @@ import listasEgresados from '../../estaticos/listasEgresados.json';
 
       nodo.onclick = () => {
         if (!indice || !tipo) return;
-        elementoSeleccionado.set({ tipo, id: indice });
+        elementoSeleccionado.set({ vista: 'egresados', tipo, id: indice });
       };
     });
   });

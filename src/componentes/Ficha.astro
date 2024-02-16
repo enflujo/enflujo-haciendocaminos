@@ -65,6 +65,10 @@
       <h3 class="titulo">Temas</h3>
       <ul id="listaTemas" class="contenido"></ul>
     </div>
+    <div class="seccionDatos" id="fichaAmbitos">
+      <h3 class="titulo">Ámbitos</h3>
+      <ul id="listaAmbitos" class="contenido"></ul>
+    </div>
     <div class="seccionDatos" id="fichaObjetos">
       <h3 class="titulo">Objetos</h3>
       <ul id="listaObjetos" class="contenido"></ul>
@@ -219,9 +223,14 @@
     llenarCampos('objetos', datos);
     llenarCampos('municipios', datos);
     llenarCampos('decadas', datos);
+    llenarCampos('ambitos', datos);
+    // llenarCampos('ciudades', datos);
   });
 
-  function llenarCampos(campo: LLavesMultiples | LllavesSingulares | 'proyecto', datos: Ficha) {
+  function llenarCampos(
+    campo: LLavesMultiples | LllavesSingulares | 'proyecto' | 'ambitos' | 'ciudades',
+    datos: Ficha
+  ) {
     const primeraLetra = campo.charAt(0).toUpperCase();
     const campoMayuscula = primeraLetra + campo.slice(1);
 

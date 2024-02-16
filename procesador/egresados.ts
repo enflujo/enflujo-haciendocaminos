@@ -91,7 +91,6 @@ export default async function procesarEgresados(archivo: string): Promise<void> 
 
           camposEgresados.forEach((campo) => {
             // Agregar datos de cada campo en todos los otros, excepto en sí mismo.
-
             if (campoRelacion.llave !== campo.llave && datosRelacion) {
               const llaveALlenar = campo.llave;
               const llaveDondeLllenar = campoRelacion.llave;

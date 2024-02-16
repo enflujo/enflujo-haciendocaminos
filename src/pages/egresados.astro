@@ -19,3 +19,26 @@ import ListasEgresados from '@/componentes/ListasEgresados.astro';
     <LineaTiempo tiempo={listas.años} decadas={listas.decadas} />
   </main>
 </Plantilla>
+
+<script>
+  import { datosEgresados, elementoSeleccionado } from '@/utilidades/cerebro';
+  const nodosEgresados = document.querySelectorAll<HTMLLIElement>('.nodoEgresado');
+  const conteoFicha = document.getElementById('conteoFicha') as HTMLDivElement;
+
+  datosEgresados.subscribe((datos) => {
+    if (!datos.length) return;
+
+    nodosEgresados.forEach((nodoEgresado) => {
+      nodoEgresado.onclick = () => {
+        const contenedorTitulo = document.getElementById('contenedorTitulo') as HTMLDivElement;
+        contenedorTitulo.style.flexBasis = '100%';
+        conteoFicha.style.display = 'none';
+
+        const id = nodoEgresado.dataset.indice;
+        if (!id) return;
+
+        elementoSeleccionado.set({ vista: 'egresados', tipo: 'egresado', id });
+      };
+    });
+  });
+</script>

@@ -8,7 +8,7 @@ import egresados from '../../estaticos/egresados.json';
   <ul>
     {
       egresados.map((egresado, i) => (
-        <li id={`egresado_${egresado.id}`} class="nodoProyecto" data-indice={i}>
+        <li id={`egresado_${egresado.id}`} class="nodoEgresado" data-indice={i}>
           {egresado.nombre}
         </li>
       ))
@@ -33,7 +33,7 @@ import egresados from '../../estaticos/egresados.json';
         const id = nodoEgresado.dataset.indice;
         if (!id) return;
 
-        elementoSeleccionado.set({ tipo: 'egresado', id });
+        elementoSeleccionado.set({ vista: 'egresados', tipo: 'egresado', id });
       };
     });
   });

@@ -4,6 +4,7 @@ export interface ElementoLista {
   conteo: number;
   relaciones: { tipo: keyof Listas | string; conteo: number; indice: number; slug: string }[];
   proyectos?: number[];
+  egresados?: number[];
 }
 export type DefinicionSimple = { nombre: string; slug: string };
 export type Años = [año: number, conteo: number][];
@@ -78,7 +79,12 @@ export interface ElementoFicha {
   conteo?: number;
 }
 
-export interface ELementoProyecto {
+export interface ElementoProyecto {
+  nombre: string;
+  id: number;
+}
+
+export interface ElementoEgresado {
   nombre: string;
   id: number;
 }
@@ -94,7 +100,10 @@ export interface RelacionesFicha {
   objetos?: ElementoFicha[];
   municipios?: ElementoFicha[];
   decadas?: ElementoFicha[];
-  proyecto?: ELementoProyecto[];
+  proyecto?: ElementoProyecto[];
+  egresado?: ElementoEgresado[];
+  ambitos?: ElementoFicha[];
+  // ciudades?: ElementoFicha[];
 }
 
 export interface Ficha extends RelacionesFicha {

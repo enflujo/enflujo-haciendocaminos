@@ -1,7 +1,7 @@
 ---
 import type { ElementoListaEgresados } from '@/tipos';
 import type { ListasEgresados } from 'procesador/egresados';
-import { nombresListasProyectos } from '@/utilidades/cerebro';
+import { nombresListasEgresados } from '@/utilidades/cerebro';
 
 interface Props {
   id: keyof ListasEgresados;
@@ -11,18 +11,12 @@ interface Props {
 const { lista, id } = Astro.props;
 ---
 
-<section id=`${String(id)}` class="lista">
-  <h2 class="titulo">{nombresListasProyectos[id]}</h2>
-  <ul class=`contenedorElementos ${String(id)}`>
+<section id={id} class="lista">
+  <h2 class="titulo">{nombresListasEgresados[id]}</h2>
+  <ul class=`contenedorElementos ${id}`>
     {
       lista.map((elemento, i) => (
-        <li
-          id={`${String(id)}_${i}`}
-          class="nodoEgresado"
-          data-tipo={id}
-          data-indice={i}
-          data-egresados={elemento.egresados}
-        >
+        <li id={`${id}_${i}`} class="nodo" data-tipo={id} data-indice={i} data-egresados={elemento.egresados}>
           <h3 class="nombre">{elemento.nombre}</h3>
           <div class="barra">
             <span class="linea" style={`width: ${elemento.conteo}%`} />
