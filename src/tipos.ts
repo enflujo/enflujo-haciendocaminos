@@ -22,6 +22,13 @@ export type LLavesMultiples =
   | 'paises'
   | 'municipios';
 
+export interface DatosImg {
+  grande: string;
+  peque: string;
+  ancho: number;
+  alto: number;
+}
+
 export type Proyecto = {
   id: number;
   nombre: DefinicionSimple;
@@ -38,7 +45,7 @@ export type Proyecto = {
   paises?: DefinicionSimple[];
   municipios?: DefinicionSimple[];
   enlaces?: string[];
-  imagenes?: string[];
+  imagenes?: DatosImg[];
 };
 
 export type Listas = {
@@ -97,6 +104,6 @@ export interface Ficha extends RelacionesFicha {
   conteo?: string;
   descripcion?: string;
   enlaces?: string[];
-  imagenes?: string[];
+  imagenes?: DatosImg[];
   id?: number;
 }

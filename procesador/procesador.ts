@@ -13,6 +13,9 @@ import slugificar from 'slug';
 import { guardarJSON, ordenarListaObjetos } from './ayudas.js';
 import procesarLugares from './lugares.js';
 import procesarEgresados from './egresados.js';
+import { existsSync, readdirSync } from 'fs';
+import { resolve } from 'path';
+import { imageSize } from 'image-size';
 
 const datosEmpiezanEnFila = 2;
 const camposSingulares: Campos = [
@@ -208,10 +211,35 @@ function procesarFila(fila: string[]) {
     nombre: { nombre: nombreProyecto, slug: slugificar(nombreProyecto) },
     descripcion: fila[16],
     enlaces: fila[17] && fila[17] !== 'No aplica' ? fila[17].trim().split(' ') : [],
-    imagenes: fila[19] && fila[19] !== 'No aplica' ? fila[19].trim().split(',') : []
+    imagenes: []
   };
   const años = validarAño(`${fila[3]}`.trim());
   if (años) respuesta.años = años;
+
+  if (fila[19] && fila[19] !== 'No aplica') {
+    const nombresFotos = fila[19].split(',').map((nombre) => nombre.trim());
+    const carpetaFotos = resolve('./estaticos/imgs/fotos', `${fila[0]}`);
+
+    if (existsSync(carpetaFotos)) {
+      const archivosEnCarpeta = readdirSync(carpetaFotos);
+
+      nombresFotos.forEach((nombreFoto) => {
+        const versionesFoto = archivosEnCarpeta.filter((nombre) => nombre.includes(nombreFoto));
+        const indicePeque = versionesFoto.findIndex((version) => version.includes('_p.'));
+        const indiceGrande = versionesFoto.findIndex((version) => !version.includes('_p.'));
+        const datosImgGrande = imageSize(resolve(carpetaFotos, versionesFoto[indiceGrande]));
+
+        const datosImg = {
+          grande: versionesFoto[indiceGrande],
+          peque: versionesFoto[indicePeque],
+          ancho: datosImgGrande.width ? datosImgGrande.width : 0,
+          alto: datosImgGrande.height ? datosImgGrande.height : 0
+        };
+
+        respuesta.imagenes?.push(datosImg);
+      });
+    }
+  }
 
   camposSingulares.forEach((campo) => {
     const validacion = validarValorSingular(fila[campo.indice], listas[campo.llave]);

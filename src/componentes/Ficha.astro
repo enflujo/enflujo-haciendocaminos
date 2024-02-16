@@ -87,6 +87,9 @@
   import { datosFicha, datosProyectos, datosListas, elementoSeleccionado, filtrarMapa } from '@/utilidades/cerebro';
   import type { Ficha, LLavesMultiples, Listas, LllavesSingulares } from '@/tipos';
   import { marked } from 'marked';
+  import 'photoswipe/style.css';
+  import Galeria from 'photoswipe/lightbox';
+
   const urlBase = import.meta.env.BASE_URL;
   const ficha = document.getElementById('contenedorFicha') as HTMLDivElement;
   const lista = document.getElementById('listaFicha') as HTMLTitleElement;
@@ -99,6 +102,12 @@
   const listaEnlaces = document.getElementById('listaEnlaces') as HTMLUListElement;
   const seccionImagenes = document.getElementById('fichaImagenes') as HTMLDivElement;
   const contenedorImagenes = document.getElementById('listaImagenes') as HTMLDivElement;
+  const galeria = new Galeria({
+    gallery: '#listaImagenes',
+    children: 'a',
+    pswpModule: () => import('photoswipe')
+  });
+  galeria.init();
 
   const siguiente = document.getElementById('fichaElementoSiguiente') as HTMLSpanElement;
   const anterior = document.getElementById('fichaElementoAnterior') as HTMLSpanElement;
@@ -168,17 +177,27 @@
     } else {
       seccionEnlaces.style.display = 'none';
     }
-
+    console.log(datos.imagenes);
     // Llenar imágenes, si hay
     if (datos.imagenes && datos.imagenes.length) {
       contenedorImagenes.innerHTML = '';
       seccionImagenes.style.display = 'flex';
+
       datos.imagenes.forEach((elemento) => {
+        const imagenAncho = document.createElement('a');
+        imagenAncho.classList.add('imagenAncho');
+        imagenAncho.href = `${urlBase}/imgs/fotos/${datos.id}/${elemento.grande}`;
+        imagenAncho.setAttribute('data-pswp-width', `${elemento.ancho}`);
+        imagenAncho.setAttribute('data-pswp-height', `${elemento.alto}`);
+
         const imagen = document.createElement('img');
-        const rutaImg = `${urlBase}/imgs/fotos/${datos.id}/${elemento}.jpg`;
         imagen.classList.add('imagenFicha');
-        imagen.src = rutaImg;
-        contenedorImagenes.append(imagen);
+        imagen.src = `${urlBase}/imgs/fotos/${datos.id}/${elemento.peque}`;
+        imagen.alt = '';
+
+        imagenAncho.appendChild(imagen);
+        contenedorImagenes.append(imagenAncho);
+        imagen.alt = '';
 
         imagen.addEventListener('click', () => {
           imagen.classList.toggle('grande');
@@ -387,6 +406,18 @@
           justify-content: space-around;
         }
         .imagenFicha {
+          position: relative;
+          width: 100%;
+          margin: 0.62em 0;
+        }
+
+        .imagenAncho {
+          position: relative;
+          width: 100%;
+          margin: 0.62em 0;
+        }
+
+        .imagenAncho {
           position: relative;
           width: 45%;
           margin: 0.62em 0;
