@@ -1,4 +1,6 @@
 ---
+import { join } from 'path';
+
 interface Props {
   titulo?: string;
   descripcion?: string;
@@ -7,7 +9,7 @@ interface Props {
 
 const { titulo, descripcion, imagen } = Astro.props;
 
-const nombreProyecto = 'EnFlujo';
+const nombreProyecto = 'Antropología Uniandes - 60 años haciendo caminos';
 const descripcionGeneral = 'Este proyecto...';
 const { pathname } = Astro.url;
 const tituloSEO = titulo ? `${titulo} | ${nombreProyecto}` : nombreProyecto;
@@ -27,14 +29,14 @@ const altImg = imagen ? imagen.alt : nombreProyecto;
     <link rel="preconnect" href="https://rsms.me/" />
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
 
-    <link rel="icon" href={new URL('favicon.ico', urlBase)} sizes="32x32" />
-    <link rel="icon" href={new URL('favicon.svg', urlBase)} type="image/svg+xml" />
-    <link rel="apple-touch-icon" href={new URL('apple-touch-icon.png', urlBase)} />
+    <link rel="icon" href={new URL(join(urlBase.pathname, 'favicon.ico'), urlBase)} sizes="32x32" />
+    <link rel="icon" href={new URL(join(urlBase.pathname, 'favicon.svg'), urlBase)} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={new URL(join(urlBase.pathname, 'apple-touch-icon.png'), urlBase)} />
     <meta name="generator" content={Astro.generator} />
     <link rel="canonical" href={urlPagina} />
 
     <title>{tituloSEO}</title>
-    <meta name="description" content="Descripción del sitio...." />
+    <meta name="description" content={descripcionSEO} />
     <!-- OpenGraph -->
     <meta property="og:locale" content="es_CO" />
     <meta property="og:site_name" content={nombreProyecto} />
