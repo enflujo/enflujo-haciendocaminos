@@ -30,7 +30,10 @@ const camposMultiplesEgresados: CamposEgresados = [
 
 const camposEgresados = [...camposMultiplesEgresados];
 
-export default async function procesarEgresados(archivo: string, listasEgresados: ListasEgresados): Promise<void> {
+export default async function procesarEgresados(
+  archivo: string,
+  listasEgresados: ListasEgresados
+): Promise<Egresado[]> {
   const egresados: Egresado[] = [];
 
   return new Promise(async (resolver) => {
@@ -136,7 +139,7 @@ export default async function procesarEgresados(archivo: string, listasEgresados
       console.log('fin egresados');
       guardarJSON(egresados, 'egresados');
       guardarJSON(listasEgresados, 'listasEgresados');
-      resolver();
+      resolver(egresados);
     });
   });
 

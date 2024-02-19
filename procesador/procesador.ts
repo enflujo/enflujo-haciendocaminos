@@ -6,6 +6,7 @@ import type {
   LLavesMultiples,
   Listas,
   LllavesSingulares,
+  OpcionBuscadorDatos,
   Proyecto
 } from '../src/tipos.ts';
 import { getXlsxStream } from 'xlstream';
@@ -16,7 +17,7 @@ import procesarEgresados from './egresados.js';
 import { existsSync, readdirSync } from 'fs';
 import { resolve } from 'path';
 import { imageSize } from 'image-size';
-import type { ListasEgresados } from './egresados.js';
+import type { Egresado, ListasEgresados } from './egresados.js';
 
 const datosEmpiezanEnFila = 2;
 const camposSingulares: Campos = [
@@ -61,17 +62,58 @@ const listasEgresados: ListasEgresados = {
 const archivo = './procesador/datos/Listado de proyectos - 60 años dpto antropología 1902.xlsx';
 
 async function procesar() {
-  await procesarEgresados(archivo, listasEgresados);
+  const egresados = await procesarEgresados(archivo, listasEgresados);
   await procesarProyectos();
   console.log('Proyectos procesados');
   await procesarLugares(archivo, listas);
 
   console.log('fin de lugares');
   await procesarLugaresEgresados(archivo, listasEgresados);
+
+  procesarDatosBuscador(egresados);
+  console.log('listos datos buscador');
+
   console.log('fin');
 }
 
 procesar().catch(console.error);
+
+function procesarDatosBuscador(egresados: Egresado[]) {
+  const opciones: OpcionBuscadorDatos[] = [];
+
+  proyectos.forEach((proyecto) => {
+    opciones.push({ nombre: proyecto.nombre.nombre, tipo: 'proyecto' });
+  });
+
+  egresados.forEach((egresado) => {
+    opciones.push({ nombre: egresado.nombre, tipo: 'egresado' });
+  });
+
+  for (const llaveListaP in listas) {
+    const lista = listas[llaveListaP as keyof Listas];
+    lista.forEach((elemento) => {
+      const elementoBuscador: OpcionBuscadorDatos = {
+        nombre: elemento.nombre,
+        tipo: llaveListaP
+      };
+      opciones.push(elementoBuscador);
+    });
+  }
+
+  for (const llaveListaE in listasEgresados) {
+    const lista = listasEgresados[llaveListaE as keyof ListasEgresados];
+    lista.forEach((elemento) => {
+      const elementoBuscador: OpcionBuscadorDatos = {
+        nombre: elemento.nombre,
+        tipo: llaveListaE
+      };
+
+      opciones.push(elementoBuscador);
+    });
+  }
+
+  guardarJSON(opciones, 'datosBuscador');
+}
 
 async function procesarProyectos(): Promise<void> {
   const flujo = await getXlsxStream({

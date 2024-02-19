@@ -1,4 +1,6 @@
 ---
+import Buscador from './Buscador.astro';
+
 const urlBase = import.meta.env.BASE_URL;
 ---
 
@@ -16,6 +18,8 @@ const urlBase = import.meta.env.BASE_URL;
       <li class="botonVista" id="botonProyectos"><a href=`${urlBase}/`>Proyectos</a></li>
       <li class="botonVista" id="botonEgresados"><a href=`${urlBase}/egresados`>Egresados</a></li>
     </ul>
+
+    <Buscador />
   </div>
 </nav>
 
@@ -86,7 +90,6 @@ const urlBase = import.meta.env.BASE_URL;
       .cajaGusanos {
         // content: '';
         background-image: url(/enflujo-haciendocaminos/imgs/gusanitos.svg);
-        position: absolute;
         height: 50px;
         width: 100px;
         background-repeat: no-repeat;

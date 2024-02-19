@@ -128,3 +128,12 @@ export interface ElementoListaEgresados {
   relaciones: { tipo: keyof Listas | string; conteo: number; indice: number; slug: string }[];
   egresados?: number[];
 }
+
+export interface OpcionBuscadorDatos {
+  nombre: string;
+  tipo: string;
+}
+
+export interface ElementoBuscador extends OpcionBuscadorDatos {
+  opcion: HTMLLIElement;
+}

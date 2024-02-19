@@ -1,0 +1,128 @@
+---
+import type { Listas } from '@/tipos';
+import { nombresListasEgresados, nombresListasProyectos } from '@/utilidades/cerebro';
+const listas = { ...nombresListasProyectos, ...nombresListasEgresados };
+---
+
+<div id="contenedorBuscador">
+  <input id="buscador" type="search" name="nombreLugar" placeholder="Buscar" list="sugerencias" />
+  <div id="sugerencias">
+    {
+      Object.keys(listas).map((tipo) => (
+        <div id={`caja-${tipo}`} class="cajaBuscador">
+          <h4>{listas[tipo as keyof Listas]}</h4>
+          <ul class="subLista" />
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<script>
+  import fuzzysort from 'fuzzysort';
+  import { opcionesBuscador } from '@/utilidades/cerebro';
+  import type { ElementoBuscador } from '@/tipos';
+  const buscador = document.getElementById('buscador') as HTMLInputElement;
+  const sugerencias = document.getElementById('sugerencias') as HTMLDataListElement;
+  const cajas = sugerencias.querySelectorAll<HTMLDivElement>('.cajaBuscador');
+  const sinResultados = document.createElement('span');
+  sinResultados.className = 'sinResultados';
+
+  interface ListasBuscador {
+    tipo: string;
+    puntaje: number;
+    elementos: HTMLSpanElement[];
+  }
+  opcionesBuscador.subscribe((opciones) => {
+    if (!opciones) return;
+
+    buscador.oninput = buscar;
+
+    function buscar() {
+      const texto = buscador.value.trim();
+
+      // sugerencias.innerHTML = '';
+      sinResultados.innerText = '';
+      cajas.forEach((caja) => caja.classList.remove('visible'));
+
+      if (!texto || !texto.length) {
+        sugerencias.classList.remove('visible');
+        return;
+      }
+
+      const busqueda = fuzzysort.go<ElementoBuscador>(texto, opciones as ElementoBuscador[], {
+        key: 'nombre',
+        threshold: -1000,
+        limit: 100
+      });
+
+      if (busqueda.total > 0) {
+        sugerencias.classList.add('visible');
+
+        const resultadoEnListas = busqueda.reduce((listas: ListasBuscador[], actual) => {
+          const llave = actual.obj.tipo;
+          const enLista = listas.find((lista: ListasBuscador) => lista.tipo === llave);
+
+          if (!enLista) {
+            listas.push({ puntaje: actual.score, tipo: llave, elementos: [actual.obj.opcion] });
+          } else {
+            if (enLista.puntaje < actual.score) enLista.puntaje = actual.score;
+            enLista.elementos.push(actual.obj.opcion);
+          }
+
+          return listas;
+        }, []);
+
+        resultadoEnListas.forEach((obj) => {
+          const contenedor = document.getElementById(`caja-${obj.tipo}`) as HTMLDivElement;
+          const ul = contenedor.querySelector<HTMLUListElement>('.subLista') as HTMLUListElement;
+          sugerencias.insertBefore(contenedor, sugerencias.lastChild);
+          ul.innerHTML = '';
+          contenedor.classList.add('visible');
+
+          obj.elementos.forEach((elemento) => ul.appendChild(elemento));
+        });
+      } else {
+        sinResultados.innerText = `No hay resultados para la busqueda: ${texto}`;
+        sugerencias.appendChild(sinResultados);
+      }
+    }
+  });
+</script>
+
+<style lang="scss">
+  #contenedorBuscador {
+    z-index: 99;
+  }
+
+  #sugerencias {
+    background-color: var(--magenta);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: var(--altoMenu);
+    padding: 1.2em;
+    width: 80vw;
+    display: none;
+    flex-wrap: wrap;
+    overflow: auto;
+    height: calc(100vh - 50px);
+    text-transform: none;
+
+    &.visible {
+      display: flex;
+    }
+
+    .cajaBuscador {
+      width: 33%;
+      border: 1px dotted white;
+      padding: 0.5em;
+      display: none;
+      flex-direction: column;
+
+      &.visible {
+        display: flex;
+      }
+    }
+  }
+</style>
