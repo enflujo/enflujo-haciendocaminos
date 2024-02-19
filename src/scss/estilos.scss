@@ -114,36 +114,36 @@ a:link {
     height: 100%;
     opacity: 1;
   }
-}
 
-li {
-  cursor: pointer;
+  li {
+    cursor: pointer;
 
-  &:hover {
-    background-color: white;
-  }
-}
-
-.titulo {
-  cursor: pointer;
-}
-
-.nombre {
-  margin: 0;
-  font-size: 0.85em;
-}
-
-.barra {
-  display: flex;
-  align-items: center;
-
-  .linea {
-    height: 0.25rem;
-    background-color: var(--resaltadoVerde);
+    &:hover {
+      background-color: white;
+    }
   }
 
-  .conteo {
-    margin-left: 3px;
+  .titulo {
+    cursor: pointer;
+  }
+
+  .nombre {
+    margin: 0;
+    font-size: 0.85em;
+  }
+
+  .barra {
+    display: flex;
+    align-items: center;
+
+    .linea {
+      height: 0.25rem;
+      background-color: var(--resaltadoVerde);
+    }
+
+    .conteo {
+      margin-left: 3px;
+    }
   }
 }
 
@@ -165,6 +165,21 @@ li {
   font-size: 0.8em;
 
   .nodoProyecto {
+    margin: 0.85em 0;
+    font-size: 1.1em;
+    cursor: pointer;
+
+    &:hover,
+    &.resaltado {
+      background-color: var(--fondoAmarilloClaro);
+      color: var(--textoOscuro);
+    }
+  }
+  &.oculta {
+    display: none;
+  }
+
+  .nodoEgresado {
     margin: 0.85em 0;
     font-size: 1.1em;
     cursor: pointer;
