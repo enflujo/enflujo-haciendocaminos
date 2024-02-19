@@ -11,7 +11,7 @@ import type {
   ElementoBuscador,
   OpcionBuscadorDatos
 } from '@/tipos';
-import type { FeatureCollection, Point } from 'geojson';
+import type { Feature, FeatureCollection, Point } from 'geojson';
 import type { Egresado, ListasEgresados } from '../../procesador/egresados';
 
 export const datosProyectos = atom<Proyecto[]>([]);
@@ -101,15 +101,37 @@ onMount(geo, () => {
   }
 });
 
-export function filtrarMapa(lugares?: string[]) {
+export function filtrarMapa(lugares?: { slug: string; conteo: number }[]) {
   if (lugares) {
     const vistaActual = vista.get();
-    let lugaresFiltrados;
+    let lugaresFiltrados: Feature<Point>[];
 
     if (vistaActual === 'proyectos') {
-      lugaresFiltrados = _copiaDatosMapa?.features.filter((lugar) => lugares.includes(lugar.properties?.slug));
+      lugaresFiltrados = _copiaDatosMapa?.features.filter((lugar) =>
+        lugares.find((obj) => obj.slug === lugar.properties?.slug)
+      );
+
+      lugaresFiltrados.map((punto) => {
+        if (punto.properties) {
+          const datosLugar = lugares.find((obj) => obj.slug === punto.properties?.slug);
+          punto.properties.conteo = datosLugar?.conteo;
+        }
+
+        return punto;
+      });
     } else if (vistaActual === 'egresados') {
-      lugaresFiltrados = _copiaDatosMapaEgresados?.features.filter((lugar) => lugares.includes(lugar.properties?.slug));
+      lugaresFiltrados = _copiaDatosMapaEgresados?.features.filter((lugar) =>
+        lugares.find((obj) => obj.slug === lugar.properties?.slug)
+      );
+
+      lugaresFiltrados.map((punto) => {
+        if (punto.properties) {
+          const datosLugar = lugares.find((obj) => obj.slug === punto.properties?.slug);
+          punto.properties.conteo = datosLugar?.conteo;
+        }
+
+        return punto;
+      });
     }
 
     if (lugaresFiltrados) {
@@ -189,7 +211,12 @@ elementoSeleccionado.subscribe((elemento) => {
         );
 
         const lugaresMapa = datos.relaciones.filter((relacion) => relacion.tipo === 'municipios');
-        filtrarMapa(lugaresMapa.map((lugar) => lugar.slug));
+
+        filtrarMapa(
+          lugaresMapa.map((lugar) => {
+            return { slug: lugar.slug, conteo: lugar.conteo };
+          })
+        );
 
         datosFicha.set({
           visible: true,
@@ -262,7 +289,11 @@ elementoSeleccionado.subscribe((elemento) => {
 
         const lugaresMapa = datos.relaciones.filter((relacion) => relacion.tipo === 'ciudades');
 
-        filtrarMapa(lugaresMapa.map((lugar) => lugar.slug));
+        filtrarMapa(
+          lugaresMapa.map((lugar) => {
+            return { slug: lugar.slug, conteo: lugar.conteo };
+          })
+        );
 
         datosFicha.set({
           visible: true,
