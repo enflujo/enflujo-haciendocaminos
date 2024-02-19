@@ -7,7 +7,7 @@
 <script>
   import mapbox from 'mapbox-gl';
   import type { GeoJSONSource, Map } from 'mapbox-gl';
-  import { geo, geoEgresados, vista } from '@/utilidades/cerebro';
+  import { geo } from '@/utilidades/cerebro';
   import 'mapbox-gl/dist/mapbox-gl.css';
 
   let mapaCreado = false;
@@ -16,423 +16,144 @@
   const estilo = 'mapbox://styles/enflujo/clpcruhsj005z01qr10czhk1d';
   mapbox.accessToken = 'pk.eyJ1IjoiZW5mbHVqbyIsImEiOiJjbDNrOXNndXQwMnZsM2lvNDd4N2x0M3dvIn0.eWs4BHs67PcETEUI00T66Q';
 
-  vista.subscribe((vista) => {
-    if (vista === 'proyectos') {
-      geo.subscribe((datosGeo) => {
-        if (!Object.keys(datosGeo).length) return;
+  geo.subscribe((datosGeo) => {
+    if (!Object.keys(datosGeo).length) return;
 
-        if (!contenedorMapa) return;
+    if (!contenedorMapa) return;
 
-        if (!mapaCreado) {
-          mapa = new mapbox.Map({
-            container: contenedorMapa,
-            style: estilo,
-            zoom: 1,
-            attributionControl: false
-          });
-
-          mapaCreado = true;
-        } else {
-          const fuente = mapa.getSource('ubicaciones') as GeoJSONSource;
-
-          fuente.setData(datosGeo);
-
-          const primerPunto = datosGeo.features[0];
-
-          if (primerPunto) {
-            mapa.flyTo({
-              center: primerPunto.geometry.coordinates as [number, number],
-              essential: true
-            });
-          }
-
-          return;
-        }
-
-        /**
-         * Esperar a que el mapa de mapbox termine de cargar antes de llenarlo con los datos.
-         */
-        mapa.on('load', () => {
-          // Crea la fuente para todas las ubicaciones (puntos).
-          mapa.addSource('ubicaciones', {
-            type: 'geojson',
-            data: datosGeo,
-            cluster: true,
-            clusterRadius: 100,
-            clusterProperties: {
-              // Esto suma la cantidad de elementos que tiene un grupo,
-              // para poder actualizar los círculos a medida que se hace zoom
-              conteo: ['+', ['get', 'conteo']]
-            }
-          });
-
-          /**
-           * 🔵 Los círculos que agrupan varios lugares dependiendo del zoom.
-           */
-          mapa.addLayer({
-            id: 'grupos',
-            type: 'circle',
-            source: 'ubicaciones',
-            filter: ['has', 'point_count'],
-            paint: {
-              'circle-stroke-color': '#ff00ff',
-              'circle-stroke-width': 3,
-              /**
-               * ['step'] | A diferencia de "interpolate", "step" crea una serie de puntos donde algo debe cambiar.
-               * ['get', 'obras'] | La cantidad de obras dentro del círculo, sale de "clusterProperties" que definimos al crear la capa.
-               * En "step" se pueden crear los cortes que uno quiera, los valores que siguen deben ser impares:
-               * anchoMin, corte1, ancho1, corte2, ancho2, ....
-               */
-              'circle-radius': ['interpolate', ['linear'], ['get', 'conteo'], 1, 15, 100, 80],
-              'circle-color': '#ff00ff',
-              'circle-opacity': 0.05
-            }
-          });
-
-          /**
-           * 🅰 Texto dentro del círculo
-           */
-          mapa.addLayer({
-            id: 'contadorObras',
-            type: 'symbol',
-            source: 'ubicaciones',
-            // Sólo mostrarlo cuando tiene más de un lugar agrupado ("point_count" lo crea mapbox y se va actualizando con el zoom).
-            filter: ['has', 'point_count'],
-            layout: {
-              /**
-               * 'format' | Permite concatenar una serie de textos o imágenes.
-               * ['image', 'icono'] | Pone la imagen que registramos antes en la instancia de mapbox.
-               */
-              'text-field': ['format', ['get', 'conteo']],
-              'text-size': 12
-            }
-          });
-
-          /**
-           * ⭕ Punto cuando es 1 lugar y no un "cluster".
-           */
-          mapa.addLayer({
-            id: 'punto',
-            type: 'circle',
-            source: 'ubicaciones',
-            filter: ['!', ['has', 'point_count']], // Cuando NO tiene "point_count" ya no es un grupo y es sólo 1 punto.
-            paint: {
-              'circle-stroke-color': '#ff00ff',
-              'circle-color': '#ff00ff',
-              'circle-radius': 15,
-              'circle-stroke-width': 2,
-              'circle-opacity': 0.05
-            }
-          });
-
-          /**
-           * 🏛 Nombre del lugar
-           */
-          mapa.addLayer({
-            id: 'nombre',
-            type: 'symbol',
-            source: 'ubicaciones',
-            filter: ['!', ['has', 'point_count']],
-            layout: {
-              'text-field': [
-                'format',
-                ['get', 'nombre'],
-                { 'font-scale': 0.8 },
-                ' ',
-                ['get', 'conteo'],
-                { 'font-scale': 0.75 }
-              ]
-            },
-            paint: {
-              'text-color': '#000',
-              'text-halo-width': ['case', ['boolean', ['feature-state', 'activo'], false], 3, 2],
-              'text-halo-blur': 0
-            }
-          });
-        });
-
-        // mapa.on('mouseenter', 'grupos', (evento) => {
-        //   console.log(evento);
-        // });
+    if (!mapaCreado) {
+      mapa = new mapbox.Map({
+        container: contenedorMapa,
+        style: estilo,
+        zoom: 1,
+        attributionControl: false
       });
-    } else if (vista === 'egresados') {
-      geoEgresados.subscribe((datosGeo) => {
-        if (!Object.keys(datosGeo).length) return;
 
-        if (!contenedorMapa) return;
+      mapaCreado = true;
+    } else {
+      const fuente = mapa.getSource('ubicaciones') as GeoJSONSource;
 
-        if (!mapaCreado) {
-          mapa = new mapbox.Map({
-            container: contenedorMapa,
-            style: estilo,
-            zoom: 1,
-            attributionControl: false
-          });
+      fuente.setData(datosGeo);
 
-          mapaCreado = true;
-        } else {
-          const fuente = mapa.getSource('ubicaciones') as GeoJSONSource;
+      const primerPunto = datosGeo.features[0];
 
-          fuente.setData(datosGeo);
-
-          const primerPunto = datosGeo.features[0];
-
-          if (primerPunto) {
-            mapa.flyTo({
-              center: primerPunto.geometry.coordinates as [number, number],
-              essential: true
-            });
-          }
-
-          return;
-        }
-
-        /**
-         * Esperar a que el mapa de mapbox termine de cargar antes de llenarlo con los datos.
-         */
-        mapa.on('load', () => {
-          // Crea la fuente para todas las ubicaciones (puntos).
-          mapa.addSource('ubicaciones', {
-            type: 'geojson',
-            data: datosGeo,
-            cluster: true,
-            clusterRadius: 100,
-            clusterProperties: {
-              // Esto suma la cantidad de elementos que tiene un grupo,
-              // para poder actualizar los círculos a medida que se hace zoom
-              conteo: ['+', ['get', 'conteo']]
-            }
-          });
-
-          /**
-           * 🔵 Los círculos que agrupan varios lugares dependiendo del zoom.
-           */
-          mapa.addLayer({
-            id: 'grupos',
-            type: 'circle',
-            source: 'ubicaciones',
-            filter: ['has', 'point_count'],
-            paint: {
-              'circle-stroke-color': '#ff00ff',
-              'circle-stroke-width': 3,
-              /**
-               * ['step'] | A diferencia de "interpolate", "step" crea una serie de puntos donde algo debe cambiar.
-               * ['get', 'obras'] | La cantidad de obras dentro del círculo, sale de "clusterProperties" que definimos al crear la capa.
-               * En "step" se pueden crear los cortes que uno quiera, los valores que siguen deben ser impares:
-               * anchoMin, corte1, ancho1, corte2, ancho2, ....
-               */
-              'circle-radius': ['interpolate', ['linear'], ['get', 'conteo'], 1, 15, 100, 80],
-              'circle-color': '#ff00ff',
-              'circle-opacity': 0.05
-            }
-          });
-
-          /**
-           * 🅰 Texto dentro del círculo
-           */
-          mapa.addLayer({
-            id: 'contadorObras',
-            type: 'symbol',
-            source: 'ubicaciones',
-            // Sólo mostrarlo cuando tiene más de un lugar agrupado ("point_count" lo crea mapbox y se va actualizando con el zoom).
-            filter: ['has', 'point_count'],
-            layout: {
-              /**
-               * 'format' | Permite concatenar una serie de textos o imágenes.
-               * ['image', 'icono'] | Pone la imagen que registramos antes en la instancia de mapbox.
-               */
-              'text-field': ['format', ['get', 'conteo']],
-              'text-size': 12
-            }
-          });
-
-          /**
-           * ⭕ Punto cuando es 1 lugar y no un "cluster".
-           */
-          mapa.addLayer({
-            id: 'punto',
-            type: 'circle',
-            source: 'ubicaciones',
-            filter: ['!', ['has', 'point_count']], // Cuando NO tiene "point_count" ya no es un grupo y es sólo 1 punto.
-            paint: {
-              'circle-stroke-color': '#ff00ff',
-              'circle-color': '#ff00ff',
-              'circle-radius': 15,
-              'circle-stroke-width': 2,
-              'circle-opacity': 0.05
-            }
-          });
-
-          /**
-           * 🏛 Nombre del lugar
-           */
-          mapa.addLayer({
-            id: 'nombre',
-            type: 'symbol',
-            source: 'ubicaciones',
-            filter: ['!', ['has', 'point_count']],
-            layout: {
-              'text-field': [
-                'format',
-                ['get', 'nombre'],
-                { 'font-scale': 0.8 },
-                ' ',
-                ['get', 'conteo'],
-                { 'font-scale': 0.75 }
-              ]
-            },
-            paint: {
-              'text-color': '#000',
-              'text-halo-width': ['case', ['boolean', ['feature-state', 'activo'], false], 3, 2],
-              'text-halo-blur': 0
-            }
-          });
+      if (primerPunto) {
+        mapa.flyTo({
+          center: primerPunto.geometry.coordinates as [number, number],
+          essential: true
         });
+      }
 
-        // mapa.on('mouseenter', 'grupos', (evento) => {
-        //   console.log(evento);
-        // });
-      });
+      return;
     }
+
+    /**
+     * Esperar a que el mapa de mapbox termine de cargar antes de llenarlo con los datos.
+     */
+    mapa.on('load', () => {
+      // Crea la fuente para todas las ubicaciones (puntos).
+      mapa.addSource('ubicaciones', {
+        type: 'geojson',
+        data: datosGeo,
+        cluster: true,
+        clusterRadius: 100,
+        clusterProperties: {
+          // Esto suma la cantidad de elementos que tiene un grupo,
+          // para poder actualizar los círculos a medida que se hace zoom
+          conteo: ['+', ['get', 'conteo']]
+        }
+      });
+
+      /**
+       * 🔵 Los círculos que agrupan varios lugares dependiendo del zoom.
+       */
+      mapa.addLayer({
+        id: 'grupos',
+        type: 'circle',
+        source: 'ubicaciones',
+        filter: ['has', 'point_count'],
+        paint: {
+          'circle-stroke-color': '#ff00ff',
+          'circle-stroke-width': 3,
+          /**
+           * ['step'] | A diferencia de "interpolate", "step" crea una serie de puntos donde algo debe cambiar.
+           * ['get', 'obras'] | La cantidad de obras dentro del círculo, sale de "clusterProperties" que definimos al crear la capa.
+           * En "step" se pueden crear los cortes que uno quiera, los valores que siguen deben ser impares:
+           * anchoMin, corte1, ancho1, corte2, ancho2, ....
+           */
+          'circle-radius': ['interpolate', ['linear'], ['get', 'conteo'], 1, 15, 100, 80],
+          'circle-color': '#ff00ff',
+          'circle-opacity': 0.05
+        }
+      });
+
+      /**
+       * 🅰 Texto dentro del círculo
+       */
+      mapa.addLayer({
+        id: 'contadorObras',
+        type: 'symbol',
+        source: 'ubicaciones',
+        // Sólo mostrarlo cuando tiene más de un lugar agrupado ("point_count" lo crea mapbox y se va actualizando con el zoom).
+        filter: ['has', 'point_count'],
+        layout: {
+          /**
+           * 'format' | Permite concatenar una serie de textos o imágenes.
+           * ['image', 'icono'] | Pone la imagen que registramos antes en la instancia de mapbox.
+           */
+          'text-field': ['format', ['get', 'conteo']],
+          'text-size': 12
+        }
+      });
+
+      /**
+       * ⭕ Punto cuando es 1 lugar y no un "cluster".
+       */
+      mapa.addLayer({
+        id: 'punto',
+        type: 'circle',
+        source: 'ubicaciones',
+        filter: ['!', ['has', 'point_count']], // Cuando NO tiene "point_count" ya no es un grupo y es sólo 1 punto.
+        paint: {
+          'circle-stroke-color': '#ff00ff',
+          'circle-color': '#ff00ff',
+          'circle-radius': 15,
+          'circle-stroke-width': 2,
+          'circle-opacity': 0.05
+        }
+      });
+
+      /**
+       * 🏛 Nombre del lugar
+       */
+      mapa.addLayer({
+        id: 'nombre',
+        type: 'symbol',
+        source: 'ubicaciones',
+        filter: ['!', ['has', 'point_count']],
+        layout: {
+          'text-field': [
+            'format',
+            ['get', 'nombre'],
+            { 'font-scale': 0.8 },
+            ' ',
+            ['get', 'conteo'],
+            { 'font-scale': 0.75 }
+          ]
+        },
+        paint: {
+          'text-color': '#000',
+          'text-halo-width': ['case', ['boolean', ['feature-state', 'activo'], false], 3, 2],
+          'text-halo-blur': 0
+        }
+      });
+    });
+
+    // Función para mostrar algo al pasar el mouse por un punto
+    // mapa.on('mouseenter', 'grupos', (evento) => {
+    //   console.log(evento);
+    // });
   });
-
-  // geo.subscribe((datosGeo) => {
-  //   if (!Object.keys(datosGeo).length) return;
-
-  //   if (!contenedorMapa) return;
-
-  //   if (!mapaCreado) {
-  //     mapa = new mapbox.Map({
-  //       container: contenedorMapa,
-  //       style: estilo,
-  //       zoom: 1,
-  //       attributionControl: false
-  //     });
-
-  //     mapaCreado = true;
-  //   } else {
-  //     const fuente = mapa.getSource('ubicaciones') as GeoJSONSource;
-
-  //     fuente.setData(datosGeo);
-
-  //     const primerPunto = datosGeo.features[0];
-
-  //     if (primerPunto) {
-  //       mapa.flyTo({
-  //         center: primerPunto.geometry.coordinates as [number, number],
-  //         essential: true
-  //       });
-  //     }
-
-  //     return;
-  //   }
-
-  //   /**
-  //    * Esperar a que el mapa de mapbox termine de cargar antes de llenarlo con los datos.
-  //    */
-  //   mapa.on('load', () => {
-  //     // Crea la fuente para todas las ubicaciones (puntos).
-  //     mapa.addSource('ubicaciones', {
-  //       type: 'geojson',
-  //       data: datosGeo,
-  //       cluster: true,
-  //       clusterRadius: 100,
-  //       clusterProperties: {
-  //         // Esto suma la cantidad de elementos que tiene un grupo,
-  //         // para poder actualizar los círculos a medida que se hace zoom
-  //         conteo: ['+', ['get', 'conteo']]
-  //       }
-  //     });
-
-  //     /**
-  //      * 🔵 Los círculos que agrupan varios lugares dependiendo del zoom.
-  //      */
-  //     mapa.addLayer({
-  //       id: 'grupos',
-  //       type: 'circle',
-  //       source: 'ubicaciones',
-  //       filter: ['has', 'point_count'],
-  //       paint: {
-  //         'circle-stroke-color': '#ff00ff',
-  //         'circle-stroke-width': 3,
-  //         /**
-  //          * ['step'] | A diferencia de "interpolate", "step" crea una serie de puntos donde algo debe cambiar.
-  //          * ['get', 'obras'] | La cantidad de obras dentro del círculo, sale de "clusterProperties" que definimos al crear la capa.
-  //          * En "step" se pueden crear los cortes que uno quiera, los valores que siguen deben ser impares:
-  //          * anchoMin, corte1, ancho1, corte2, ancho2, ....
-  //          */
-  //         'circle-radius': ['interpolate', ['linear'], ['get', 'conteo'], 1, 15, 100, 80],
-  //         'circle-color': '#ff00ff',
-  //         'circle-opacity': 0.05
-  //       }
-  //     });
-
-  //     /**
-  //      * 🅰 Texto dentro del círculo
-  //      */
-  //     mapa.addLayer({
-  //       id: 'contadorObras',
-  //       type: 'symbol',
-  //       source: 'ubicaciones',
-  //       // Sólo mostrarlo cuando tiene más de un lugar agrupado ("point_count" lo crea mapbox y se va actualizando con el zoom).
-  //       filter: ['has', 'point_count'],
-  //       layout: {
-  //         /**
-  //          * 'format' | Permite concatenar una serie de textos o imágenes.
-  //          * ['image', 'icono'] | Pone la imagen que registramos antes en la instancia de mapbox.
-  //          */
-  //         'text-field': ['format', ['get', 'conteo']],
-  //         'text-size': 12
-  //       }
-  //     });
-
-  //     /**
-  //      * ⭕ Punto cuando es 1 lugar y no un "cluster".
-  //      */
-  //     mapa.addLayer({
-  //       id: 'punto',
-  //       type: 'circle',
-  //       source: 'ubicaciones',
-  //       filter: ['!', ['has', 'point_count']], // Cuando NO tiene "point_count" ya no es un grupo y es sólo 1 punto.
-  //       paint: {
-  //         'circle-stroke-color': '#ff00ff',
-  //         'circle-color': '#ff00ff',
-  //         'circle-radius': 15,
-  //         'circle-stroke-width': 2,
-  //         'circle-opacity': 0.05
-  //       }
-  //     });
-
-  //     /**
-  //      * 🏛 Nombre del lugar
-  //      */
-  //     mapa.addLayer({
-  //       id: 'nombre',
-  //       type: 'symbol',
-  //       source: 'ubicaciones',
-  //       filter: ['!', ['has', 'point_count']],
-  //       layout: {
-  //         'text-field': [
-  //           'format',
-  //           ['get', 'nombre'],
-  //           { 'font-scale': 0.8 },
-  //           ' ',
-  //           ['get', 'conteo'],
-  //           { 'font-scale': 0.75 }
-  //         ]
-  //       },
-  //       paint: {
-  //         'text-color': '#000',
-  //         'text-halo-width': ['case', ['boolean', ['feature-state', 'activo'], false], 3, 2],
-  //         'text-halo-blur': 0
-  //       }
-  //     });
-  //   });
-
-  //   // mapa.on('mouseenter', 'grupos', (evento) => {
-  //   //   console.log(evento);
-  //   // });
-  // });
 </script>
 
 <style>

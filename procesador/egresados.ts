@@ -21,13 +21,6 @@ export interface ListasEgresados {
   ciudades: ElementoLista[];
 }
 
-const listasEgresados: ListasEgresados = {
-  temas: [],
-  ambitos: [],
-  paises: [],
-  ciudades: []
-};
-
 const camposMultiplesEgresados: CamposEgresados = [
   { llave: 'ambitos', indice: 4 },
   { llave: 'paises', indice: 6 },
@@ -37,7 +30,7 @@ const camposMultiplesEgresados: CamposEgresados = [
 
 const camposEgresados = [...camposMultiplesEgresados];
 
-export default async function procesarEgresados(archivo: string): Promise<void> {
+export default async function procesarEgresados(archivo: string, listasEgresados: ListasEgresados): Promise<void> {
   const egresados: Egresado[] = [];
 
   return new Promise(async (resolver) => {
