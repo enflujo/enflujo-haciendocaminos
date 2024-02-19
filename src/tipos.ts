@@ -129,9 +129,11 @@ export interface ElementoListaEgresados {
   egresados?: number[];
 }
 
-export interface ElementoBuscador {
+export interface OpcionBuscadorDatos {
   nombre: string;
-  indice: number;
   tipo: string;
+}
+
+export interface ElementoBuscador extends OpcionBuscadorDatos {
   opcion: HTMLLIElement;
 }

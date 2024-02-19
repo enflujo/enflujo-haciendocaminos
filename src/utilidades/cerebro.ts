@@ -8,7 +8,8 @@ import type {
   RelacionesFicha,
   ElementoFicha,
   ElementoEgresado,
-  ElementoBuscador
+  ElementoBuscador,
+  OpcionBuscadorDatos
 } from '@/tipos';
 import type { FeatureCollection, Point } from 'geojson';
 import type { Egresado, ListasEgresados } from '../../procesador/egresados';
@@ -57,27 +58,20 @@ onMount(datosListas, () => {
 
     pedirDatos<Proyecto[]>(`${import.meta.env.BASE_URL}/proyectos.json`).then((proyectos) => {
       datosProyectos.set(proyectos);
-
-      const opciones: ElementoBuscador[] = [];
-
-      for (const llaveLista in listas) {
-        const lista = listas[llaveLista as keyof Listas];
-        lista.forEach((elemento, i) => {
-          const opcion = document.createElement('li');
-          opcion.innerText = elemento.nombre;
-
-          const elementoBuscador: ElementoBuscador = {
-            nombre: elemento.nombre,
-            tipo: llaveLista,
-            indice: i,
-            opcion
-          };
-          opciones.push(elementoBuscador);
-        });
-      }
-
-      opcionesBuscador.set(opciones);
     });
+  });
+});
+
+onMount(opcionesBuscador, () => {
+  pedirDatos<OpcionBuscadorDatos[]>(`${import.meta.env.BASE_URL}/datosBuscador.json`).then((datosBuscador) => {
+    const opciones: ElementoBuscador[] = datosBuscador.map((opcion) => {
+      const elemento = document.createElement('li');
+      elemento.innerText = opcion.nombre;
+
+      return { opcion: elemento, ...opcion };
+    });
+
+    opcionesBuscador.set(opciones);
   });
 });
 
