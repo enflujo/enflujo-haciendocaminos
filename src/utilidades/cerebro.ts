@@ -63,8 +63,8 @@ onMount(datosListas, () => {
       for (const llaveLista in listas) {
         const lista = listas[llaveLista as keyof Listas];
         lista.forEach((elemento, i) => {
-          const opcion = document.createElement('option');
-          opcion.value = elemento.nombre;
+          const opcion = document.createElement('li');
+          opcion.innerText = elemento.nombre;
 
           const elementoBuscador: ElementoBuscador = {
             nombre: elemento.nombre,
