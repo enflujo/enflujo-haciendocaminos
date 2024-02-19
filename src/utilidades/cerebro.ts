@@ -22,7 +22,9 @@ export const geo = map<FeatureCollection<Point>>();
 export const geoEgresados = map<FeatureCollection<Point>>();
 export const elementoSeleccionado = map<{ vista: string; tipo: string; id: string }>();
 export const opcionesBuscador = atom<ElementoBuscador[] | null>(null);
+export const vista = map<String>();
 let _copiaDatosMapa: FeatureCollection<Point>;
+let _copiaDatosMapaEgresados: FeatureCollection<Point>;
 
 export const nombresListasProyectos = {
   proyecto: 'Proyecto',
@@ -90,28 +92,41 @@ onMount(datosListasEgresados, () => {
 });
 
 onMount(geo, () => {
-  pedirDatos<FeatureCollection<Point>>(`${import.meta.env.BASE_URL}/datosMapa.geo.json`).then((res) => {
-    geo.set(res);
-    _copiaDatosMapa = res;
-  });
-});
+  const vistaActual = vista.get();
 
-// Pedir datos egresados
-onMount(geoEgresados, () => {
-  pedirDatos<FeatureCollection<Point>>(`${import.meta.env.BASE_URL}/datosMapaEgresados.geo.json`).then((res) => {
-    geoEgresados.set(res);
-    _copiaDatosMapa = res;
-  });
+  if (vistaActual === 'proyectos') {
+    pedirDatos<FeatureCollection<Point>>(`${import.meta.env.BASE_URL}/datosMapa.geo.json`).then((res) => {
+      geo.set(res);
+      _copiaDatosMapa = res;
+    });
+  } else if (vistaActual === 'egresados') {
+    pedirDatos<FeatureCollection<Point>>(`${import.meta.env.BASE_URL}/datosMapaEgresados.geo.json`).then((res) => {
+      geo.set(res);
+      _copiaDatosMapaEgresados = res;
+    });
+  }
 });
 
 export function filtrarMapa(lugares?: string[]) {
   if (lugares) {
-    const lugaresFiltrados = _copiaDatosMapa?.features.filter((lugar) => lugares.includes(lugar.properties?.slug));
+    const vistaActual = vista.get();
+    let lugaresFiltrados;
+
+    if (vistaActual === 'proyectos') {
+      lugaresFiltrados = _copiaDatosMapa?.features.filter((lugar) => lugares.includes(lugar.properties?.slug));
+    } else if (vistaActual === 'egresados') {
+      lugaresFiltrados = _copiaDatosMapaEgresados?.features.filter((lugar) => lugares.includes(lugar.properties?.slug));
+    }
+
     if (lugaresFiltrados) {
       geo.setKey('features', lugaresFiltrados);
     }
   } else {
-    geo.setKey('features', _copiaDatosMapa?.features);
+    if (vista.get() === 'proyectos') {
+      geo.setKey('features', _copiaDatosMapa?.features);
+    } else if (vista.get() === 'egresados') {
+      geo.setKey('features', _copiaDatosMapaEgresados?.features);
+    }
   }
 }
 
@@ -251,7 +266,8 @@ elementoSeleccionado.subscribe((elemento) => {
           {}
         );
 
-        const lugaresMapa = datos.relaciones.filter((relacion) => relacion.tipo === 'municipios');
+        const lugaresMapa = datos.relaciones.filter((relacion) => relacion.tipo === 'ciudades');
+
         filtrarMapa(lugaresMapa.map((lugar) => lugar.slug));
 
         datosFicha.set({
@@ -261,8 +277,7 @@ elementoSeleccionado.subscribe((elemento) => {
           conteo: `${datos.conteo}`,
           paises: relaciones.paises ? relaciones.paises : [],
           temas: relaciones.temas ? relaciones.temas : [],
-          municipios: relaciones.municipios ? relaciones.municipios : [],
-          decadas: relaciones.decadas ? relaciones.decadas : [],
+          ciudades: relaciones.ciudades ? relaciones.ciudades : [],
           egresado: egresados
         });
       }
