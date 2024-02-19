@@ -58,7 +58,7 @@ const listasEgresados: ListasEgresados = {
   ciudades: []
 };
 
-const archivo = './procesador/datos/Listado de proyectos - 60 años dpto antropología .xlsx';
+const archivo = './procesador/datos/Listado de proyectos - 60 años dpto antropología 1902.xlsx';
 
 async function procesar() {
   await procesarEgresados(archivo, listasEgresados);

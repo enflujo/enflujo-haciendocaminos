@@ -37,8 +37,8 @@ export async function procesarLugares(archivo: string, listas: Listas): Promise<
     function procesarLugar(fila: string[]) {
       const nombreLugar = fila[0].trim();
       const slug = slugificar(nombreLugar);
-      const longitud = fila[8];
-      const latitud = fila[7];
+      const longitud = fila[6];
+      const latitud = fila[5];
       const lugar = listas.municipios.filter((elemento) => elemento.slug === slug);
       const conteo = lugar[0] ? lugar[0].conteo : 0;
 
@@ -109,8 +109,8 @@ export async function procesarLugaresEgresados(archivo: string, listas: ListasEg
     function procesarLugar(fila: string[]) {
       const nombreLugar = fila[0].trim();
       const slug = slugificar(nombreLugar);
-      const longitud = fila[8];
-      const latitud = fila[7];
+      const longitud = fila[6];
+      const latitud = fila[5];
       const lugar = listas.ciudades.filter((elemento) => elemento.slug === slug);
       const conteo = lugar[0] ? lugar[0].conteo : 0;
 
