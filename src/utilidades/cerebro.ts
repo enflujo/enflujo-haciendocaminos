@@ -110,7 +110,7 @@ vista.subscribe((vistaActual) => {
 export function filtrarMapa(lugares?: { slug: string; conteo: number }[]) {
   if (lugares) {
     const vistaActual = vista.get();
-    let lugaresFiltrados: Feature<Point>[];
+    let lugaresFiltrados: Feature<Point>[] = [];
 
     if (vistaActual === 'proyectos') {
       lugaresFiltrados = _copiaDatosMapa?.features.filter((lugar) =>
@@ -122,7 +122,6 @@ export function filtrarMapa(lugares?: { slug: string; conteo: number }[]) {
           const datosLugar = lugares.find((obj) => obj.slug === punto.properties?.slug);
           punto.properties.conteo = datosLugar?.conteo;
         }
-
         return punto;
       });
     } else if (vistaActual === 'egresados') {
@@ -138,10 +137,9 @@ export function filtrarMapa(lugares?: { slug: string; conteo: number }[]) {
 
         return punto;
       });
-
-      if (lugaresFiltrados) {
-        geo.setKey('features', lugaresFiltrados);
-      }
+    }
+    if (lugaresFiltrados) {
+      geo.setKey('features', lugaresFiltrados);
     }
   } else {
     if (vista.get() === 'proyectos') {
