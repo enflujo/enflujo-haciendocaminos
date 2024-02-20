@@ -64,9 +64,17 @@ onMount(datosListas, () => {
 
 onMount(opcionesBuscador, () => {
   pedirDatos<OpcionBuscadorDatos[]>(`${import.meta.env.BASE_URL}/datosBuscador.json`).then((datosBuscador) => {
+    const sugerencias = document.getElementById('sugerencias') as HTMLDataListElement;
     const opciones: ElementoBuscador[] = datosBuscador.map((opcion) => {
       const elemento = document.createElement('li');
+      elemento.className = 'resultadoBusqueda';
       elemento.innerText = opcion.nombre;
+
+      elemento.addEventListener('click', () => {
+        vista.set(opcion.vista);
+        sugerencias.classList.remove('visible');
+        elementoSeleccionado.set({ vista: opcion.vista, tipo: opcion.tipo, id: opcion.id });
+      });
 
       return { opcion: elemento, ...opcion };
     });
@@ -132,10 +140,10 @@ export function filtrarMapa(lugares?: { slug: string; conteo: number }[]) {
 
         return punto;
       });
-    }
 
-    if (lugaresFiltrados) {
-      geo.setKey('features', lugaresFiltrados);
+      if (lugaresFiltrados) {
+        geo.setKey('features', lugaresFiltrados);
+      }
     }
   } else {
     if (vista.get() === 'proyectos') {

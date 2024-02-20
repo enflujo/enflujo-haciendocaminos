@@ -82,19 +82,21 @@ function procesarDatosBuscador(egresados: Egresado[]) {
   const opciones: OpcionBuscadorDatos[] = [];
 
   proyectos.forEach((proyecto) => {
-    opciones.push({ nombre: proyecto.nombre.nombre, tipo: 'proyecto' });
+    opciones.push({ nombre: proyecto.nombre.nombre, tipo: 'proyecto', id: `${proyecto.id}`, vista: 'proyectos' });
   });
 
   egresados.forEach((egresado) => {
-    opciones.push({ nombre: egresado.nombre, tipo: 'egresado' });
+    opciones.push({ nombre: egresado.nombre, tipo: 'egresado', id: `${egresado.id}`, vista: 'egresados' });
   });
 
   for (const llaveListaP in listas) {
     const lista = listas[llaveListaP as keyof Listas];
-    lista.forEach((elemento) => {
+    lista.forEach((elemento, i) => {
       const elementoBuscador: OpcionBuscadorDatos = {
         nombre: elemento.nombre,
-        tipo: llaveListaP
+        tipo: llaveListaP,
+        id: `${i}`,
+        vista: 'proyectos'
       };
       opciones.push(elementoBuscador);
     });
@@ -102,10 +104,12 @@ function procesarDatosBuscador(egresados: Egresado[]) {
 
   for (const llaveListaE in listasEgresados) {
     const lista = listasEgresados[llaveListaE as keyof ListasEgresados];
-    lista.forEach((elemento) => {
+    lista.forEach((elemento, i) => {
       const elementoBuscador: OpcionBuscadorDatos = {
         nombre: elemento.nombre,
-        tipo: llaveListaE
+        tipo: llaveListaE,
+        id: `${i}`,
+        vista: 'egresados'
       };
 
       opciones.push(elementoBuscador);

@@ -132,6 +132,8 @@ export interface ElementoListaEgresados {
 export interface OpcionBuscadorDatos {
   nombre: string;
   tipo: string;
+  id: string;
+  vista: 'proyectos' | 'egresados';
 }
 
 export interface ElementoBuscador extends OpcionBuscadorDatos {
