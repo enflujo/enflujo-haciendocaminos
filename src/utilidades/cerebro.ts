@@ -93,9 +93,7 @@ onMount(datosListasEgresados, () => {
   });
 });
 
-onMount(geo, () => {
-  const vistaActual = vista.get();
-
+vista.subscribe((vistaActual) => {
   if (vistaActual === 'proyectos') {
     pedirDatos<FeatureCollection<Point>>(`${import.meta.env.BASE_URL}/datosMapa.geo.json`).then((res) => {
       geo.set(res);

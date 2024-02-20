@@ -3,7 +3,7 @@ import Buscador from './Buscador.astro';
 
 const urlBase = import.meta.env.BASE_URL;
 const { pathname } = Astro.url;
-const paginaActual = pathname.replace(urlBase, '');
+const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
 ---
 
 <nav id="menu">
@@ -17,9 +17,9 @@ const paginaActual = pathname.replace(urlBase, '');
     <h1>Haciendo Caminos</h1>
     <span class="cajaGusanos"></span>
     <ul>
-      <li class="botonVista"><a href=`${urlBase}/` class={paginaActual === '/' ? 'actual' : ''}>Proyectos</a></li>
+      <li class="botonVista"><a href=`${urlBase}/` class={paginaActual === '' ? 'actual' : ''}>Proyectos</a></li>
       <li class="botonVista">
-        <a href=`${urlBase}/egresados` class={paginaActual === '/egresados' ? 'actual' : ''}>Egresados</a>
+        <a href=`${urlBase}/egresados` class={paginaActual === 'egresados' ? 'actual' : ''}>Egresados</a>
       </li>
     </ul>
 
