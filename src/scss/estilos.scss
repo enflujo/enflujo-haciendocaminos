@@ -158,12 +158,27 @@ a:link {
   right: 0px;
   z-index: 4;
   font-family: var(--fuenteParrafo);
-  height: 70vh;
+  height: 100vh;
   overflow: auto;
   padding-bottom: 5em;
   width: 50vw;
   padding: 3rem 2rem;
+  margin-top: 1.2em;
   font-size: 0.8em;
+
+  #cajaNombreVista {
+    background-color: var(--resaltadoVerde);
+    position: fixed;
+    top: var(--altoMenu);
+    width: calc(30vw - 15px);
+    font-family: var(--fuenteParrafo);
+    text-transform: uppercase;
+    font-size: 20px;
+    color: var(--textoOscuro);
+    padding: 15px 0 15px 3.5rem;
+    margin-top: 0px;
+    right: 15px;
+  }
 
   .nodoProyecto {
     margin: 0.85em 0;

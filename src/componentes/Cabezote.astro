@@ -24,12 +24,15 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
     </ul>
 
     <Buscador />
+    <div id="botonIntro">?</div>
   </div>
 </nav>
 
 <script>
   const menuListas = document.getElementById('menuListas') as HTMLDivElement;
   const contenedorListas = document.getElementById('contenedorListas') as HTMLDivElement;
+  const botonAbrirIntro = document.getElementById('botonIntro') as HTMLDivElement;
+  const intro = document.getElementById('introduccion') as HTMLDivElement;
 
   if (menuListas) {
     menuListas.addEventListener('click', () => {
@@ -42,6 +45,25 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
       }
     });
   }
+
+  // Cerrar listas si se hace click fuera de su contenedor
+  document.body.addEventListener('click', (evento) => {
+    if (
+      !(
+        contenedorListas === evento.target ||
+        contenedorListas.contains(evento.target as Node) ||
+        menuListas === evento.target
+      )
+    ) {
+      contenedorListas.classList.remove('visible');
+      menuListas.classList.remove('abierto');
+    }
+  });
+
+  // Abrir y cerrar Intro
+  botonAbrirIntro.onclick = () => {
+    intro.classList.add('visible');
+  };
 </script>
 
 <style lang="scss">
@@ -174,6 +196,25 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
             transform: rotate(-45deg);
           }
         }
+      }
+    }
+
+    #botonIntro {
+      display: block;
+      font-family: var(--fuenteNumeros);
+      font-size: 1.2em;
+      width: 2.1em;
+      height: 2.1em;
+      padding: 0.4em;
+      font-weight: bold;
+      border-radius: 50%;
+      text-align: center;
+      cursor: pointer;
+
+      &:hover {
+        opacity: 0.5;
+        background-color: var(--fondoAmarilloClaro2);
+        color: var(--textoOscuro);
       }
     }
   }

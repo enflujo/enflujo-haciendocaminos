@@ -11,3 +11,18 @@ export async function pedirDatos<Respuesta>(url: string, config: RequestInit = {
   const datos = await res.json();
   return datos as Respuesta;
 }
+
+/**
+ *
+ * @param elemento : Elemento de HTML que quiere cerrarse al hacer clic fuera de él
+ * @param elemento2 : Elemento de HTML que no debe cerrar el elemento 1 al hacer clic en él
+ */
+export function cerrarClicFuera(elemento: HTMLElement, elemento2?: HTMLElement) {
+  document.body.addEventListener('click', (evento) => {
+    if (!(elemento === evento.target || elemento.contains(evento.target as Node) || elemento2 === evento.target)) {
+      if (elemento.classList.contains('visible')) {
+        elemento.classList.remove('visible');
+      }
+    }
+  });
+}
