@@ -105,13 +105,15 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
       padding: 0em 1em;
       display: flex;
       align-items: center;
-      justify-content: space-around;
+      justify-content: space-between;
       height: 100%;
       max-height: 50px;
       z-index: 9;
 
       h1 {
         z-index: 3;
+        width: 23vw;
+        font-size: 1.1em;
       }
 
       .cajaGusanos {
@@ -130,6 +132,7 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
     // Botón para cambiar de vista (proyectos / egresados)
     .botonVista {
       cursor: pointer;
+      font-size: 0.8em;
 
       &:hover {
         opacity: 0.6;
@@ -180,7 +183,7 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
     #botonIntro {
       display: block;
       font-family: var(--fuenteNumeros);
-      font-size: 1.2em;
+      font-size: 0.8em;
       width: 2.1em;
       height: 2.1em;
       padding: 0.4em;
