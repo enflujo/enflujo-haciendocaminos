@@ -2,9 +2,7 @@
 
 ---
 
-<div id="mostrarIntro">?</div>
-
-<div id="introduccion">
+<div id="introduccion" class="visible">
   <button id="cerrarIntro">X</button>
 
   <p>
@@ -32,45 +30,27 @@
 </div>
 
 <script>
-  const botonMostrarIntro = document.getElementById('mostrarIntro') as HTMLDivElement;
+  import { cerrarClicFuera } from '../utilidades/ayudas.ts';
   const botonCerrarIntro = document.getElementById('cerrarIntro') as HTMLDivElement;
+  const botonAbrirIntro = document.getElementById('botonIntro') as HTMLDivElement;
   const intro = document.getElementById('introduccion') as HTMLDivElement;
 
   botonCerrarIntro.onclick = () => {
-    intro.style.display = 'none';
+    intro.classList.remove('visible');
   };
 
-  botonMostrarIntro.onclick = () => {
-    intro.style.display = 'block';
-  };
+  // Cerrar al hacer click fuera de intro
+  cerrarClicFuera(intro, botonAbrirIntro);
 </script>
 
 <style lang="scss">
   @import '@/scss/constantes';
-  #mostrarIntro {
-    display: block;
-    position: absolute;
-    right: 2vw;
-    top: 70px;
-    z-index: 3;
-    width: 2em;
-    height: 2em;
-    padding: 0.5em;
-    border-radius: 50%;
-    text-align: center;
-    cursor: pointer;
-    background-color: var(--fondoAmarilloClaro2);
-
-    &:hover {
-      opacity: 0.5;
-    }
-  }
 
   #introduccion {
     font-family: var(--fuenteParrafo);
     width: 96vw;
     position: absolute;
-    display: block;
+    display: none;
     right: 2vw;
     top: 60px;
     background-color: var(--fondoVerdeOscuro);
@@ -124,6 +104,10 @@
         background-color: var(--grisMedio);
         opacity: 0.7;
       }
+    }
+
+    &.visible {
+      display: block;
     }
   }
 
