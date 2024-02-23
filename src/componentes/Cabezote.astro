@@ -90,8 +90,10 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
 
       &:hover,
       &.actual {
-        opacity: 0.8;
-        color: var(--magenta);
+        // opacity: 0.8;
+        // color: var(--magenta);
+        color: var(--resaltadoVerde);
+        // text-decoration: underline;
       }
     }
 
@@ -116,11 +118,15 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
       }
 
       .cajaGusanos {
-        // content: '';
+        position: absolute;
         background-image: url(/enflujo-haciendocaminos/imgs/gusanitos.svg);
         height: 50px;
-        width: 100px;
+        width: 10vw;
+        left: 30vw;
+        min-width: 70px;
         background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
       }
 
       // Lo mismo pero con psuedo elemento ::before, en este caso, en el HTML no va nada de esto.
@@ -130,7 +136,7 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
       //   background-image: url(/enflujo-haciendocaminos/imgs/gusanitos.svg);
       //   position: absolute;
       //   height: 50px;
-      //   width: 100px;
+      //   width: 20vw;
       //   background-repeat: no-repeat;
       // }
 
@@ -215,6 +221,24 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
         opacity: 0.5;
         background-color: var(--fondoAmarilloClaro2);
         color: var(--textoOscuro);
+      }
+    }
+  }
+
+  // Cambiar estilos según tamaño de pantalla
+  @media screen and (min-width: $corte2) {
+    #menu {
+      #encabezado {
+        .cajaGusanos {
+          position: static;
+          background-image: url(/enflujo-haciendocaminos/imgs/gusanitos.svg);
+          height: 50px;
+          width: 10vw;
+          min-width: 70px;
+          background-repeat: no-repeat;
+          background-position: center;
+          background-size: cover;
+        }
       }
     }
   }
