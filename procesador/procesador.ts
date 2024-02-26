@@ -5,7 +5,7 @@ import type {
   ElementoLista,
   LLavesMultiples,
   Listas,
-  LllavesSingulares,
+  LlavesSingulares,
   OpcionBuscadorDatos,
   Proyecto
 } from '../src/tipos.ts';
@@ -294,7 +294,7 @@ function procesarFila(fila: string[]) {
 
   camposSingulares.forEach((campo) => {
     const validacion = validarValorSingular(fila[campo.indice], listas[campo.llave]);
-    if (validacion) respuesta[campo.llave as LllavesSingulares] = validacion;
+    if (validacion) respuesta[campo.llave as LlavesSingulares] = validacion;
   });
 
   camposMultiples.forEach((campo) => {
