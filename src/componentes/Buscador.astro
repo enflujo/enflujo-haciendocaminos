@@ -97,6 +97,7 @@ const listas = { ...nombresListasProyectos, ...nombresListasEgresados };
 </script>
 
 <style lang="scss">
+  @import '@/scss/constantes';
   #contenedorBuscador {
     z-index: 99;
   }
@@ -109,6 +110,7 @@ const listas = { ...nombresListasProyectos, ...nombresListasEgresados };
     color: var(--textoClaro);
     font-size: 0.85em;
     transition: all 0.25s ease-in-out;
+    width: 20vw;
 
     &:focus {
       background-color: var(--resaltadoVerde);
@@ -162,6 +164,13 @@ const listas = { ...nombresListasProyectos, ...nombresListasEgresados };
       &.visible {
         display: flex;
       }
+    }
+  }
+
+  // Cambiar estilos según tamaño de pantalla
+  @media screen and (min-width: $corte1) {
+    #buscador {
+      width: 150px;
     }
   }
 </style>
