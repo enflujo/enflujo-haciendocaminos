@@ -19,8 +19,8 @@
 
   <section id="navegacion">
     <div id="navegacionProyectos">
-      <span id="fichaElementoAnterior" class="botonNavegacion izquierda"></span>
-      <span id="fichaElementoSiguiente" class="botonNavegacion derecha"></span>
+      <div id="fichaElementoAnterior"><span class="botonNavegacion izquierda"></span></div>
+      <div id="fichaElementoSiguiente"><span class="botonNavegacion derecha"></span></div>
     </div>
   </section>
 
@@ -414,6 +414,7 @@
         position: sticky;
 
         .botonNavegacion {
+          display: block;
           width: 15px;
           height: 15px;
           border-top: 2px solid var(--textoOscuro);
