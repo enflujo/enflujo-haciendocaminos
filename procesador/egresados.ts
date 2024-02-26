@@ -92,14 +92,14 @@ export default async function procesarEgresados(
               const llaveDondeLllenar = campoRelacion.llave;
               const datosEgresado = egresado[llaveALlenar];
 
-              // Si el proyecto tiene datos en este campo
+              // Si el egresado tiene datos en este campo
               if (datosEgresado) {
                 // Sacar los slugs del campo
-                const slugsCampoProyecto = Array.isArray(datosEgresado)
+                const slugsCampoEgresado = Array.isArray(datosEgresado)
                   ? (datosEgresado as DefinicionSimple[]).map(({ slug }) => slug)
                   : [(datosEgresado as DefinicionSimple).slug];
 
-                slugsCampoProyecto.forEach((slug) => {
+                slugsCampoEgresado.forEach((slug) => {
                   const i = listasEgresados[llaveALlenar].findIndex((obj) => obj.slug === slug);
                   const elementosDondeConectar = Array.isArray(datosRelacion)
                     ? (datosRelacion as DefinicionSimple[]).map(({ slug }) => slug)
@@ -113,8 +113,8 @@ export default async function procesarEgresados(
                     if (elementoALlenar) {
                       const existe = elementoALlenar.relaciones.find((obj) => obj.slug === slug);
 
-                      if (!elementoALlenar.proyectos?.includes(id)) {
-                        elementoALlenar.proyectos?.push(id);
+                      if (!elementoALlenar.egresados?.includes(id)) {
+                        elementoALlenar.egresados?.push(id);
                       }
 
                       if (!existe) {
@@ -159,7 +159,7 @@ export default async function procesarEgresados(
       const existe = lista.find((obj) => obj.slug === slug);
 
       if (!existe) {
-        lista.push({ nombre, conteo: 1, slug, relaciones: [] });
+        lista.push({ nombre, conteo: 1, slug, relaciones: [], egresados: [] });
       } else {
         existe.conteo++;
       }
