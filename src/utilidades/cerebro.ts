@@ -34,7 +34,7 @@ export const nombresListasProyectos = {
   lideres: 'Líderes de Proyectos',
   participantes: 'Participantes',
   ramas: 'Ramas',
-  temas: 'Temas',
+  temas: 'Áreas',
   objetos: 'Objetos',
   municipios: 'Municipios',
   decadas: 'Décadas',
@@ -43,7 +43,7 @@ export const nombresListasProyectos = {
 
 export const nombresListasEgresados = {
   paises: 'Países',
-  temas: 'Temas',
+  temas: 'Áreas',
   municipios: 'Municipios',
   años: 'Años',
   egresado: 'Egresado/a',
