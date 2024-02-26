@@ -90,10 +90,7 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
 
       &:hover,
       &.actual {
-        // opacity: 0.8;
-        // color: var(--magenta);
         color: var(--resaltadoVerde);
-        // text-decoration: underline;
       }
     }
 
@@ -128,31 +125,6 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
         background-position: center;
         background-size: cover;
       }
-
-      // Lo mismo pero con psuedo elemento ::before, en este caso, en el HTML no va nada de esto.
-
-      // &::before {
-      //   content: '';
-      //   background-image: url(/enflujo-haciendocaminos/imgs/gusanitos.svg);
-      //   position: absolute;
-      //   height: 50px;
-      //   width: 20vw;
-      //   background-repeat: no-repeat;
-      // }
-
-      // .cajaGusanos {
-      //   display: flex;
-      //   max-height: 50px;
-      //   width: 100%;
-      //   z-index: 0;
-      //   position: absolute;
-
-      //   .gusanos {
-      //     height: 50px;
-      //     width: 100%;
-      //     object-fit: none;
-      //   }
-      // }
     }
 
     // Botón para cambiar de vista (proyectos / egresados)
