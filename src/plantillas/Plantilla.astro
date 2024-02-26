@@ -10,7 +10,8 @@ interface Props {
 const { titulo, descripcion, imagen } = Astro.props;
 
 const nombreProyecto = 'Antropología Uniandes - 60 años haciendo caminos';
-const descripcionGeneral = 'Este proyecto...';
+const descripcionGeneral =
+  'HACIENDO CAMINOS: Historia del Departamento de Antropología de la Universidad de Los Andes contada a través de sus proyectos de investigación.';
 const { pathname } = Astro.url;
 const tituloSEO = titulo ? `${titulo} | ${nombreProyecto}` : nombreProyecto;
 const descripcionSEO = descripcion || descripcionGeneral;
