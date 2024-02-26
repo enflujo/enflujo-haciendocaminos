@@ -12,7 +12,7 @@ export type Año = { años: number[]; tipo: 'singular' | 'rango' | 'multiples'; 
 export type Regiones = { nombre: string; slug: string; lon: number; lat: number; conteo: number }[];
 export type Municipios = { nombre: string; slug: string; lon: number; lat: number; conteo: number }[];
 
-export type LllavesSingulares = 'categorias' | 'roles';
+export type LllavesSingulares = 'categorias';
 export type LLavesMultiples =
   | 'decadas'
   | 'lideres'
@@ -38,7 +38,6 @@ export type Proyecto = {
   años?: Año;
   decadas?: DefinicionSimple[];
   lideres?: DefinicionSimple[];
-  roles?: DefinicionSimple;
   participantes?: DefinicionSimple[];
   ramas?: DefinicionSimple[];
   temas?: DefinicionSimple[];
@@ -54,7 +53,6 @@ export type Listas = {
   años: ElementoLista[];
   categorias: ElementoLista[];
   lideres: ElementoLista[];
-  roles: ElementoLista[];
   participantes: ElementoLista[];
   ramas: ElementoLista[];
   temas: ElementoLista[];
@@ -93,7 +91,6 @@ export interface RelacionesFicha {
   paises?: ElementoFicha[];
   categorias?: ElementoFicha[];
   lideres?: ElementoFicha[];
-  roles?: ElementoFicha[];
   participantes?: ElementoFicha[];
   ramas?: ElementoFicha[];
   temas?: ElementoFicha[];

@@ -20,10 +20,7 @@ import { imageSize } from 'image-size';
 import type { Egresado, ListasEgresados } from './egresados.js';
 
 const datosEmpiezanEnFila = 2;
-const camposSingulares: Campos = [
-  { llave: 'categorias', indice: 2 },
-  { llave: 'roles', indice: 6 }
-];
+const camposSingulares: Campos = [{ llave: 'categorias', indice: 2 }];
 const camposMultiples: Campos = [
   { llave: 'decadas', indice: 4 },
   { llave: 'lideres', indice: 5 },
@@ -43,7 +40,6 @@ const listas: Listas = {
   años: [],
   categorias: [],
   lideres: [],
-  roles: [],
   participantes: [],
   ramas: [],
   temas: [],
