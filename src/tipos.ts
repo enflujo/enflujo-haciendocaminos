@@ -12,7 +12,7 @@ export type Año = { años: number[]; tipo: 'singular' | 'rango' | 'multiples'; 
 export type Regiones = { nombre: string; slug: string; lon: number; lat: number; conteo: number }[];
 export type Municipios = { nombre: string; slug: string; lon: number; lat: number; conteo: number }[];
 
-export type LllavesSingulares = 'categorias';
+export type LlavesSingulares = 'categorias';
 export type LLavesMultiples =
   | 'decadas'
   | 'lideres'
@@ -22,6 +22,8 @@ export type LLavesMultiples =
   | 'objetos'
   | 'paises'
   | 'municipios';
+
+export type LlavesListasEgresados = 'ambitos' | 'ciudades' | 'paises' | 'temas';
 
 export interface DatosImg {
   grande: string;
@@ -61,7 +63,7 @@ export type Listas = {
   decadas: ElementoLista[];
 };
 
-export type Campos = { llave: LllavesSingulares | LLavesMultiples; indice: number }[];
+export type Campos = { llave: LlavesSingulares | LLavesMultiples; indice: number }[];
 
 export type Lugar = {
   nombre: string;

@@ -23,7 +23,7 @@ export const geo = map<FeatureCollection<Point>>();
 export const geoEgresados = map<FeatureCollection<Point>>();
 export const elementoSeleccionado = map<{ vista: string; tipo: string; id: string }>();
 export const opcionesBuscador = atom<ElementoBuscador[] | null>(null);
-export const vista = map<String>();
+export const vista = atom<'proyectos' | 'egresados' | null>(null);
 let _copiaDatosMapa: FeatureCollection<Point>;
 let _copiaDatosMapaEgresados: FeatureCollection<Point>;
 
@@ -261,9 +261,9 @@ elementoSeleccionado.subscribe((elemento) => {
 
       if (datos) {
         const egresados = datos.egresados?.reduce((lista: ElementoEgresado[], indiceEgresado) => {
-          const proyecto = datosProyectos.value?.find((p) => p.id === indiceEgresado);
-          if (proyecto) {
-            lista.push({ nombre: proyecto.nombre.nombre, id: proyecto.id });
+          const egresado = datosEgresados.value?.find((p) => p.id === indiceEgresado);
+          if (egresado) {
+            lista.push({ nombre: egresado.nombre, id: egresado.id });
           }
 
           ordenarListaObjetos(lista, 'nombre', true);
@@ -304,7 +304,8 @@ elementoSeleccionado.subscribe((elemento) => {
           paises: relaciones.paises ? relaciones.paises : [],
           temas: relaciones.temas ? relaciones.temas : [],
           ciudades: relaciones.ciudades ? relaciones.ciudades : [],
-          egresado: egresados
+          egresado: egresados,
+          ambitos: relaciones.ambitos ? relaciones.ambitos : []
         });
       }
     }

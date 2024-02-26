@@ -39,6 +39,11 @@
       <ul id="listaProyecto" class="contenido"></ul>
     </div>
 
+    <div class="seccionDatos" id="fichaEgresado">
+      <h3 class="titulo">Egresados</h3>
+      <ul id="listaEgresado" class="contenido"></ul>
+    </div>
+
     <div class="seccionDatos" id="fichaPaises">
       <h3 class="titulo">Países</h3>
       <ul id="listaPaises" class="contenido"></ul>
@@ -98,9 +103,17 @@
     datosEgresados,
     datosListasEgresados,
     elementoSeleccionado,
-    filtrarMapa
+    filtrarMapa,
+    vista
   } from '@/utilidades/cerebro';
-  import type { Ficha, LLavesMultiples, Listas, LllavesSingulares } from '@/tipos';
+  import type {
+    ElementoProyecto,
+    Ficha,
+    LLavesMultiples,
+    Listas,
+    LlavesListasEgresados,
+    LlavesSingulares
+  } from '@/tipos';
   import { marked } from 'marked';
   import 'photoswipe/style.css';
   import Galeria from 'photoswipe/lightbox';
@@ -242,40 +255,77 @@
       seccionImagenes.style.display = 'none';
     }
 
+    const vistaActual = vista.get();
+
+    if (!vistaActual) return;
     // Llenar el resto de los campos
-    llenarCampos('proyecto', datos);
-    llenarCampos('paises', datos);
-    llenarCampos('categorias', datos);
-    llenarCampos('lideres', datos);
-    llenarCampos('participantes', datos);
-    llenarCampos('ramas', datos);
-    llenarCampos('temas', datos);
-    llenarCampos('objetos', datos);
-    llenarCampos('municipios', datos);
-    llenarCampos('decadas', datos);
-    llenarCampos('ambitos', datos);
-    llenarCampos('ciudades', datos);
+
+    /**Campos de Proyectos */
+    llenarCampos('proyecto', datos, vistaActual);
+    llenarCampos('categorias', datos, vistaActual);
+    llenarCampos('lideres', datos, vistaActual);
+    llenarCampos('participantes', datos, vistaActual);
+    llenarCampos('ramas', datos, vistaActual);
+    llenarCampos('objetos', datos, vistaActual);
+    llenarCampos('municipios', datos, vistaActual);
+    llenarCampos('decadas', datos, vistaActual);
+
+    /** Campos de Egresados */
+    llenarCampos('egresado', datos, vistaActual);
+    llenarCampos('ambitos', datos, vistaActual);
+    /** Campos compartidos */
+    llenarCampos('temas', datos, vistaActual);
+    llenarCampos('paises', datos, vistaActual);
+    llenarCampos('ciudades', datos, vistaActual);
   });
 
   function llenarCampos(
-    campo: LLavesMultiples | LllavesSingulares | 'proyecto' | 'ambitos' | 'ciudades',
-    datos: Ficha
+    campo: LLavesMultiples | LlavesSingulares | 'proyecto' | 'egresado' | 'ambitos' | 'ciudades',
+    datos: Ficha,
+    vistaActual: 'proyectos' | 'egresados'
   ) {
     const primeraLetra = campo.charAt(0).toUpperCase();
     const campoMayuscula = primeraLetra + campo.slice(1);
-
     const listaCampo = document.getElementById(`lista${campoMayuscula}`) as HTMLUListElement;
     const contenedorCampo = document.getElementById(`ficha${campoMayuscula}`) as HTMLDivElement;
-    contenedorCampo.style.display = 'flex';
 
     listaCampo.innerText = '';
-
     if (datos[campo] && datos[campo]?.length) {
+      contenedorCampo.style.display = 'flex';
+
       datos[campo]?.forEach((dato) => {
         const fila = document.createElement('li');
         fila.innerText = '';
         fila.innerText = dato.nombre;
         listaCampo.appendChild(fila);
+
+        let indice = '0';
+
+        if (vistaActual === 'proyectos') {
+          if (campo === 'proyecto') {
+            const i = datosProyectos.get().findIndex((proyecto) => proyecto.id === (dato as ElementoProyecto).id);
+            indice = `${i}`;
+          } else {
+            const i = datosListas
+              .get()
+              [campo as LlavesSingulares | LLavesMultiples].findIndex((elemento) => elemento.nombre === dato.nombre);
+            indice = `${i}`;
+          }
+        } else if (vistaActual === 'egresados') {
+          if (campo === 'egresado') {
+            const i = datosEgresados.get().findIndex((egresado) => egresado.id === (dato as ElementoProyecto).id);
+            indice = `${i}`;
+          } else {
+            const i = datosListasEgresados
+              .get()
+              [campo as LlavesListasEgresados].findIndex((elemento) => elemento.nombre === dato.nombre);
+            indice = `${i}`;
+          }
+        }
+
+        fila.onclick = () => {
+          elementoSeleccionado.set({ vista: vistaActual || '', tipo: campo, id: indice });
+        };
       });
     } else {
       contenedorCampo.style.display = 'none';
@@ -285,6 +335,15 @@
 
 <style lang="scss" is:global>
   @import '@/scss/constantes';
+
+  li {
+    cursor: pointer;
+    &:hover,
+    &.resaltado {
+      background-color: var(--fondoAmarilloClaro);
+      color: var(--textoOscuro);
+    }
+  }
 
   #contenedorFicha {
     max-height: calc(100vh - 70px);
@@ -436,7 +495,7 @@
       align-self: stretch;
 
       .seccionDatos {
-        display: flex;
+        display: none;
         border-bottom: 1px solid var(--resaltadoVerde);
         margin: 0 15px 0 15px;
         padding: 10px 5px 15px 10px;
