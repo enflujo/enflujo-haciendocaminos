@@ -150,7 +150,6 @@ a:link {
 
 // Listas proyectos y egresados
 #listaProyectos {
-  display: block;
   position: fixed;
   background-color: var(--fondoVerdeOscuro);
   color: var(--textoClaro);
@@ -158,26 +157,59 @@ a:link {
   right: 0px;
   z-index: 4;
   font-family: var(--fuenteParrafo);
-  height: 100vh;
+  height: calc(100vh - 170px - 50px);
   overflow: auto;
-  padding-bottom: 5em;
   width: 50vw;
-  padding: 3rem 2rem;
-  margin-top: 1.2em;
   font-size: 0.8em;
+  border-radius: 0% 0% 0% 3%;
+
+  &::before {
+    content: '';
+    background-image: url(/enflujo-haciendocaminos/imgs/gusano_3.svg);
+    background-size: contain;
+    width: 60px;
+    height: 60px;
+    transform: rotate(90deg);
+    margin: 0 0 0 0;
+    top: 500px;
+    right: -20px;
+    background-repeat: no-repeat;
+    position: absolute;
+  }
+
+  &::after {
+    content: '';
+    background-image: url(/enflujo-haciendocaminos/imgs/gusano_2.svg);
+    background-size: contain;
+    width: 60px;
+    height: 60px;
+    transform: rotate(45deg);
+    margin: 0 0 0 0;
+    top: 200vh;
+    left: -20px;
+    background-repeat: no-repeat;
+    position: absolute;
+  }
 
   #cajaNombreVista {
     background-color: var(--resaltadoVerde);
-    position: fixed;
-    top: var(--altoMenu);
-    width: calc(30vw - 15px);
-    font-family: var(--fuenteParrafo);
-    text-transform: uppercase;
-    font-size: 20px;
-    color: var(--textoOscuro);
-    padding: 15px 0 15px 3.5rem;
-    margin-top: 0px;
-    right: 15px;
+    position: sticky;
+    top: 0;
+    width: 100%;
+
+    h2 {
+      font-family: var(--fuenteParrafo);
+      text-transform: uppercase;
+      font-size: 20px;
+      color: var(--textoOscuro);
+      padding: 15px 0 15px 3.5rem;
+      margin-top: 0px;
+    }
+  }
+
+  ul {
+    font-size: 12.5px;
+    padding: 1px 3rem 5rem 3.5rem;
   }
 
   .nodoProyecto {

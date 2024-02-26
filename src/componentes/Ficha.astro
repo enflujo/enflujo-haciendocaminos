@@ -5,20 +5,23 @@
 <div id="contenedorFicha">
   <div id="botonesFicha">
     <span id="cerrarFicha">X</span>
-
-    <div class="navegacionProyectos">
-      <span id="fichaElementoAnterior" class="botonNavegacion izquierda"></span>
-      <span id="fichaElementoSiguiente" class="botonNavegacion derecha"></span>
-    </div>
   </div>
 
   <section id="superior">
-    <div id="contenedorTitulo">
-      <h2 id="listaFicha"></h2>
-      <p id="tituloFicha"></p>
+    <div id="contedorCajaSuperior">
+      <div id="contenedorTitulo">
+        <h2 id="listaFicha"></h2>
+        <p id="tituloFicha"></p>
+      </div>
+      <div id="conteoFicha"></div>
     </div>
+  </section>
 
-    <div id="conteoFicha"></div>
+  <section id="navegacion">
+    <div id="navegacionProyectos">
+      <span id="fichaElementoAnterior" class="botonNavegacion izquierda"></span>
+      <span id="fichaElementoSiguiente" class="botonNavegacion derecha"></span>
+    </div>
   </section>
 
   <section id="inferior">
@@ -299,7 +302,19 @@
     z-index: 5;
     padding: 10px;
     border-radius: 1.5%;
-    border: 3.5px solid var(--fondoVerdeOscuro);
+
+    &::before {
+      content: '';
+      background-image: url(/enflujo-haciendocaminos/imgs/gusano_4.svg);
+      background-size: contain;
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      margin: 0 0 0 0;
+      top: 50%;
+      left: -20px;
+      background-repeat: no-repeat;
+    }
 
     #botonesFicha {
       position: sticky;
@@ -311,12 +326,13 @@
     }
 
     #cerrarFicha {
+      position: absolute;
       cursor: pointer;
       margin: 0;
       color: var(--textoOscuro);
-      font-size: 1.5em;
+      font-size: 1.1em;
       background-color: var(--resaltadoVerde);
-      padding: 5px 10px 0 10px;
+      padding: 7px 10px 0 10px;
 
       &:hover {
         background-color: var(--grisMedio);
@@ -324,74 +340,92 @@
       }
     }
 
-    .navegacionProyectos {
-      display: flex;
-      justify-content: space-between;
-      width: 40%;
-      background-color: var(--resaltadoVerde);
+    #navegacion {
+      margin-bottom: 0.62rem;
+      position: sticky;
+      top: -10px;
+      cursor: pointer;
+      z-index: 9;
+      color: var(--textoOscuro);
 
-      .botonNavegacion {
-        width: 20px;
-        height: 20px;
-        border-top: 2px solid var(--textoOscuro);
-        border-left: 2px solid var(--textoOscuro);
-        cursor: pointer;
-        opacity: 0.3;
-        transition: opacity 0.25s ease-in-out;
-        margin: 10px 20px 10px 20px;
+      #navegacionProyectos {
+        justify-content: space-between;
+        width: 100%;
+        background-color: var(--resaltadoVerde);
+        padding-right: 2.5vw;
+        padding-left: 2.5vw;
+        z-index: 99;
+        overflow-y: auto;
+        display: flex;
+        position: sticky;
 
-        &:hover {
-          opacity: 1;
-        }
+        .botonNavegacion {
+          width: 15px;
+          height: 15px;
+          border-top: 2px solid var(--textoOscuro);
+          border-left: 2px solid var(--textoOscuro);
+          cursor: pointer;
+          opacity: 0.3;
+          transition: opacity 0.25s ease-in-out;
+          margin: 10px 20px 10px 20px;
 
-        &.derecha {
-          transform: rotate(135deg);
-        }
+          &:hover {
+            opacity: 1;
+          }
 
-        &.izquierda {
-          transform: rotate(-45deg);
+          &.derecha {
+            transform: rotate(135deg);
+          }
+
+          &.izquierda {
+            transform: rotate(-45deg);
+          }
         }
       }
     }
 
     #superior {
       border: 1px solid var(--resaltadoVerde);
-      margin-bottom: 0.62rem;
+
       display: flex;
+      flex-direction: column;
       text-align: center;
       color: var(--textoOscuro);
-      min-height: 70px;
+
       font-family: var(--fuenteNumeros);
 
-      #contenedorTitulo {
-        background-color: var(--resaltadoVerde);
-        flex-basis: 90%;
-        margin: 0;
+      #contedorCajaSuperior {
         display: flex;
-        padding: 0.5em 0;
-        gap: 0.15em 0;
-        flex-direction: column;
-        justify-content: center;
-      }
+        #contenedorTitulo {
+          background-color: var(--resaltadoVerde);
+          flex-basis: 90%;
+          margin: 0;
+          display: flex;
+          padding: 1.2em 0 0 0;
+          gap: 0.15em 0;
+          flex-direction: column;
+          justify-content: center;
+        }
 
-      #listaFicha {
-        margin: 0;
-        padding: 0 3em 0 3em;
-        font-size: 16px;
-        font-weight: 700;
-      }
+        #listaFicha {
+          margin: 0;
+          padding: 0 3em 0 3em;
+          font-size: 16px;
+          font-weight: 700;
+        }
 
-      #tituloFicha {
-        margin: 0;
-        padding: 0 1.5em 0 1.5em;
-        font-size: 18px;
-      }
+        #tituloFicha {
+          margin: 0;
+          padding: 0 1.5em 0 1.5em;
+          font-size: 18px;
+        }
 
-      #conteoFicha {
-        margin: auto;
-        color: var(--textoClaro);
-        width: 70px;
-        font-family: var(--fuenteNumeros);
+        #conteoFicha {
+          margin: auto;
+          color: var(--textoClaro);
+          width: 70px;
+          font-family: var(--fuenteNumeros);
+        }
       }
     }
 
@@ -399,16 +433,18 @@
       border: 1px solid var(--resaltadoVerde);
       display: flex;
       padding: 10px;
+      padding-top: 20px;
       flex-direction: column;
       align-items: flex-start;
       gap: 10px;
-      flex: 1 0 0;
+
       align-self: stretch;
 
       .seccionDatos {
         display: flex;
         border-bottom: 1px solid var(--resaltadoVerde);
-        padding: 10px 10px 15px 10px;
+        margin: 0 15px 0 15px;
+        padding: 10px 5px 15px 10px;
         align-items: flex-start;
         align-self: stretch;
 
@@ -429,15 +465,29 @@
 
         .descripcion {
           font-size: 0.8em;
-          margin: 0;
+
+          margin: 1.5rem;
+          max-width: 92%;
+
+          p {
+            font-size: 1.1em;
+
+            line-height: 1.4em;
+          }
+          h2 {
+            font-size: 1.2em;
+          }
         }
 
         .titulo {
           margin: 0;
+          padding-top: 0.2em;
+          padding-right: 0.4em;
           flex-basis: 35%;
           font-size: 1em;
           position: sticky;
           top: 2em;
+          z-index: 1;
         }
 
         .imagenes {
@@ -485,6 +535,13 @@
       max-height: calc(100vh - 60px);
       width: 35vw;
       right: 0;
+
+      #navegacion {
+        #navegacionProyectos {
+          padding-right: 1.25vw;
+          padding-left: 1.25vw;
+        }
+      }
     }
   }
 </style>
