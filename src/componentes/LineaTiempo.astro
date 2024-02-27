@@ -8,8 +8,10 @@ interface Props {
 }
 
 const { decadas, tiempo } = Astro.props;
+
 let datosLinea = '';
 const numeroDecadas = decadas.length;
+
 const anchoDecada = 100 / numeroDecadas;
 const altoDecada = (valor: number) => convertirEscala(valor, 0, 58, 0, 30);
 const posY = (valor: number) => convertirEscala(valor, 0, 20, 100, 0);
@@ -30,27 +32,77 @@ tiempo.forEach((marca, i) => {
     datosLinea += 'L 100, 100 Z';
   }
 });
+
+function rango(min: number, max: number) {
+  var len = max - min + 1;
+  var arr = new Array(len);
+  for (var i = 0; i < len; i++) {
+    arr[i] = min + i;
+  }
+  return arr;
+}
+
+const listaAños = rango(+tiempo[0].nombre, +tiempo[tiempo.length - 1].nombre);
 ---
 
 <div id="contenedorLineaTiempo">
   <div id="contenedorGrafica">
     <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
-      <g id="grupoDecadas">
+      <g id="grupoDecadas" style={`transform:translateX(8%)`}>
         {
           decadas.map((decada, i) => (
-            <rect x={`${i * anchoDecada}%`} y="0" width={`${anchoDecada}%`} height={`${altoDecada(decada.conteo)}px`} />
+            <rect
+              x={`${i * anchoDecada}%`}
+              y="0"
+              width={`${anchoDecada}%`}
+              height={`15px`}
+              stroke="#62e595"
+              stroke-width="1px"
+            />
           ))
         }
 
-        <path d={datosLinea}></path>
+        <!-- <path d={datosLinea}></path> -->
       </g>
     </svg>
 
     <svg id="marcas" width="100%" height="100%">
       {
+        listaAños.map((marca) => (
+          <>
+            <circle
+              style={`transform:translate(${posX(marca)}%, ${45}%)`}
+              r="4"
+              cx="10"
+              cy="0"
+              stroke="#62e595"
+              stroke-width="2px"
+              fill="transparent"
+            />
+          </>
+        ))
+      }
+
+      {
         tiempo.map((marca) => (
-          <text style={`transform:translate(${posX(+marca.nombre)}%, ${posY(marca.conteo)}%)`} x="0" y="0">
-            {marca.nombre}
+          <>
+            <circle
+              style={`transform:translate(${posX(+marca.nombre)}%, ${45}%)`}
+              r="4"
+              cx="10"
+              cy="0"
+              stroke="#62e595"
+              stroke-width="2px"
+              fill="#62e595"
+            />
+          </>
+        ))
+      }
+
+      {
+        listaAños.map((marca) => (
+          <text style={`transform:translate(${posX(+marca)}%, 75%)`} x="0" y="0">
+            {marca}
           </text>
         ))
       }
@@ -63,13 +115,14 @@ tiempo.forEach((marca, i) => {
     position: absolute;
     bottom: 0;
     width: 100vw;
+    margin: 0 auto;
   }
 
   #contenedorGrafica {
-    height: 170px;
+    height: 80px;
     position: relative;
 
-    background-color: rgba(245, 245, 245, 0.8);
+    background-color: var(--fondoVerdeOscuro);
     z-index: 3;
     #decadas {
       fill: rgba(26, 42, 34, 0.3);
