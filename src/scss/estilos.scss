@@ -151,14 +151,14 @@ a:link {
 // Listas proyectos y egresados
 #listaProyectos {
   position: fixed;
-  background-color: var(--fondoVerdeOscuro);
   color: var(--textoClaro);
   top: var(--altoMenu);
   right: 0px;
   z-index: 4;
   font-family: var(--fuenteParrafo);
   height: calc(100vh - 170px - 50px);
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   width: 50vw;
   font-size: 0.8em;
   border-radius: 0% 0% 0% 3%;
@@ -196,6 +196,9 @@ a:link {
     position: sticky;
     top: 0;
     width: 100%;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
 
     h2 {
       font-family: var(--fuenteParrafo);
@@ -203,7 +206,38 @@ a:link {
       font-size: 20px;
       color: var(--textoOscuro);
       padding: 15px 0 15px 3.5rem;
-      margin-top: 0px;
+      margin: 0px;
+    }
+
+    .botonAbrir {
+      display: block;
+      width: 15px;
+      height: 15px;
+      border-top: 2px solid var(--textoOscuro);
+      border-left: 2px solid var(--textoOscuro);
+      cursor: pointer;
+      opacity: 0.3;
+      transition: opacity 0.25s ease-in-out;
+      margin: 15px 28px 10px 0px;
+      transform: rotate(225deg);
+
+      &:hover {
+        opacity: 1;
+      }
+
+      &.abierta {
+        transform: rotate(45deg);
+        margin: 25px 29px 10px 1px;
+      }
+    }
+  }
+
+  #contenidoLista {
+    display: block;
+    background-color: var(--fondoVerdeOscuro);
+
+    &.oculta {
+      display: none;
     }
   }
 

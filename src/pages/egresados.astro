@@ -5,6 +5,7 @@ import listas from '../../estaticos/listas.json';
 import LineaTiempo from '@/componentes/LineaTiempo.astro';
 import Ficha from '@/componentes/Ficha.astro';
 import Cabezote from '@/componentes/Cabezote.astro';
+import Introduccion from '@/componentes/Introduccion.astro';
 import EgresadosNombres from '@/componentes/EgresadosNombres.astro';
 import ListasEgresados from '@/componentes/ListasEgresados.astro';
 ---
@@ -12,6 +13,7 @@ import ListasEgresados from '@/componentes/ListasEgresados.astro';
 <Plantilla>
   <Cabezote />
   <main>
+    <Introduccion />
     <Ficha />
     <ListasEgresados />
     <EgresadosNombres />
@@ -24,6 +26,12 @@ import ListasEgresados from '@/componentes/ListasEgresados.astro';
   import { datosEgresados, elementoSeleccionado, vista } from '@/utilidades/cerebro';
   const nodosEgresados = document.querySelectorAll<HTMLLIElement>('.nodoEgresado');
   const conteoFicha = document.getElementById('conteoFicha') as HTMLDivElement;
+  const intro = document.getElementById('introduccion') as HTMLDivElement;
+
+  // No mostrar intro al cambiar de vista a menos que se abra desde el cabezote
+  if (intro.classList.contains('visible')) {
+    intro.classList.remove('visible');
+  }
 
   vista.set('egresados');
 
