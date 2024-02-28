@@ -65,7 +65,13 @@ const altImg = imagen ? imagen.alt : nombreProyecto;
   </body>
 </html>
 
-<script></script>
+<script>
+  import { revisarVariablesURL } from '@/utilidades/cerebro';
+
+  window.addEventListener('popstate', () => {
+    revisarVariablesURL();
+  });
+</script>
 
 <style lang="scss" is:global>
   @import '@/scss/estilos.scss';

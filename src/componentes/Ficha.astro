@@ -104,7 +104,8 @@
     datosListasEgresados,
     elementoSeleccionado,
     filtrarMapa,
-    vista
+    vista,
+    actualizarUrl
   } from '@/utilidades/cerebro';
   import type {
     ElementoProyecto,
@@ -131,6 +132,8 @@
   const listaEnlaces = document.getElementById('listaEnlaces') as HTMLUListElement;
   const seccionImagenes = document.getElementById('fichaImagenes') as HTMLDivElement;
   const contenedorImagenes = document.getElementById('listaImagenes') as HTMLDivElement;
+  const contenedorSuperior = document.getElementById('contedorCajaSuperior') as HTMLDivElement;
+
   const galeria = new Galeria({
     gallery: '#listaImagenes',
     children: 'a',
@@ -140,16 +143,16 @@
 
   const siguiente = document.getElementById('fichaElementoSiguiente') as HTMLSpanElement;
   const anterior = document.getElementById('fichaElementoAnterior') as HTMLSpanElement;
-
+  const vistaActual = vista.get();
   // Cargar ficha anterior o ficha siguiente al hace click en los botones
   siguiente.onclick = () => {
     let lista = [];
     const actual = elementoSeleccionado.get();
     if (!actual) return;
 
-    if (actual.vista === 'proyectos') {
+    if (vistaActual === 'proyectos') {
       lista = actual.tipo !== 'proyecto' ? datosListas.get()[actual.tipo as keyof Listas] : datosProyectos.get();
-    } else if (actual.vista === 'egresados') {
+    } else if (vistaActual === 'egresados') {
       lista =
         actual.tipo !== 'egresado'
           ? datosListasEgresados.get()[actual.tipo as keyof ListasEgresados]
@@ -157,7 +160,10 @@
     }
 
     const siguienteI = lista.length - 1 > +actual.id ? +actual.id + 1 : 0;
-    elementoSeleccionado.setKey('id', `${siguienteI}`);
+    actualizarUrl([
+      { nombre: 'tipo', valor: actual.tipo },
+      { nombre: 'id', valor: `${siguienteI}` }
+    ]);
   };
 
   anterior.onclick = () => {
@@ -165,9 +171,9 @@
     const actual = elementoSeleccionado.get();
     if (!actual) return;
 
-    if (actual.vista === 'proyectos') {
+    if (vistaActual === 'proyectos') {
       lista = actual.tipo !== 'proyecto' ? datosListas.get()[actual.tipo as keyof Listas] : datosProyectos.get();
-    } else if (actual.vista === 'egresados') {
+    } else if (vistaActual === 'egresados') {
       lista =
         actual.tipo !== 'egresado'
           ? datosListasEgresados.get()[actual.tipo as keyof ListasEgresados]
@@ -175,11 +181,15 @@
     }
 
     const anteriorI = +actual.id > 0 ? +actual.id - 1 : lista.length - 1;
-    elementoSeleccionado.setKey('id', `${anteriorI}`);
+    actualizarUrl([
+      { nombre: 'tipo', valor: actual.tipo },
+      { nombre: 'id', valor: `${anteriorI}` }
+    ]);
   };
 
   botonCerrarFicha.onclick = () => {
     ficha.style.display = 'none';
+    window.history.pushState({}, '', decodeURIComponent(window.location.pathname));
     filtrarMapa();
   };
 
@@ -198,8 +208,10 @@
     if (datos.conteo) {
       conteoFicha.style.display = 'block';
       conteoFicha.innerText = datos.conteo;
+      contenedorSuperior.classList.remove('sinContador');
     } else {
       conteoFicha.style.display = 'none';
+      contenedorSuperior.classList.add('sinContador');
     }
 
     // Llenar descripción, si tiene
@@ -254,8 +266,6 @@
     } else {
       seccionImagenes.style.display = 'none';
     }
-
-    const vistaActual = vista.get();
 
     if (!vistaActual) return;
     // Llenar el resto de los campos
@@ -324,7 +334,10 @@
         }
 
         fila.onclick = () => {
-          elementoSeleccionado.set({ vista: vistaActual || '', tipo: campo, id: indice });
+          actualizarUrl([
+            { nombre: 'id', valor: indice },
+            { nombre: 'tipo', valor: campo }
+          ]);
         };
       });
     } else {
@@ -451,6 +464,13 @@
 
       #contedorCajaSuperior {
         display: flex;
+
+        &.sinContador {
+          #contenedorTitulo {
+            flex-basis: 100%;
+          }
+        }
+
         #contenedorTitulo {
           background-color: var(--resaltadoVerde);
           flex-basis: 90%;

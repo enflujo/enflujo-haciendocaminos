@@ -77,12 +77,12 @@ procesar().catch(console.error);
 function procesarDatosBuscador(egresados: Egresado[]) {
   const opciones: OpcionBuscadorDatos[] = [];
 
-  proyectos.forEach((proyecto) => {
-    opciones.push({ nombre: proyecto.nombre.nombre, tipo: 'proyecto', id: `${proyecto.id}`, vista: 'proyectos' });
+  proyectos.forEach((proyecto, i) => {
+    opciones.push({ nombre: proyecto.nombre.nombre, tipo: 'proyecto', id: `${i}`, vista: 'proyectos' });
   });
 
-  egresados.forEach((egresado) => {
-    opciones.push({ nombre: egresado.nombre, tipo: 'egresado', id: `${egresado.id}`, vista: 'egresados' });
+  egresados.forEach((egresado, i) => {
+    opciones.push({ nombre: egresado.nombre, tipo: 'egresado', id: `${i}`, vista: 'egresados' });
   });
 
   for (const llaveListaP in listas) {

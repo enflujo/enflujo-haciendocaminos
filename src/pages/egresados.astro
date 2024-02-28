@@ -23,9 +23,7 @@ import ListasEgresados from '@/componentes/ListasEgresados.astro';
 </Plantilla>
 
 <script>
-  import { datosEgresados, elementoSeleccionado, vista } from '@/utilidades/cerebro';
-  const nodosEgresados = document.querySelectorAll<HTMLLIElement>('.nodoEgresado');
-  const conteoFicha = document.getElementById('conteoFicha') as HTMLDivElement;
+  import { vista } from '@/utilidades/cerebro';
   const intro = document.getElementById('introduccion') as HTMLDivElement;
 
   // No mostrar intro al cambiar de vista a menos que se abra desde el cabezote
@@ -34,21 +32,4 @@ import ListasEgresados from '@/componentes/ListasEgresados.astro';
   }
 
   vista.set('egresados');
-
-  datosEgresados.subscribe((datos) => {
-    if (!datos.length) return;
-
-    nodosEgresados.forEach((nodoEgresado) => {
-      nodoEgresado.onclick = () => {
-        const contenedorTitulo = document.getElementById('contenedorTitulo') as HTMLDivElement;
-        contenedorTitulo.style.flexBasis = '100%';
-        conteoFicha.style.display = 'none';
-
-        const id = nodoEgresado.dataset.indice;
-        if (!id) return;
-
-        elementoSeleccionado.set({ vista: 'egresados', tipo: 'egresado', id });
-      };
-    });
-  });
 </script>

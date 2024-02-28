@@ -17,7 +17,7 @@ import listas from '../../estaticos/listas.json';
 
 <script>
   const nodos = document.querySelectorAll<HTMLLIElement>('.nodo');
-  import { datosListas, elementoSeleccionado } from '@/utilidades/cerebro';
+  import { actualizarUrl, datosListas } from '@/utilidades/cerebro';
 
   datosListas.subscribe((datos) => {
     if (!Object.keys(datos).length) return;
@@ -67,7 +67,11 @@ import listas from '../../estaticos/listas.json';
 
       nodo.onclick = () => {
         if (!indice || !tipo) return;
-        elementoSeleccionado.set({ vista: 'proyectos', tipo, id: indice });
+
+        actualizarUrl([
+          { nombre: 'id', valor: indice },
+          { nombre: 'tipo', valor: tipo }
+        ]);
       };
     });
   });

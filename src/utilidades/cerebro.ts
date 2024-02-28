@@ -21,7 +21,7 @@ export const datosEgresados = atom<Egresado[]>([]);
 export const datosListasEgresados = map<ListasEgresados>();
 export const geo = map<FeatureCollection<Point>>();
 export const geoEgresados = map<FeatureCollection<Point>>();
-export const elementoSeleccionado = map<{ vista: string; tipo: string; id: string }>();
+export const elementoSeleccionado = map<{ tipo: string; id: string }>();
 export const opcionesBuscador = atom<ElementoBuscador[] | null>(null);
 export const vista = atom<'proyectos' | 'egresados' | null>(null);
 let _copiaDatosMapa: FeatureCollection<Point>;
@@ -51,18 +51,36 @@ export const nombresListasEgresados = {
   ciudades: 'Ciudades'
 };
 
-onMount(datosListas, () => {
-  pedirDatos<Listas>(`${import.meta.env.BASE_URL}/listas.json`).then((listas) => {
+const base = import.meta.env.BASE_URL;
+
+vista.subscribe(async (vistaActual) => {
+  if (vistaActual === 'proyectos') {
+    const geoProyectos = await pedirDatos<FeatureCollection<Point>>(`${base}/datosMapa.geo.json`);
+    geo.set(geoProyectos);
+    _copiaDatosMapa = geoProyectos;
+
+    const listas = await pedirDatos<Listas>(`${base}/listas.json`);
     datosListas.set(listas);
 
-    pedirDatos<Proyecto[]>(`${import.meta.env.BASE_URL}/proyectos.json`).then((proyectos) => {
-      datosProyectos.set(proyectos);
-    });
-  });
-});
+    const proyectos = await pedirDatos<Proyecto[]>(`${base}/proyectos.json`);
+    datosProyectos.set(proyectos);
+    revisarVariablesURL();
+  } else if (vistaActual === 'egresados') {
+    const geoEgresados = await pedirDatos<FeatureCollection<Point>>(`${base}/datosMapaEgresados.geo.json`);
+    geo.set(geoEgresados);
 
-onMount(opcionesBuscador, () => {
-  pedirDatos<OpcionBuscadorDatos[]>(`${import.meta.env.BASE_URL}/datosBuscador.json`).then((datosBuscador) => {
+    const listasEgresados = await pedirDatos<ListasEgresados>(`${base}/listasEgresados.json`);
+    datosListasEgresados.set(listasEgresados);
+
+    const egresados = await pedirDatos<Egresado[]>(`${base}/egresados.json`);
+    datosEgresados.set(egresados);
+
+    _copiaDatosMapaEgresados = geoEgresados;
+    revisarVariablesURL();
+  }
+
+  try {
+    const datosBuscador = await pedirDatos<OpcionBuscadorDatos[]>(`${base}/datosBuscador.json`);
     const sugerencias = document.getElementById('sugerencias') as HTMLDataListElement;
     const opciones: ElementoBuscador[] = datosBuscador.map((opcion) => {
       const elemento = document.createElement('li');
@@ -70,39 +88,34 @@ onMount(opcionesBuscador, () => {
       elemento.innerText = opcion.nombre;
 
       elemento.addEventListener('click', () => {
-        vista.set(opcion.vista);
         sugerencias.classList.remove('visible');
-        elementoSeleccionado.set({ vista: opcion.vista, tipo: opcion.tipo, id: opcion.id });
+        let indice;
+
+        if (opcion.tipo)
+          if (opcion.vista !== vistaActual) {
+            const ruta = opcion.vista === 'proyectos' ? base : `${base}/egresados`;
+            actualizarUrl(
+              [
+                { nombre: 'id', valor: opcion.id },
+                { nombre: 'tipo', valor: opcion.tipo }
+              ],
+              true,
+              ruta
+            );
+          } else {
+            actualizarUrl([
+              { nombre: 'id', valor: opcion.id },
+              { nombre: 'tipo', valor: opcion.tipo }
+            ]);
+          }
       });
 
       return { opcion: elemento, ...opcion };
     });
 
     opcionesBuscador.set(opciones);
-  });
-});
-
-onMount(datosListasEgresados, () => {
-  pedirDatos<ListasEgresados>(`${import.meta.env.BASE_URL}/listasEgresados.json`).then((listasEgresados) => {
-    datosListasEgresados.set(listasEgresados);
-
-    pedirDatos<Egresado[]>(`${import.meta.env.BASE_URL}/egresados.json`).then((egresados) => {
-      datosEgresados.set(egresados);
-    });
-  });
-});
-
-vista.subscribe((vistaActual) => {
-  if (vistaActual === 'proyectos') {
-    pedirDatos<FeatureCollection<Point>>(`${import.meta.env.BASE_URL}/datosMapa.geo.json`).then((res) => {
-      geo.set(res);
-      _copiaDatosMapa = res;
-    });
-  } else if (vistaActual === 'egresados') {
-    pedirDatos<FeatureCollection<Point>>(`${import.meta.env.BASE_URL}/datosMapaEgresados.geo.json`).then((res) => {
-      geo.set(res);
-      _copiaDatosMapaEgresados = res;
-    });
+  } catch (err) {
+    console.error(err);
   }
 });
 
@@ -152,9 +165,10 @@ export function filtrarMapa(lugares?: { slug: string; conteo: number }[]) {
 elementoSeleccionado.subscribe((elemento) => {
   if (!Object.keys(elemento).length) return;
 
-  const { vista, tipo, id } = elemento;
+  const { tipo, id } = elemento;
+  const enEgresados = window.location.pathname.includes('egresados');
 
-  if (vista === 'proyectos') {
+  if (!enEgresados) {
     if (tipo === 'proyecto') {
       const datosProyecto = datosProyectos.get()[+id];
 
@@ -238,7 +252,7 @@ elementoSeleccionado.subscribe((elemento) => {
         });
       }
     }
-  } else if (vista === 'egresados') {
+  } else {
     if (tipo === 'egresado') {
       const datosEgresado = datosEgresados.get()[+id];
 
@@ -311,3 +325,43 @@ elementoSeleccionado.subscribe((elemento) => {
     }
   }
 });
+
+export function actualizarUrl(valores: { nombre: string; valor: string }[], nuevaPagina = false, ruta?: string) {
+  if (nuevaPagina) {
+    const parametros = new URLSearchParams();
+
+    valores.forEach((obj) => {
+      if (obj.valor) parametros.set(obj.nombre, obj.valor);
+    });
+
+    const nuevaRuta = decodeURIComponent(`${window.location.origin}${ruta}?${parametros}`);
+    window.location.href = nuevaRuta;
+  } else {
+    const parametros = new URLSearchParams(window.location.search);
+
+    valores.forEach((obj) => {
+      if (obj.valor) {
+        parametros.set(obj.nombre, obj.valor);
+      } else {
+        parametros.delete(obj.nombre);
+      }
+    });
+
+    window.history.pushState({}, '', decodeURIComponent(`${window.location.pathname}?${parametros}`));
+    revisarVariablesURL();
+  }
+}
+
+export function revisarVariablesURL() {
+  const parametros = new URLSearchParams(window.location.search);
+  const id = parametros.get('id');
+  const tipo = parametros.get('tipo');
+
+  if (id && tipo) {
+    elementoSeleccionado.set({ tipo, id });
+  } else {
+    datosFicha.setKey('visible', false);
+    window.history.pushState({}, '', decodeURIComponent(window.location.pathname));
+    filtrarMapa();
+  }
+}

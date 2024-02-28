@@ -20,9 +20,8 @@ import proyectos from '../../estaticos/proyectos.json';
 </div>
 
 <script>
-  import { datosProyectos, elementoSeleccionado } from '@/utilidades/cerebro';
+  import { actualizarUrl, datosProyectos } from '@/utilidades/cerebro';
   const nodosProyectos = document.querySelectorAll<HTMLLIElement>('.nodoProyecto');
-  const conteoFicha = document.getElementById('conteoFicha') as HTMLDivElement;
   const contenidoLista = document.getElementById('contenidoLista') as HTMLUListElement;
   const cajaNombreVista = document.getElementById('cajaNombreVista') as HTMLDivElement;
   const botonListas = document.getElementById('botonListas') as HTMLSpanElement;
@@ -37,14 +36,13 @@ import proyectos from '../../estaticos/proyectos.json';
 
     nodosProyectos.forEach((nodoProyecto) => {
       nodoProyecto.onclick = () => {
-        const contenedorTitulo = document.getElementById('contenedorTitulo') as HTMLDivElement;
-        contenedorTitulo.style.flexBasis = '100%';
-        conteoFicha.style.display = 'none';
-
         const id = nodoProyecto.dataset.indice;
         if (!id) return;
 
-        elementoSeleccionado.set({ vista: 'proyectos', tipo: 'proyecto', id });
+        actualizarUrl([
+          { nombre: 'id', valor: id },
+          { nombre: 'tipo', valor: 'proyecto' }
+        ]);
       };
     });
   });

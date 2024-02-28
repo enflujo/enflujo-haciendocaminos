@@ -10,7 +10,8 @@
   import { geo } from '@/utilidades/cerebro';
   import 'mapbox-gl/dist/mapbox-gl.css';
 
-  let mapaCreado = false;
+  let mapaCreado = false; // Instancia creada
+  let mapaCargado = false; // Instancia creada y ya terminó de cargar en la página
   let mapa: Map;
   const contenedorMapa = document.getElementById('contenedorMapa') as HTMLDivElement;
   const estilo = 'mapbox://styles/enflujo/clpcruhsj005z01qr10czhk1d';
@@ -32,17 +33,20 @@
 
       mapaCreado = true;
     } else {
-      const fuente = mapa.getSource('ubicaciones') as GeoJSONSource;
+      // POR HACER: ¿cómo esperar si no está cargado el mapa?
+      if (mapaCargado) {
+        const fuente = mapa.getSource('ubicaciones') as GeoJSONSource;
 
-      fuente.setData(datosGeo);
+        fuente.setData(datosGeo);
 
-      const primerPunto = datosGeo.features[0];
+        const primerPunto = datosGeo.features[0];
 
-      if (primerPunto) {
-        mapa.flyTo({
-          center: primerPunto.geometry.coordinates as [number, number],
-          essential: true
-        });
+        if (primerPunto) {
+          mapa.flyTo({
+            center: primerPunto.geometry.coordinates as [number, number],
+            essential: true
+          });
+        }
       }
 
       return;
@@ -148,6 +152,8 @@
           'text-halo-blur': 0
         }
       });
+
+      mapaCargado = true;
     });
 
     // Función para mostrar algo al pasar el mouse por un punto

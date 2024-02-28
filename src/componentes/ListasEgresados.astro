@@ -12,7 +12,7 @@ import listasEgresados from '../../estaticos/listasEgresados.json';
 
 <script>
   const nodos = document.querySelectorAll<HTMLLIElement>('.nodo');
-  import { datosListasEgresados, elementoSeleccionado } from '@/utilidades/cerebro';
+  import { actualizarUrl, datosListasEgresados } from '@/utilidades/cerebro';
 
   datosListasEgresados.subscribe((datos) => {
     if (!Object.keys(datos).length) return;
@@ -62,7 +62,11 @@ import listasEgresados from '../../estaticos/listasEgresados.json';
 
       nodo.onclick = () => {
         if (!indice || !tipo) return;
-        elementoSeleccionado.set({ vista: 'egresados', tipo, id: indice });
+
+        actualizarUrl([
+          { nombre: 'id', valor: indice },
+          { nombre: 'tipo', valor: tipo }
+        ]);
       };
     });
   });
