@@ -1,4 +1,4 @@
-import { atom, map, onMount } from 'nanostores';
+import { atom, map } from 'nanostores';
 import { ordenarListaObjetos, pedirDatos } from './ayudas';
 import type {
   Listas,
@@ -54,6 +54,8 @@ export const nombresListasEgresados = {
 const base = import.meta.env.BASE_URL;
 
 vista.subscribe(async (vistaActual) => {
+  if (!vistaActual) return;
+
   if (vistaActual === 'proyectos') {
     const geoProyectos = await pedirDatos<FeatureCollection<Point>>(`${base}/datosMapa.geo.json`);
     geo.set(geoProyectos);
@@ -79,44 +81,39 @@ vista.subscribe(async (vistaActual) => {
     revisarVariablesURL();
   }
 
-  try {
-    const datosBuscador = await pedirDatos<OpcionBuscadorDatos[]>(`${base}/datosBuscador.json`);
-    const sugerencias = document.getElementById('sugerencias') as HTMLDataListElement;
-    const opciones: ElementoBuscador[] = datosBuscador.map((opcion) => {
-      const elemento = document.createElement('li');
-      elemento.className = 'resultadoBusqueda';
-      elemento.innerText = opcion.nombre;
+  const datosBuscador = await pedirDatos<OpcionBuscadorDatos[]>(`${base}/datosBuscador.json`);
+  const sugerencias = document.getElementById('sugerencias') as HTMLDataListElement;
+  const opciones: ElementoBuscador[] = datosBuscador.map((opcion) => {
+    const elemento = document.createElement('li');
+    elemento.className = 'resultadoBusqueda';
+    elemento.innerText = opcion.nombre;
 
-      elemento.addEventListener('click', () => {
-        sugerencias.classList.remove('visible');
-        let indice;
+    elemento.addEventListener('click', () => {
+      sugerencias.classList.remove('visible');
 
-        if (opcion.tipo)
-          if (opcion.vista !== vistaActual) {
-            const ruta = opcion.vista === 'proyectos' ? base : `${base}/egresados`;
-            actualizarUrl(
-              [
-                { nombre: 'id', valor: opcion.id },
-                { nombre: 'tipo', valor: opcion.tipo }
-              ],
-              true,
-              ruta
-            );
-          } else {
-            actualizarUrl([
+      if (opcion.tipo)
+        if (opcion.vista !== vistaActual) {
+          const ruta = opcion.vista === 'proyectos' ? base : `${base}/egresados`;
+          actualizarUrl(
+            [
               { nombre: 'id', valor: opcion.id },
               { nombre: 'tipo', valor: opcion.tipo }
-            ]);
-          }
-      });
-
-      return { opcion: elemento, ...opcion };
+            ],
+            true,
+            ruta
+          );
+        } else {
+          actualizarUrl([
+            { nombre: 'id', valor: opcion.id },
+            { nombre: 'tipo', valor: opcion.tipo }
+          ]);
+        }
     });
 
-    opcionesBuscador.set(opciones);
-  } catch (err) {
-    console.error(err);
-  }
+    return { opcion: elemento, ...opcion };
+  });
+
+  opcionesBuscador.set(opciones);
 });
 
 export function filtrarMapa(lugares?: { slug: string; conteo: number }[]) {
