@@ -40,10 +40,13 @@
     creditos.classList.remove('visible');
   };
 
-  // Abrir y cerrar Intro
+  // Abrir y cerrar Creditos
   botonAbrirCreditos.onclick = () => {
     creditos.classList.add('visible');
   };
+
+  // Cerrar al hacer click fuera de creditos
+  cerrarClicFuera(creditos, botonAbrirCreditos);
 </script>
 
 <style lang="scss">
