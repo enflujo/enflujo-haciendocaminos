@@ -159,37 +159,8 @@ a:link {
   height: calc(100vh - 170px - 50px);
   overflow-y: auto;
   overflow-x: hidden;
-  width: 50vw;
   font-size: 0.8em;
   border-radius: 0% 0% 0% 3%;
-
-  &::before {
-    content: '';
-    background-image: url(/enflujo-haciendocaminos/imgs/gusano_3.svg);
-    background-size: contain;
-    width: 60px;
-    height: 60px;
-    transform: rotate(90deg);
-    margin: 0 0 0 0;
-    top: 500px;
-    right: -20px;
-    background-repeat: no-repeat;
-    position: absolute;
-  }
-
-  &::after {
-    content: '';
-    background-image: url(/enflujo-haciendocaminos/imgs/gusano_2.svg);
-    background-size: contain;
-    width: 60px;
-    height: 60px;
-    transform: rotate(45deg);
-    margin: 0 0 0 0;
-    top: 200vh;
-    left: -20px;
-    background-repeat: no-repeat;
-    position: absolute;
-  }
 
   #cajaNombreVista {
     background-color: var(--resaltadoVerde);
@@ -238,6 +209,34 @@ a:link {
 
     &.oculta {
       display: none;
+    }
+
+    &::before {
+      content: '';
+      background-image: url(/enflujo-haciendocaminos/imgs/gusano_3.svg);
+      background-size: contain;
+      width: 60px;
+      height: 60px;
+      transform: rotate(90deg);
+      margin: 0 0 0 0;
+      top: 500px;
+      right: -20px;
+      background-repeat: no-repeat;
+      position: absolute;
+    }
+
+    &::after {
+      content: '';
+      background-image: url(/enflujo-haciendocaminos/imgs/gusano_2.svg);
+      background-size: contain;
+      width: 60px;
+      height: 60px;
+      transform: rotate(45deg);
+      margin: 0 0 0 0;
+      top: 200vh;
+      left: -20px;
+      background-repeat: no-repeat;
+      position: absolute;
     }
   }
 
