@@ -7,6 +7,7 @@ import type {
   Listas,
   LlavesSingulares,
   OpcionBuscadorDatos,
+  PersonaID,
   Proyecto
 } from '../src/tipos.ts';
 import { getXlsxStream } from 'xlstream';
@@ -18,6 +19,7 @@ import { existsSync, readdirSync } from 'fs';
 import { resolve } from 'path';
 import { imageSize } from 'image-size';
 import type { Egresado, ListasEgresados } from './egresados.js';
+import procesarPersonas from './personas.js';
 
 const datosEmpiezanEnFila = 2;
 const camposSingulares: Campos = [{ llave: 'categorias', indice: 2 }];
@@ -55,9 +57,12 @@ const listasEgresados: ListasEgresados = {
   ciudades: []
 };
 
-const archivo = './procesador/datos/Listado de proyectos - 60 años dpto antropología 1902.xlsx';
+const archivo = './procesador/datos/Listado de proyectos - 60 años dpto antropología .xlsx';
+let personas: PersonaID;
 
 async function procesar() {
+  personas = await procesarPersonas(archivo);
+
   const egresados = await procesarEgresados(archivo, listasEgresados);
   await procesarProyectos();
   console.log('Proyectos procesados');
@@ -298,34 +303,42 @@ function procesarFila(fila: string[]) {
   });
 
   camposMultiples.forEach((campo) => {
-    const validacion = validarValorMultiple(fila[campo.indice], listas[campo.llave]);
+    const validacion = validarValorMultiple(fila[campo.indice], listas[campo.llave], campo.llave);
     if (validacion) respuesta[campo.llave as LLavesMultiples] = validacion;
   });
 
   proyectos.push(respuesta);
 }
 
-function validarValorMultiple(valor: string, lista: ElementoLista[]) {
+function validarValorMultiple(valor: string, lista: ElementoLista[], tipo: LLavesMultiples | 'categorias') {
   if (!valor) return null;
   const partes = `${valor}`.trim().split(',');
   const respuesta: DefinicionSimple[] = [];
 
   partes.forEach((elemento) => {
-    const valorProcesado = validarValorSingular(elemento, lista);
+    const valorProcesado = validarValorSingular(elemento, lista, tipo);
+
     if (valorProcesado) respuesta.push(valorProcesado);
   });
 
   return respuesta.length ? respuesta : null;
 }
 
-function validarValorSingular(valor: string, lista: ElementoLista[]) {
+function validarValorSingular(valor: string, lista: ElementoLista[], tipo?: LLavesMultiples | LlavesSingulares) {
   if (!valor || valor === 'No aplica' || valor === 'undefined' || valor === 'Sin Información') return;
   const nombre = `${valor}`.trim();
   const slug = slugificar(nombre);
   const existe = lista.find((obj) => obj.slug === slug);
 
   if (!existe) {
-    lista.push({ nombre, conteo: 1, slug, relaciones: [], proyectos: [] });
+    const objeto: ElementoLista = { nombre, conteo: 1, slug, relaciones: [], proyectos: [] };
+
+    // Agregar ID de Academia para mostrar red
+    if (tipo === 'lideres' && personas[objeto.nombre]) {
+      objeto.academia = personas[objeto.nombre];
+    }
+
+    lista.push(objeto);
   } else {
     existe.conteo++;
   }

@@ -29,6 +29,16 @@
       <p id="descripcion" class="contenido descripcion"></p>
     </div>
 
+    <div class="seccionRed" id="fichaRed">
+      <a
+        id="enlaceRedAcademia"
+        href="#"
+        target="_blank"
+        style={`background-image: url(${import.meta.env.BASE_URL}/imgs/icono-enlace-externo.svg`}
+        )></a>
+      <iframe id="redAcademica"></iframe>
+    </div>
+
     <div class="seccionDatos" id="fichaEnlaces">
       <h3 class="titulo">Enlaces</h3>
       <ul id="listaEnlaces" class="contenido enlaces"></ul>
@@ -267,6 +277,26 @@
       });
     } else {
       seccionImagenes.style.display = 'none';
+    }
+
+    /**
+     * RED Académica de lideres
+     */
+    const seccionRed = document.getElementById('fichaRed') as HTMLDivElement;
+    const contenedorRed = document.getElementById('redAcademica') as HTMLIFrameElement;
+    const enlaceRed = document.getElementById('enlaceRedAcademia') as HTMLAnchorElement;
+    const idAcademia = datos.academia;
+
+    if (idAcademia) {
+      seccionRed.style.display = 'block';
+      contenedorRed.src = `https://academia.uniandes.edu.co/academynetsweb/personnet.html?&personId=${idAcademia}&highlight=${idAcademia}&minified=true&scale=50&force=-100"`;
+      enlaceRed.onclick = () => {
+        const enlace = `https://academia.uniandes.edu.co/academynetsweb/personnet.html?&personId=${idAcademia}&highlight=${idAcademia}`;
+        enlaceRed.setAttribute('href', enlace);
+      };
+    } else {
+      contenedorRed.src = '';
+      seccionRed.style.display = 'none';
     }
 
     const vistaActual = vista.get();
@@ -606,6 +636,34 @@
         border: none;
       }
     }
+  }
+
+  #fichaRed {
+    width: 100%;
+    position: relative;
+
+    #enlaceRedAcademia {
+      top: 5px;
+      right: 5px;
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-color: rgba(224, 245, 234, 0.846);
+      transition: background-color 0.2s ease-out;
+
+      &:hover {
+        background-color: rgba(131, 246, 187, 0.846);
+      }
+    }
+  }
+
+  #redAcademica {
+    display: block;
+    width: 100%;
+    height: 300px;
+    border: none;
   }
 
   // Cambiar estilos según tamaño de pantalla

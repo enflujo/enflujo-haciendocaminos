@@ -5,6 +5,7 @@ export interface ElementoLista {
   relaciones: { tipo: keyof Listas | string; conteo: number; indice: number; slug: string }[];
   proyectos?: number[];
   egresados?: number[];
+  academia?: number;
 }
 export type DefinicionSimple = { nombre: string; slug: string };
 export type Años = [año: number, conteo: number][];
@@ -114,6 +115,7 @@ export interface Ficha extends RelacionesFicha {
   enlaces?: string[];
   imagenes?: DatosImg[];
   id?: number;
+  academia?: number;
 }
 
 // Tipos egresados
@@ -137,4 +139,8 @@ export interface OpcionBuscadorDatos {
 
 export interface ElementoBuscador extends OpcionBuscadorDatos {
   opcion: HTMLLIElement;
+}
+
+export interface PersonaID {
+  [nombre: string]: number;
 }

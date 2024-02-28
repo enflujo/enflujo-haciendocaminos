@@ -245,7 +245,8 @@ elementoSeleccionado.subscribe((elemento) => {
           objetos: relaciones.objetos ? relaciones.objetos : [],
           municipios: relaciones.municipios ? relaciones.municipios : [],
           decadas: relaciones.decadas ? relaciones.decadas : [],
-          proyecto: proyectos
+          proyecto: proyectos,
+          academia: datos.academia ? datos.academia : undefined
         });
       }
     }
