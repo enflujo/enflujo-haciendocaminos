@@ -30,9 +30,11 @@ const altImg = imagen ? imagen.alt : nombreProyecto;
     <link rel="preconnect" href="https://rsms.me/" />
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
 
-    <link rel="icon" href={new URL(join(urlBase.pathname, 'favicon.ico'), urlBase)} sizes="32x32" />
-    <link rel="icon" href={new URL(join(urlBase.pathname, 'favicon.svg'), urlBase)} type="image/svg+xml" />
-    <link rel="apple-touch-icon" href={new URL(join(urlBase.pathname, 'apple-touch-icon.png'), urlBase)} />
+    <link rel="icon" href={`${import.meta.env.BASE_URL}/favicon.ico`} sizes="32x32" />
+    <link rel="icon" href={`${import.meta.env.BASE_URL}/favicon.svg`} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={`${import.meta.env.BASE_URL}/apple-touch-icon.png`} />
+    <link rel="manifest" href={`${import.meta.env.BASE_URL}/sitio.webmanifest`} />
+
     <meta name="generator" content={Astro.generator} />
     <link rel="canonical" href={urlPagina} />
 

@@ -1,0 +1,8 @@
+{
+    "name": "60 años Haciendo caminos. Departamento de Antropología de la Universidad de los Andes", 
+    "short_name": "Haciendo caminos", 
+    "icons": [
+      { "src": "/icono_192.png", "sizes": "192x192", "type": "image/png" },
+      { "src": "/icono_512.png", "sizes": "512x512", "type": "image/png" }
+    ]
+  }
