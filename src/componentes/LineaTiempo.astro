@@ -8,49 +8,79 @@ interface Props {
 }
 
 const { decadas, tiempo } = Astro.props;
+
 let datosLinea = '';
 const numeroDecadas = decadas.length;
-const anchoDecada = 100 / numeroDecadas;
-const altoDecada = (valor: number) => convertirEscala(valor, 0, 58, 0, 30);
-const posY = (valor: number) => convertirEscala(valor, 0, 20, 100, 0);
-const posX = (valor: number) => convertirEscala(valor, 1966, 2026, 0, 100);
 
-tiempo.forEach((marca, i) => {
-  const x = posX(+marca.nombre);
-  const y = posY(marca.conteo);
+const anchoLineaPorcentaje = 98;
+const anchoDecada = anchoLineaPorcentaje / numeroDecadas;
+const posX = (valor: number) => convertirEscala(valor, 1960, 2030, 0, anchoLineaPorcentaje);
 
-  if (i === 0) {
-    datosLinea += `M ${0}, ${100} L`;
-  } else {
+function rango(min: number, max: number): number[] {
+  const lon = max - min + 1;
+  const arr = new Array(lon);
+
+  for (let i = 0; i < lon; i++) {
+    arr[i] = min + i;
   }
+  return arr;
+}
 
-  datosLinea += ` ${x}, ${y}`;
-
-  if (i === tiempo.length - 1) {
-    datosLinea += 'L 100, 100 Z';
-  }
-});
+const listaAños = rango(1960, 2029);
 ---
 
 <div id="contenedorLineaTiempo">
   <div id="contenedorGrafica">
-    <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
+    <svg
+      width={`${anchoLineaPorcentaje}%`}
+      height="100%"
+      viewBox="0 0 100 100"
+      preserveAspectRatio="none"
+      style={`transform:translateX(2%)`}
+    >
       <g id="grupoDecadas">
         {
           decadas.map((decada, i) => (
-            <rect x={`${i * anchoDecada}%`} y="0" width={`${anchoDecada}%`} height={`${altoDecada(decada.conteo)}px`} />
+            <rect
+              class={decadas.find(({ nombre }) => nombre === decada.nombre) ? 'decada' : 'desactivado'}
+              x={`${i * anchoDecada}%`}
+              y="0"
+              width={`${anchoDecada}%`}
+              height="15px"
+              stroke-width="1px"
+            />
           ))
         }
-
-        <path d={datosLinea}></path>
       </g>
+
+      <g> </g>
     </svg>
 
-    <svg id="marcas" width="100%" height="100%">
+    <svg id="marcas" width={`${anchoLineaPorcentaje}%`} height="100%" style={`transform:translateX(2%)`}>
       {
-        tiempo.map((marca) => (
-          <text style={`transform:translate(${posX(+marca.nombre)}%, ${posY(marca.conteo)}%)`} x="0" y="0">
-            {marca.nombre}
+        listaAños.map((fecha) => (
+          <>
+            <circle
+              class={tiempo.find(({ nombre }) => +nombre === fecha) ? '' : 'desactivado'}
+              style={`transform:translate(${posX(fecha)}%, ${45}%)`}
+              r="4"
+              cx="10"
+              cy="0"
+              stroke="#62e595"
+              stroke-width="1px"
+            />
+          </>
+        ))
+      }
+      {
+        listaAños.map((marca) => (
+          <text
+            class={tiempo.find(({ nombre }) => +nombre === marca) ? '' : 'desactivado'}
+            style={`transform:translate(${posX(+marca)}%, 75%)`}
+            x="0"
+            y="0"
+          >
+            {marca}
           </text>
         ))
       }
@@ -59,17 +89,18 @@ tiempo.forEach((marca, i) => {
 </div>
 
 <style lang="scss">
+  @import '@/scss/constantes';
   #contenedorLineaTiempo {
     position: absolute;
     bottom: 0;
     width: 100vw;
+    margin: 0 auto;
   }
 
   #contenedorGrafica {
-    height: 170px;
     position: relative;
-
-    background-color: rgba(245, 245, 245, 0.8);
+    height: var(--altoLineaTiempo);
+    background-color: var(--fondoVerdeOscuro);
     z-index: 3;
     #decadas {
       fill: rgba(26, 42, 34, 0.3);
@@ -89,6 +120,27 @@ tiempo.forEach((marca, i) => {
       font-size: 8.5px;
       fill: rgba(255, 255, 222, 1);
       text-shadow: 1px 1px 1px rgba(26, 42, 34, 1);
+
+      &.desactivado {
+        opacity: 0.5;
+      }
+    }
+
+    rect {
+      &.decada {
+        fill: #62e595;
+      }
+      &.desactivado {
+        opacity: 0.5;
+      }
+    }
+
+    circle {
+      fill: #62e595;
+      &.desactivado {
+        fill: transparent;
+        opacity: 0.2;
+      }
     }
   }
 </style>
