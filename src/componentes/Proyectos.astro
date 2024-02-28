@@ -29,6 +29,7 @@ import proyectos from '../../estaticos/proyectos.json';
   cajaNombreVista.onclick = () => {
     contenidoLista.classList.toggle('oculta');
     botonListas.classList.toggle('abierta');
+    cajaNombreVista.classList.toggle('cerrada');
   };
 
   datosProyectos.subscribe((datos) => {

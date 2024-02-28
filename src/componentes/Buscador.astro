@@ -5,6 +5,7 @@ const listas = { ...nombresListasProyectos, ...nombresListasEgresados };
 ---
 
 <div id="contenedorBuscador">
+  <img id="botonBuscador" src={`${import.meta.env.BASE_URL}/imgs/lupa.svg`} alt="Buscador" />
   <input id="buscador" type="search" placeholder="Buscar" />
 
   <div id="sugerencias">
@@ -24,6 +25,7 @@ const listas = { ...nombresListasProyectos, ...nombresListasEgresados };
   import { opcionesBuscador } from '@/utilidades/cerebro';
   import type { ElementoBuscador } from '@/tipos';
   const buscador = document.getElementById('buscador') as HTMLInputElement;
+  const botonBuscador = document.getElementById('botonBuscador') as HTMLDivElement;
   const sugerencias = document.getElementById('sugerencias') as HTMLDataListElement;
   const cajas = sugerencias.querySelectorAll<HTMLDivElement>('.cajaBuscador');
   const sinResultados = document.createElement('span');
@@ -34,6 +36,10 @@ const listas = { ...nombresListasProyectos, ...nombresListasEgresados };
     puntaje: number;
     elementos: HTMLSpanElement[];
   }
+
+  botonBuscador.onclick = () => {
+    buscador.classList.toggle('visibleCelular');
+  };
 
   opcionesBuscador.subscribe((opciones) => {
     if (!opciones) return;
@@ -103,6 +109,7 @@ const listas = { ...nombresListasProyectos, ...nombresListasEgresados };
   }
 
   #buscador {
+    display: none;
     outline: none;
     border: none;
     padding: 0.8em;
@@ -123,6 +130,23 @@ const listas = { ...nombresListasProyectos, ...nombresListasEgresados };
     &::placeholder {
       color: rgba(255, 255, 255, 0.452);
     }
+
+    &.visibleCelular {
+      display: block;
+      position: absolute;
+      left: 0;
+      top: 50px;
+      /* background-color: green; */
+      color: black;
+    }
+  }
+
+  #botonBuscador {
+    display: inline-block;
+    height: 20px;
+    cursor: pointer;
+    -webkit-filter: invert(1);
+    filter: invert(1);
   }
 
   #sugerencias {
@@ -171,6 +195,11 @@ const listas = { ...nombresListasProyectos, ...nombresListasEgresados };
   @media screen and (min-width: $corte1) {
     #buscador {
       width: 150px;
+      display: block;
+    }
+
+    #botonBuscador {
+      display: none;
     }
   }
 </style>

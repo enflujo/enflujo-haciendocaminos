@@ -166,7 +166,7 @@ a:link {
     background-color: var(--resaltadoVerde);
     position: sticky;
     top: 0;
-    width: 100%;
+    width: 100vw;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
@@ -174,10 +174,14 @@ a:link {
     h2 {
       font-family: var(--fuenteParrafo);
       text-transform: uppercase;
-      font-size: 20px;
+      font-size: 1.2em;
       color: var(--textoOscuro);
       padding: 15px 0 15px 3.5rem;
       margin: 0px;
+    }
+
+    &.cerrada {
+      width: 55vw;
     }
 
     .botonAbrir {
@@ -284,5 +288,10 @@ a:link {
   }
   #listaProyectos {
     width: 30vw;
+
+    #cajaNombreVista {
+      width: 30vw;
+      font-size: 1.6em;
+    }
   }
 }
