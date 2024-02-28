@@ -156,7 +156,7 @@ a:link {
   right: 0px;
   z-index: 4;
   font-family: var(--fuenteParrafo);
-  height: calc(100vh - 170px - 50px);
+  height: calc(100vh - var(--altoLineaTiempo) - var(--altoMenu));
   overflow-y: auto;
   overflow-x: hidden;
   font-size: 0.8em;

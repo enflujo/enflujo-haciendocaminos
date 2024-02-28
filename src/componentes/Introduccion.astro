@@ -49,10 +49,13 @@
   #introduccion {
     font-family: var(--fuenteParrafo);
     width: 96vw;
+    max-height: calc(100vh - var(--altoLineaTiempo) - var(--altoMenu));
+    overflow-x: hidden;
+    overflow-y: scroll;
     position: absolute;
     display: none;
     right: 2vw;
-    top: 60px;
+    top: calc(var(--altoMenu) + 10px);
     background-color: var(--fondoVerdeOscuro);
     color: var(--textoClaro);
     z-index: 5;
@@ -114,7 +117,7 @@
   // Cambiar estilos según tamaño de pantalla
   @media screen and (min-width: $corte3) {
     #introduccion {
-      width: 30vw;
+      width: 35vw;
       left: 10px;
       padding: 2em 5em;
     }

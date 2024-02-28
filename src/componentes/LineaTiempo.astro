@@ -12,96 +12,74 @@ const { decadas, tiempo } = Astro.props;
 let datosLinea = '';
 const numeroDecadas = decadas.length;
 
-const anchoDecada = 100 / numeroDecadas;
-const altoDecada = (valor: number) => convertirEscala(valor, 0, 58, 0, 30);
-const posY = (valor: number) => convertirEscala(valor, 0, 20, 100, 0);
-const posX = (valor: number) => convertirEscala(valor, 1966, 2026, 0, 100);
+const anchoLineaPorcentaje = 98;
+const anchoDecada = anchoLineaPorcentaje / numeroDecadas;
+const posX = (valor: number) => convertirEscala(valor, 1960, 2030, 0, anchoLineaPorcentaje);
 
-tiempo.forEach((marca, i) => {
-  const x = posX(+marca.nombre);
-  const y = posY(marca.conteo);
+function rango(min: number, max: number): number[] {
+  const lon = max - min + 1;
+  const arr = new Array(lon);
 
-  if (i === 0) {
-    datosLinea += `M ${0}, ${100} L`;
-  } else {
-  }
-
-  datosLinea += ` ${x}, ${y}`;
-
-  if (i === tiempo.length - 1) {
-    datosLinea += 'L 100, 100 Z';
-  }
-});
-
-function rango(min: number, max: number) {
-  var len = max - min + 1;
-  var arr = new Array(len);
-  for (var i = 0; i < len; i++) {
+  for (let i = 0; i < lon; i++) {
     arr[i] = min + i;
   }
   return arr;
 }
 
-const listaAños = rango(+tiempo[0].nombre, +tiempo[tiempo.length - 1].nombre);
+const listaAños = rango(1960, 2029);
 ---
 
 <div id="contenedorLineaTiempo">
   <div id="contenedorGrafica">
-    <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
-      <g id="grupoDecadas" style={`transform:translateX(8%)`}>
+    <svg
+      width={`${anchoLineaPorcentaje}%`}
+      height="100%"
+      viewBox="0 0 100 100"
+      preserveAspectRatio="none"
+      style={`transform:translateX(2%)`}
+    >
+      <g id="grupoDecadas">
         {
           decadas.map((decada, i) => (
             <rect
+              class={decadas.find(({ nombre }) => nombre === decada.nombre) ? 'decada' : 'desactivado'}
               x={`${i * anchoDecada}%`}
               y="0"
               width={`${anchoDecada}%`}
-              height={`15px`}
-              stroke="#62e595"
+              height="15px"
               stroke-width="1px"
             />
           ))
         }
-
-        <!-- <path d={datosLinea}></path> -->
       </g>
+
+      <g> </g>
     </svg>
 
-    <svg id="marcas" width="100%" height="100%">
+    <svg id="marcas" width={`${anchoLineaPorcentaje}%`} height="100%" style={`transform:translateX(2%)`}>
       {
-        listaAños.map((marca) => (
+        listaAños.map((fecha) => (
           <>
             <circle
-              style={`transform:translate(${posX(marca)}%, ${45}%)`}
+              class={tiempo.find(({ nombre }) => +nombre === fecha) ? '' : 'desactivado'}
+              style={`transform:translate(${posX(fecha)}%, ${45}%)`}
               r="4"
               cx="10"
               cy="0"
               stroke="#62e595"
-              stroke-width="2px"
-              fill="transparent"
+              stroke-width="1px"
             />
           </>
         ))
       }
-
-      {
-        tiempo.map((marca) => (
-          <>
-            <circle
-              style={`transform:translate(${posX(+marca.nombre)}%, ${45}%)`}
-              r="4"
-              cx="10"
-              cy="0"
-              stroke="#62e595"
-              stroke-width="2px"
-              fill="#62e595"
-            />
-          </>
-        ))
-      }
-
       {
         listaAños.map((marca) => (
-          <text style={`transform:translate(${posX(+marca)}%, 75%)`} x="0" y="0">
+          <text
+            class={tiempo.find(({ nombre }) => +nombre === marca) ? '' : 'desactivado'}
+            style={`transform:translate(${posX(+marca)}%, 75%)`}
+            x="0"
+            y="0"
+          >
             {marca}
           </text>
         ))
@@ -111,6 +89,7 @@ const listaAños = rango(+tiempo[0].nombre, +tiempo[tiempo.length - 1].nombre);
 </div>
 
 <style lang="scss">
+  @import '@/scss/constantes';
   #contenedorLineaTiempo {
     position: absolute;
     bottom: 0;
@@ -119,9 +98,8 @@ const listaAños = rango(+tiempo[0].nombre, +tiempo[tiempo.length - 1].nombre);
   }
 
   #contenedorGrafica {
-    height: 80px;
     position: relative;
-
+    height: var(--altoLineaTiempo);
     background-color: var(--fondoVerdeOscuro);
     z-index: 3;
     #decadas {
@@ -142,6 +120,27 @@ const listaAños = rango(+tiempo[0].nombre, +tiempo[tiempo.length - 1].nombre);
       font-size: 8.5px;
       fill: rgba(255, 255, 222, 1);
       text-shadow: 1px 1px 1px rgba(26, 42, 34, 1);
+
+      &.desactivado {
+        opacity: 0.5;
+      }
+    }
+
+    rect {
+      &.decada {
+        fill: #62e595;
+      }
+      &.desactivado {
+        opacity: 0.5;
+      }
+    }
+
+    circle {
+      fill: #62e595;
+      &.desactivado {
+        fill: transparent;
+        opacity: 0.2;
+      }
     }
   }
 </style>
