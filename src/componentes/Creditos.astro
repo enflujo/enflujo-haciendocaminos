@@ -1,0 +1,137 @@
+---
+
+---
+
+<div id="creditos">
+  <div id="cerrarCreditos">X</div>
+
+  <div class="espacioLogoIntroduccion">
+    <img
+      class="logoIntroduccion"
+      src={`${import.meta.env.BASE_URL}/imgs/logo_antro_blanco.svg`}
+      alt="Logo de introducción: 60 años, haciendo caminos"
+    />
+  </div>
+
+  <div>
+    <p>Descripción de la página, la intención, etc.</p>
+  </div>
+  <div class="contenedorLogos">
+    <ul class="">
+      <li class="">
+        <h3><div class="rol">Investigación realizada por</div></h3>
+
+        <h3><div class="rol">Visualización desarrollada por</div></h3>
+        <a href="https://enflujo.com" target="_blank">
+          <img class="logo" src={`${import.meta.env.BASE_URL}/imgs/logo_enflujo_blanco.svg`} alt="Logo EnFlujo" /></a
+        >
+      </li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  import { cerrarClicFuera } from '../utilidades/ayudas.ts';
+  const botonCerrarCreditos = document.getElementById('cerrarCreditos') as HTMLDivElement;
+  const botonAbrirCreditos = document.getElementById('botonCreditos') as HTMLDivElement;
+  const creditos = document.getElementById('creditos') as HTMLDivElement;
+
+  botonCerrarCreditos.onclick = () => {
+    creditos.classList.remove('visible');
+  };
+
+  // Abrir y cerrar Intro
+  botonAbrirCreditos.onclick = () => {
+    creditos.classList.add('visible');
+  };
+</script>
+
+<style lang="scss">
+  @import '@/scss/constantes';
+
+  #creditos {
+    background-color: var(--fondoVerdeOscuro);
+    color: var(--blanco);
+    height: 100vh;
+    width: 40vw;
+    position: fixed;
+    overflow: auto;
+    z-index: 9;
+    padding: 2em 7em 2em 5em;
+    font-size: 1em;
+    left: -100%;
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+
+    &.visible {
+      left: 0;
+      opacity: 1;
+    }
+
+    #cerrarCreditos {
+      font-size: 1em;
+      margin: 0;
+      padding: 0;
+      cursor: pointer;
+      transition: opacity 0.15s ease-out;
+      text-align: right;
+      margin-right: -1em;
+
+      &:hover {
+        opacity: 0.7;
+      }
+    }
+
+    .espacioLogoIntroduccion {
+      padding: 20px 20px 20px 20px;
+      width: 60%;
+      max-width: 1300px;
+      margin: 0 auto;
+
+      .logoIntroduccion {
+      }
+    }
+
+    .contenedorLogos {
+      width: 60vw;
+      max-width: 1300px;
+      margin: 0 auto;
+
+      h1 {
+        font-size: 2em;
+        font-weight: 500;
+        width: 100%;
+      }
+
+      h3 {
+        max-width: 1300px;
+        margin: 0 auto;
+        padding-top: 1.5em;
+        margin: 1.5em 0em 1em 0;
+      }
+
+      .rol {
+        font-weight: bold;
+      }
+      .logo {
+        max-width: 200px;
+      }
+    }
+  }
+
+  // Cambiar estilos según tamaño de pantalla
+
+  @media screen and (min-width: $corte3) {
+    #creditos {
+      width: 50vw;
+      padding: 2em 2em 3em 2.2em;
+
+      #cerrarCreditos {
+        font-size: 1.2em;
+        margin-right: 0.6em;
+        cursor: pointer;
+        text-align: right;
+      }
+    }
+  }
+</style>

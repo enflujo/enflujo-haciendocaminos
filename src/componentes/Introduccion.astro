@@ -34,13 +34,22 @@
   const botonCerrarIntro = document.getElementById('cerrarIntro') as HTMLDivElement;
   const botonAbrirIntro = document.getElementById('botonIntro') as HTMLDivElement;
   const intro = document.getElementById('introduccion') as HTMLDivElement;
+  const botonCerrarCreditos = document.getElementById('cerrarCreditos') as HTMLDivElement;
+  const botonAbrirCreditos = document.getElementById('botonCreditos') as HTMLDivElement;
+  const creditos = document.getElementById('creditos') as HTMLDivElement;
 
   botonCerrarIntro.onclick = () => {
     intro.classList.remove('visible');
   };
 
+  botonCerrarCreditos.onclick = () => {
+    creditos.classList.remove('visible');
+  };
+
   // Cerrar al hacer click fuera de intro
   cerrarClicFuera(intro, botonAbrirIntro);
+  // Cerrar al hacer click fuera de creditos
+  cerrarClicFuera(creditos, botonAbrirCreditos);
 </script>
 
 <style lang="scss">

@@ -25,6 +25,7 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
 
     <Buscador />
     <div id="botonIntro">?</div>
+    <div id="botonCreditos">Créditos</div>
   </div>
 </nav>
 
@@ -113,7 +114,8 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
       h1 {
         z-index: 3;
         width: 23vw;
-        font-size: 1.1em;
+        font-size: 1.2em;
+        padding-left: 1vw;
       }
 
       .cajaGusanos {
@@ -192,6 +194,23 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
       border-radius: 50%;
       text-align: center;
       cursor: pointer;
+
+      &:hover {
+        opacity: 0.5;
+        background-color: var(--fondoAmarilloClaro2);
+        color: var(--textoOscuro);
+      }
+    }
+
+    #botonCreditos {
+      display: block;
+      font-size: 0.8em;
+      font-weight: 700;
+      border-radius: 10%;
+      padding: 1em;
+      text-align: center;
+      cursor: pointer;
+      text-transform: none;
 
       &:hover {
         opacity: 0.5;
