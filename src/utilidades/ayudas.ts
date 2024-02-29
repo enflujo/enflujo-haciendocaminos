@@ -22,6 +22,7 @@ export function cerrarClicFuera(elemento: HTMLElement, elemento2?: HTMLElement) 
     if (!(elemento === evento.target || elemento.contains(evento.target as Node) || elemento2 === evento.target)) {
       if (elemento.classList.contains('visible')) {
         elemento.classList.remove('visible');
+        elemento2?.classList.remove('activo');
       }
     }
   });

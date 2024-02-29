@@ -13,7 +13,7 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
     <span class="lineaMenu"></span>
   </div>
 
-  <div id="botonCreditos">Créditos</div>
+  <div id="botonCreditos" class="activo">Créditos</div>
 
   <div id="encabezado">
     <h1>Haciendo Caminos</h1>
@@ -192,6 +192,11 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
 
       &:hover {
         background-color: rgba(255, 255, 255, 0.3);
+        color: white;
+      }
+
+      &.activo {
+        background-color: #62e5947c;
         color: white;
       }
     }

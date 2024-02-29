@@ -43,20 +43,27 @@
   <script>
     import { cerrarClicFuera } from '../utilidades/ayudas.ts';
     const botonCerrarCreditos = document.getElementById('cerrarCreditos') as HTMLDivElement;
-    const botonAbrirCreditos = document.getElementById('botonCreditos') as HTMLDivElement;
+    const botonCreditos = document.getElementById('botonCreditos') as HTMLDivElement;
     const creditos = document.getElementById('creditos') as HTMLDivElement;
 
     botonCerrarCreditos.onclick = () => {
       creditos.classList.remove('visible');
+      botonCreditos.classList.remove('activo');
     };
 
     // Abrir y cerrar Creditos
-    botonAbrirCreditos.onclick = () => {
-      creditos.classList.add('visible');
+    botonCreditos.onclick = () => {
+      creditos.classList.toggle('visible');
+
+      if (creditos.classList.contains('visible')) {
+        botonCreditos.classList.add('activo');
+      } else {
+        botonCreditos.classList.remove('activo');
+      }
     };
 
     // Cerrar al hacer click fuera de creditos
-    cerrarClicFuera(creditos, botonAbrirCreditos);
+    cerrarClicFuera(creditos, botonCreditos);
   </script>
 
   <style lang="scss">
