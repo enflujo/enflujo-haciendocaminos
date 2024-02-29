@@ -113,9 +113,9 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
 
       h1 {
         z-index: 3;
-        width: 23vw;
-        font-size: 1.2em;
-        padding-left: 1vw;
+        width: 22vw;
+        font-size: 1em;
+        padding-left: 0.2em;
       }
 
       .cajaGusanos {
@@ -128,6 +128,7 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
         background-repeat: no-repeat;
         background-position: center;
         background-size: cover;
+        opacity: 0.3;
       }
     }
 
@@ -186,10 +187,10 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
     #botonIntro {
       display: block;
       font-family: var(--fuenteNumeros);
-      font-size: 0.8em;
+      font-size: 1em;
       width: 2.1em;
       height: 2.1em;
-      padding: 0.4em;
+      padding: 0.4em 0;
       font-weight: bold;
       border-radius: 50%;
       text-align: center;
@@ -207,7 +208,7 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
       font-size: 0.8em;
       font-weight: 700;
       border-radius: 10%;
-      padding: 1em;
+      padding: 0.5em;
       text-align: center;
       cursor: pointer;
       text-transform: none;
@@ -234,6 +235,15 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
           background-position: center;
           background-size: cover;
         }
+        h1 {
+          width: 23vw;
+          font-size: 1.2em;
+          padding-left: 1vw;
+        }
+      }
+
+      #botonCreditos {
+        padding: 1em;
       }
     }
   }

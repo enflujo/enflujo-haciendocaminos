@@ -5,6 +5,7 @@ const listas = { ...nombresListasProyectos, ...nombresListasEgresados };
 ---
 
 <div id="contenedorBuscador">
+  <img id="botonBuscador" src={`${import.meta.env.BASE_URL}/imgs/lupa.svg`} alt="Buscador" />
   <input id="buscador" type="search" placeholder="Buscar" />
 
   <div id="sugerencias">
@@ -24,6 +25,7 @@ const listas = { ...nombresListasProyectos, ...nombresListasEgresados };
   import { opcionesBuscador } from '@/utilidades/cerebro';
   import type { ElementoBuscador } from '@/tipos';
   const buscador = document.getElementById('buscador') as HTMLInputElement;
+  const botonBuscador = document.getElementById('botonBuscador') as HTMLDivElement;
   const sugerencias = document.getElementById('sugerencias') as HTMLDataListElement;
   const cajas = sugerencias.querySelectorAll<HTMLDivElement>('.cajaBuscador');
   const sinResultados = document.createElement('span');
@@ -34,6 +36,16 @@ const listas = { ...nombresListasProyectos, ...nombresListasEgresados };
     puntaje: number;
     elementos: HTMLSpanElement[];
   }
+
+  botonBuscador.onclick = () => {
+    sugerencias.classList.toggle('visible');
+
+    if (sugerencias.classList.contains('visible')) {
+      buscador.classList.add('visibleCelular');
+    } else {
+      buscador.classList.remove('visibleCelular');
+    }
+  };
 
   opcionesBuscador.subscribe((opciones) => {
     if (!opciones) return;
@@ -53,6 +65,7 @@ const listas = { ...nombresListasProyectos, ...nombresListasEgresados };
 
       if (!texto || !texto.length) {
         sugerencias.classList.remove('visible');
+        buscador.classList.remove('visibleCelular');
         return;
       }
 
@@ -110,7 +123,11 @@ const listas = { ...nombresListasProyectos, ...nombresListasEgresados };
     color: var(--textoClaro);
     font-size: 0.85em;
     transition: all 0.25s ease-in-out;
-    width: 20vw;
+    width: 30vw;
+    z-index: 4;
+    position: absolute;
+    top: calc(var(--altoMenu) + 0.5em);
+    left: 100vw;
 
     &:focus {
       background-color: var(--resaltadoVerde);
@@ -123,6 +140,21 @@ const listas = { ...nombresListasProyectos, ...nombresListasEgresados };
     &::placeholder {
       color: rgba(255, 255, 255, 0.452);
     }
+
+    &.visibleCelular {
+      top: 55px;
+      color: black;
+      left: 10px;
+      width: 95%;
+    }
+  }
+
+  #botonBuscador {
+    display: inline-block;
+    height: 20px;
+    cursor: pointer;
+    -webkit-filter: invert(1);
+    filter: invert(1);
   }
 
   #sugerencias {
@@ -131,8 +163,8 @@ const listas = { ...nombresListasProyectos, ...nombresListasEgresados };
     left: 50%;
     transform: translateX(200%);
     top: var(--altoMenu);
-    padding: 1.2em;
-    width: 80vw;
+    padding: 3em 1.5em 1.5em 1.5em;
+    width: 100vw;
     display: flex;
     flex-wrap: wrap;
     overflow: auto;
@@ -171,6 +203,23 @@ const listas = { ...nombresListasProyectos, ...nombresListasEgresados };
   @media screen and (min-width: $corte1) {
     #buscador {
       width: 150px;
+      display: block;
+      position: relative;
+      left: 0;
+      top: 0;
+
+      &.visibleCelular {
+        top: 0;
+      }
+    }
+
+    #botonBuscador {
+      display: none;
+    }
+    #sugerencias {
+      left: 50%;
+      padding: 1.2em;
+      width: 80vw;
     }
   }
 </style>
