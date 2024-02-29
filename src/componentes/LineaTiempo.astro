@@ -96,7 +96,7 @@ const listaAños = rango(1960, 2029);
     z-index: 3;
     width: 100vw;
     overflow-y: clip;
-    overflow-x: scroll;
+    overflow-x: auto;
 
     #decadas {
       fill: rgba(26, 42, 34, 0.3);
@@ -175,7 +175,7 @@ const listaAños = rango(1960, 2029);
     }
   }
 
-  @media screen and (min-width: $corte2) {
+  @media screen and (min-width: $corte3) {
     svg {
       width: 150%;
     }
@@ -193,7 +193,7 @@ const listaAños = rango(1960, 2029);
 
   @media screen and (min-width: $corte4) {
     svg {
-      width: 110%;
+      width: 120%;
     }
 
     text {
@@ -202,7 +202,23 @@ const listaAños = rango(1960, 2029);
 
     rect {
       &.decada {
-        width: 110%;
+        width: 120%;
+      }
+    }
+  }
+
+  @media screen and (min-width: 1650px) {
+    svg {
+      width: 98%;
+    }
+
+    text {
+      font-size: 0.6em;
+    }
+
+    rect {
+      &.decada {
+        width: 98%;
       }
     }
   }

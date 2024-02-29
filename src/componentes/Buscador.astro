@@ -38,7 +38,13 @@ const listas = { ...nombresListasProyectos, ...nombresListasEgresados };
   }
 
   botonBuscador.onclick = () => {
-    buscador.classList.toggle('visibleCelular');
+    sugerencias.classList.toggle('visible');
+
+    if (sugerencias.classList.contains('visible')) {
+      buscador.classList.add('visibleCelular');
+    } else {
+      buscador.classList.remove('visibleCelular');
+    }
   };
 
   opcionesBuscador.subscribe((opciones) => {
@@ -59,6 +65,7 @@ const listas = { ...nombresListasProyectos, ...nombresListasEgresados };
 
       if (!texto || !texto.length) {
         sugerencias.classList.remove('visible');
+        buscador.classList.remove('visibleCelular');
         return;
       }
 
@@ -109,7 +116,6 @@ const listas = { ...nombresListasProyectos, ...nombresListasEgresados };
   }
 
   #buscador {
-    display: none;
     outline: none;
     border: none;
     padding: 0.8em;
@@ -117,7 +123,11 @@ const listas = { ...nombresListasProyectos, ...nombresListasEgresados };
     color: var(--textoClaro);
     font-size: 0.85em;
     transition: all 0.25s ease-in-out;
-    width: 20vw;
+    width: 30vw;
+    z-index: 4;
+    position: absolute;
+    top: calc(var(--altoMenu) + 0.5em);
+    left: 100vw;
 
     &:focus {
       background-color: var(--resaltadoVerde);
@@ -132,12 +142,10 @@ const listas = { ...nombresListasProyectos, ...nombresListasEgresados };
     }
 
     &.visibleCelular {
-      display: block;
-      position: absolute;
-      left: 0;
-      top: 50px;
-      /* background-color: green; */
+      top: 55px;
       color: black;
+      left: 10px;
+      width: 95%;
     }
   }
 
@@ -155,8 +163,8 @@ const listas = { ...nombresListasProyectos, ...nombresListasEgresados };
     left: 50%;
     transform: translateX(200%);
     top: var(--altoMenu);
-    padding: 1.2em;
-    width: 80vw;
+    padding: 3em 1.5em 1.5em 1.5em;
+    width: 100vw;
     display: flex;
     flex-wrap: wrap;
     overflow: auto;
@@ -196,10 +204,22 @@ const listas = { ...nombresListasProyectos, ...nombresListasEgresados };
     #buscador {
       width: 150px;
       display: block;
+      position: relative;
+      left: 0;
+      top: 0;
+
+      &.visibleCelular {
+        top: 0;
+      }
     }
 
     #botonBuscador {
       display: none;
+    }
+    #sugerencias {
+      left: 50%;
+      padding: 1.2em;
+      width: 80vw;
     }
   }
 </style>
