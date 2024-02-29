@@ -9,7 +9,6 @@ interface Props {
 
 const { decadas, tiempo } = Astro.props;
 
-let datosLinea = '';
 const numeroDecadas = decadas.length;
 
 const anchoLineaPorcentaje = 98;
@@ -31,13 +30,7 @@ const listaAños = rango(1960, 2029);
 
 <div id="contenedorLineaTiempo">
   <div id="contenedorGrafica">
-    <svg
-      width={`${anchoLineaPorcentaje}%`}
-      height="100%"
-      viewBox="0 0 100 100"
-      preserveAspectRatio="none"
-      style={`transform:translateX(2%)`}
-    >
+    <svg height="100%" viewBox="0 0 100 100" preserveAspectRatio="none" style={`transform:translateX(2%)`}>
       <g id="grupoDecadas">
         {
           decadas.map((decada, i) => (
@@ -45,7 +38,6 @@ const listaAños = rango(1960, 2029);
               class={decadas.find(({ nombre }) => nombre === decada.nombre) ? 'decada' : 'desactivado'}
               x={`${i * anchoDecada}%`}
               y="0"
-              width={`${anchoDecada}%`}
               height="15px"
               stroke-width="1px"
             />
@@ -102,6 +94,10 @@ const listaAños = rango(1960, 2029);
     height: var(--altoLineaTiempo);
     background-color: var(--fondoVerdeOscuro);
     z-index: 3;
+    width: 100vw;
+    overflow-y: clip;
+    overflow-x: scroll;
+
     #decadas {
       fill: rgba(26, 42, 34, 0.3);
     }
@@ -111,13 +107,14 @@ const listaAños = rango(1960, 2029);
     position: absolute;
     bottom: 0;
     left: 0;
+    width: var(--anchoLineaTiempo);
 
     path {
       fill: var(--fondoVerdeOscuro);
     }
 
     text {
-      font-size: 8.5px;
+      font-size: 0.5em;
       fill: rgba(255, 255, 222, 1);
       text-shadow: 1px 1px 1px rgba(26, 42, 34, 1);
 
@@ -129,6 +126,7 @@ const listaAños = rango(1960, 2029);
     rect {
       &.decada {
         fill: #62e595;
+        width: var(--anchoLineaTiempo);
       }
       &.desactivado {
         opacity: 0.5;
@@ -140,6 +138,71 @@ const listaAños = rango(1960, 2029);
       &.desactivado {
         fill: transparent;
         opacity: 0.2;
+      }
+    }
+  }
+
+  // Cambiar estilos según tamaño de pantalla
+  @media screen and (min-width: $corte1) {
+    svg {
+      width: 350%;
+    }
+
+    text {
+      font-size: 0.6em;
+    }
+
+    rect {
+      &.decada {
+        width: 350%;
+      }
+    }
+  }
+
+  @media screen and (min-width: $corte2) {
+    svg {
+      width: 210%;
+    }
+
+    text {
+      font-size: 0.6em;
+    }
+
+    rect {
+      &.decada {
+        width: 210%;
+      }
+    }
+  }
+
+  @media screen and (min-width: $corte2) {
+    svg {
+      width: 150%;
+    }
+
+    text {
+      font-size: 0.6em;
+    }
+
+    rect {
+      &.decada {
+        width: 150%;
+      }
+    }
+  }
+
+  @media screen and (min-width: $corte4) {
+    svg {
+      width: 110%;
+    }
+
+    text {
+      font-size: 0.6em;
+    }
+
+    rect {
+      &.decada {
+        width: 110%;
       }
     }
   }
