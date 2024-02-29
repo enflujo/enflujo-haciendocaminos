@@ -13,6 +13,8 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
     <span class="lineaMenu"></span>
   </div>
 
+  <div id="botonCreditos">Créditos</div>
+
   <div id="encabezado">
     <h1>Haciendo Caminos</h1>
     <span class="cajaGusanos"></span>
@@ -24,16 +26,12 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
     </ul>
 
     <Buscador />
-    <div id="botonIntro">?</div>
-    <div id="botonCreditos">Créditos</div>
   </div>
 </nav>
 
 <script>
   const menuListas = document.getElementById('menuListas') as HTMLDivElement;
   const contenedorListas = document.getElementById('contenedorListas') as HTMLDivElement;
-  const botonAbrirIntro = document.getElementById('botonIntro') as HTMLDivElement;
-  const intro = document.getElementById('introduccion') as HTMLDivElement;
 
   if (menuListas) {
     menuListas.addEventListener('click', () => {
@@ -60,11 +58,6 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
       menuListas.classList.remove('abierto');
     }
   });
-
-  // Abrir y cerrar Intro
-  botonAbrirIntro.onclick = () => {
-    intro.classList.add('visible');
-  };
 </script>
 
 <style lang="scss">
@@ -72,6 +65,7 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
   #menu {
     margin: 0;
     font-family: var(--fuenteParrafo);
+    background-color: var(--fondoVerdeOscuro);
     font-size: 0.8em;
     position: fixed;
     top: 0;
@@ -101,7 +95,6 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
     }
 
     #encabezado {
-      background-color: var(--fondoVerdeOscuro);
       width: calc(100vw - 50px);
       padding: 0em 1em;
       display: flex;
@@ -184,39 +177,22 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
       }
     }
 
-    #botonIntro {
-      display: block;
-      font-family: var(--fuenteNumeros);
-      font-size: 1em;
-      width: 2.1em;
-      height: 2.1em;
-      padding: 0.4em 0;
-      font-weight: bold;
-      border-radius: 50%;
-      text-align: center;
-      cursor: pointer;
-
-      &:hover {
-        opacity: 0.5;
-        background-color: var(--fondoAmarilloClaro2);
-        color: var(--textoOscuro);
-      }
-    }
-
     #botonCreditos {
       display: block;
       font-size: 0.8em;
       font-weight: 700;
-      border-radius: 10%;
-      padding: 0.5em;
+      margin-left: 0;
+      padding: 18px 1em 0 1em;
       text-align: center;
       cursor: pointer;
       text-transform: none;
+      height: var(--altoMenu);
+      background-color: var(--resaltadoVerde);
+      color: var(--textoOscuro);
 
       &:hover {
-        opacity: 0.5;
-        background-color: var(--fondoAmarilloClaro2);
-        color: var(--textoOscuro);
+        background-color: rgba(255, 255, 255, 0.3);
+        color: white;
       }
     }
   }
@@ -234,6 +210,7 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
           background-repeat: no-repeat;
           background-position: center;
           background-size: cover;
+          opacity: 1;
         }
         h1 {
           width: 23vw;
@@ -243,7 +220,7 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
       }
 
       #botonCreditos {
-        padding: 1em;
+        margin-left: 5px;
       }
     }
   }

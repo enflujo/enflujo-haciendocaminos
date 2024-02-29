@@ -2,7 +2,7 @@
 
 ---
 
-<div id="creditos">
+<div id="creditos" class="visible">
   <div id="cerrarCreditos">X</div>
 
   <img
@@ -11,9 +11,22 @@
     alt="Logo de introducción: 60 años, haciendo caminos"
   />
 
-  <div>
-    <p>Descripción de la página, la intención, etc.</p>
-  </div>
+  <p>
+    <span class="resaltado">Haciendo Caminos</span> es la historia del <a
+      href="https://cienciassociales.uniandes.edu.co/antropologia/"
+      >Departamento de Antropología de la Universidad de Los Andes</a
+    > contada a través de los proyectos de investigación que sus profesores y estudiantes han realizado desde su creación.
+  </p>
+
+  <p>
+    Quiénes han hecho parte, sobre qué han investigado, en qué lugares se han centrado y cuándo fueron realizadas las
+    investigaciones son algunas de las preguntas que queremos ayudar a responder con esta herramienta.
+  </p>
+  <p>
+    Para navegar selecciona del menú de la izquierda un tema, personaje, fecha, lugar, elemento o proyecto. Se abrirá
+    una ficha con información donde podrás conocerlos en detalle.
+  </p>
+
   <div class="contenedorLogos">
     <ul class="">
       <li class="">
@@ -26,113 +39,114 @@
       </li>
     </ul>
   </div>
-</div>
 
-<script>
-  import { cerrarClicFuera } from '../utilidades/ayudas.ts';
-  const botonCerrarCreditos = document.getElementById('cerrarCreditos') as HTMLDivElement;
-  const botonAbrirCreditos = document.getElementById('botonCreditos') as HTMLDivElement;
-  const creditos = document.getElementById('creditos') as HTMLDivElement;
+  <script>
+    import { cerrarClicFuera } from '../utilidades/ayudas.ts';
+    const botonCerrarCreditos = document.getElementById('cerrarCreditos') as HTMLDivElement;
+    const botonAbrirCreditos = document.getElementById('botonCreditos') as HTMLDivElement;
+    const creditos = document.getElementById('creditos') as HTMLDivElement;
 
-  botonCerrarCreditos.onclick = () => {
-    creditos.classList.remove('visible');
-  };
+    botonCerrarCreditos.onclick = () => {
+      creditos.classList.remove('visible');
+    };
 
-  // Abrir y cerrar Creditos
-  botonAbrirCreditos.onclick = () => {
-    creditos.classList.add('visible');
-  };
+    // Abrir y cerrar Creditos
+    botonAbrirCreditos.onclick = () => {
+      creditos.classList.add('visible');
+    };
 
-  // Cerrar al hacer click fuera de creditos
-  cerrarClicFuera(creditos, botonAbrirCreditos);
-</script>
+    // Cerrar al hacer click fuera de creditos
+    cerrarClicFuera(creditos, botonAbrirCreditos);
+  </script>
 
-<style lang="scss">
-  @import '@/scss/constantes';
+  <style lang="scss">
+    @import '@/scss/constantes';
 
-  #creditos {
-    background-color: var(--fondoVerdeOscuro);
-    color: var(--blanco);
-    height: 100vh;
-    width: 100vw;
-    position: fixed;
-    overflow: auto;
-    z-index: 9;
-    padding: 4em 5em 2em 5em;
-    font-size: 1em;
-    left: -100%;
-    opacity: 0;
-    transition: all 0.3s ease-in-out;
-
-    &.visible {
-      left: 0;
-      opacity: 1;
-    }
-
-    #cerrarCreditos {
-      position: absolute;
-      right: 30px;
+    #creditos {
+      background-color: var(--fondoVerdeOscuro);
+      color: var(--blanco);
+      height: calc(100vh - 50px);
+      width: 100vw;
+      position: fixed;
+      overflow: auto;
+      z-index: 9;
+      padding: 4em 5em 2em 5em;
       font-size: 1em;
-      margin: 0;
-      padding: 0;
-      cursor: pointer;
-      transition: opacity 0.15s ease-out;
-      text-align: right;
+      left: -100%;
+      top: 50px;
+      opacity: 0;
+      transition: all 0.3s ease-in-out;
 
-      &:hover {
-        opacity: 0.4;
-      }
-    }
-
-    .logoIntroduccion {
-      width: 80%;
-      margin-bottom: 2em;
-    }
-
-    .contenedorLogos {
-      margin: 0 auto;
-
-      h1 {
-        font-size: 2em;
-        font-weight: 500;
-        width: 100%;
+      &.visible {
+        left: 0;
+        opacity: 1;
       }
 
-      h3 {
-        margin: 0 auto;
-        padding-top: 1.5em;
-        margin: 1.5em 0em 1em 0;
-      }
-
-      .rol {
-        font-weight: bold;
-      }
-      .logo {
-        max-width: 150px;
-      }
-    }
-  }
-
-  // Cambiar estilos según tamaño de pantalla
-
-  @media screen and (min-width: $corte1) {
-    #creditos {
-      width: 50vw;
-    }
-  }
-
-  @media screen and (min-width: $corte2) {
-    #creditos {
-      width: 40vw;
-    }
-  }
-
-  @media screen and (min-width: $corte3) {
-    #creditos {
-      padding: 4em 7em 2em 5em;
       #cerrarCreditos {
-        font-size: 1.2em;
+        position: absolute;
+        right: 30px;
+        font-size: 1em;
+        margin: 0;
+        padding: 0;
+        cursor: pointer;
+        transition: opacity 0.15s ease-out;
+        text-align: right;
+
+        &:hover {
+          opacity: 0.4;
+        }
+      }
+
+      .logoIntroduccion {
+        width: 80%;
+        margin-bottom: 2em;
+      }
+
+      .contenedorLogos {
+        margin: 0 auto;
+
+        h1 {
+          font-size: 2em;
+          font-weight: 500;
+          width: 100%;
+        }
+
+        h3 {
+          margin: 0 auto;
+          padding-top: 1.5em;
+          margin: 1.5em 0em 1em 0;
+        }
+
+        .rol {
+          font-weight: bold;
+        }
+        .logo {
+          max-width: 150px;
+        }
       }
     }
-  }
-</style>
+
+    // Cambiar estilos según tamaño de pantalla
+
+    @media screen and (min-width: $corte1) {
+      #creditos {
+        width: 50vw;
+      }
+    }
+
+    @media screen and (min-width: $corte2) {
+      #creditos {
+        width: 40vw;
+      }
+    }
+
+    @media screen and (min-width: $corte3) {
+      #creditos {
+        padding: 4em 7em 2em 5em;
+        #cerrarCreditos {
+          font-size: 1.2em;
+        }
+      }
+    }
+  </style>
+</div>

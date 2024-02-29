@@ -383,15 +383,6 @@
 <style lang="scss" is:global>
   @import '@/scss/constantes';
 
-  li {
-    cursor: pointer;
-    &:hover,
-    &.resaltado {
-      background-color: var(--fondoAmarilloClaro);
-      color: var(--textoOscuro);
-    }
-  }
-
   #contenedorFicha {
     max-height: calc(100vh - 70px);
     position: absolute;
@@ -546,8 +537,16 @@
       flex-direction: column;
       align-items: flex-start;
       gap: 10px;
-
       align-self: stretch;
+
+      li {
+        cursor: pointer;
+        &:hover,
+        &.resaltado {
+          background-color: var(--fondoAmarilloClaro);
+          color: var(--textoOscuro);
+        }
+      }
 
       .seccionDatos {
         display: none;
