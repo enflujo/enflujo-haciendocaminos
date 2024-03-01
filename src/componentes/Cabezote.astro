@@ -13,8 +13,6 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
     <span class="lineaMenu"></span>
   </div>
 
-  <div id="botonCreditos" class="activo">Créditos</div>
-
   <div id="encabezado">
     <h1>Haciendo Caminos</h1>
     <span class="cajaGusanos"></span>
@@ -26,6 +24,7 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
     </ul>
 
     <Buscador />
+    <div id="botonCreditos" class="activo">?</div>
   </div>
 </nav>
 
@@ -96,7 +95,7 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
 
     #encabezado {
       width: calc(100vw - 50px);
-      padding: 0em 1em;
+      padding: 0em 0 0em 1em;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -179,10 +178,10 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
 
     #botonCreditos {
       display: block;
-      font-size: 0.8em;
+      font-size: 1em;
       font-weight: 700;
       margin-left: 0;
-      padding: 18px 1em 0 1em;
+      padding: 18px 1.5em 0 1.5em;
       text-align: center;
       cursor: pointer;
       text-transform: none;

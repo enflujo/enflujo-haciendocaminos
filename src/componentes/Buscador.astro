@@ -158,7 +158,7 @@ const listas = { ...nombresListasProyectos, ...nombresListasEgresados };
   }
 
   #sugerencias {
-    background-color: var(--magenta);
+    background-color: var(--grisClaro2);
     position: absolute;
     left: 50%;
     transform: translateX(200%);
@@ -186,11 +186,12 @@ const listas = { ...nombresListasProyectos, ...nombresListasEgresados };
       h4 {
         margin: 0;
         background-color: var(--fondoVerdeOscuro);
-        padding: 0.6em;
+        padding: 0.6em 1em;
+        font-size: 1.1em;
       }
 
       .subLista {
-        padding: 0.6em;
+        padding: 0.6em 1em;
       }
 
       &.visible {
@@ -218,7 +219,7 @@ const listas = { ...nombresListasProyectos, ...nombresListasEgresados };
     }
     #sugerencias {
       left: 50%;
-      padding: 1.2em;
+      padding: 1.8em 1.5em 1.5em 2em;
       width: 80vw;
     }
   }
@@ -227,13 +228,14 @@ const listas = { ...nombresListasProyectos, ...nombresListasEgresados };
 <style lang="scss" is:global>
   // Estos son los <li> dentro de las cajas
   .resultadoBusqueda {
+    color: var(--textoOscuro);
     cursor: pointer;
-    font-size: 1.1em;
-    padding: 0.2em 0;
+    font-size: 1.2em;
+    padding: 0.2em 0.4em;
 
     &:hover {
-      background-color: var(--fondoAmarilloClaro);
-      color: var(--fondoVerdeOscuro);
+      background-color: var(--magenta);
+      color: var(--textoClaro);
     }
   }
 </style>
