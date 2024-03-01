@@ -1,0 +1,45 @@
+---
+
+---
+
+<div id="pataLogos">
+  <div id="logosInstitucionales">
+    <a href="" target="_blank"
+      ><img src={`${import.meta.env.BASE_URL}/imgs/logos_uniandes.svg`} alt="Logos institucionales" /></a
+    >
+  </div>
+</div>
+
+<style lang="scss">
+  @import '@/scss/constantes';
+
+  #pataLogos {
+    display: flex;
+    position: fixed;
+    bottom: calc(var(--altoLineaTiempo) + 2vh);
+    right: 2.5vh;
+    z-index: 2;
+
+    #logosInstitucionales {
+      display: block;
+      width: 90vw;
+    }
+  }
+
+  @media screen and (min-width: $corte1) {
+    #pataLogos {
+      #logosInstitucionales {
+        width: 50vw;
+      }
+    }
+  }
+
+  @media screen and (min-width: $corte3) {
+    #pataLogos {
+      #logosInstitucionales {
+        width: 20vw;
+        max-height: 70px;
+      }
+    }
+  }
+</style>
