@@ -5,11 +5,13 @@
 <div id="creditos" class="visible">
   <div id="cerrarCreditos">X</div>
 
-  <img
-    class="logoIntroduccion"
-    src={`${import.meta.env.BASE_URL}/imgs/logo_antro_blanco.svg`}
-    alt="Logo de introducción: 60 años, haciendo caminos"
-  />
+  <div id="tituloLogo">
+    <img
+      class="logoIntroduccion"
+      src={`${import.meta.env.BASE_URL}/imgs/logo_antro_blanco.svg`}
+      alt="Logo de introducción: 60 años, haciendo caminos"
+    />
+  </div>
 
   <p>
     <span class="resaltado">Haciendo Caminos</span> es la historia del <a
@@ -104,9 +106,15 @@
         }
       }
 
-      .logoIntroduccion {
-        width: 80%;
-        margin-bottom: 2em;
+      #tituloLogo {
+        width: 100%;
+        margin: 2em auto 2em auto;
+
+        .logoIntroduccion {
+          width: 100%;
+          margin-top: 2em;
+          margin-bottom: 2em;
+        }
       }
 
       .contenedorLogos {
@@ -128,28 +136,40 @@
           font-weight: bold;
         }
         .logo {
-          max-width: 150px;
+          max-width: 60%;
+          display: block;
+          height: 90px;
+          width: auto;
+          margin: 3em auto 0;
         }
       }
     }
 
     // Cambiar estilos según tamaño de pantalla
 
-    @media screen and (min-width: $corte1) {
-      #creditos {
-        width: 50vw;
-      }
-    }
-
     @media screen and (min-width: $corte2) {
       #creditos {
-        width: 40vw;
+        width: 80vw;
+
+        #tituloLogo {
+          width: 90%;
+        }
       }
     }
 
     @media screen and (min-width: $corte3) {
       #creditos {
-        padding: 4em 7em 2em 5em;
+        width: 40vw;
+
+        #tituloLogo {
+          width: 90%;
+        }
+      }
+    }
+
+    @media screen and (min-width: $corte3) {
+      #creditos {
+        padding: 4em 6em 2em 6em;
         #cerrarCreditos {
           font-size: 1.2em;
         }

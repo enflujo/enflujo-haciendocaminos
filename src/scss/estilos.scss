@@ -206,6 +206,7 @@ a:link {
   #contenidoLista {
     display: block;
     background-color: var(--fondoVerdeOscuro);
+    padding-top: 10px;
 
     &.oculta {
       display: none;
