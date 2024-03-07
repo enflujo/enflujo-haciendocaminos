@@ -283,6 +283,9 @@ function procesarFila(fila: string[]) {
         const versionesFoto = archivosEnCarpeta.filter((nombre) => nombre.includes(nombreFoto));
         const indicePeque = versionesFoto.findIndex((version) => version.includes('_p.'));
         const indiceGrande = versionesFoto.findIndex((version) => !version.includes('_p.'));
+        if (indiceGrande < 0) {
+          return;
+        }
         const datosImgGrande = imageSize(resolve(carpetaFotos, versionesFoto[indiceGrande]));
 
         const datosImg = {
