@@ -266,7 +266,7 @@ function procesarFila(fila: string[]) {
     id: +fila[0],
     nombre: { nombre: nombreProyecto, slug: slugificar(nombreProyecto) },
     descripcion: fila[16],
-    enlaces: fila[17] && fila[17] !== 'No aplica' ? fila[17].trim().split(' ') : [],
+    enlaces: fila[17] && fila[17].toLocaleLowerCase() !== 'no aplica' ? fila[17].trim().split(' ') : [],
     imagenes: []
   };
   const años = validarAño(`${fila[3]}`.trim());
