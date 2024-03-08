@@ -171,6 +171,16 @@ elementoSeleccionado.subscribe((elemento) => {
 
       if (!datosProyecto) return;
 
+      if (datosProyecto.municipios) {
+        filtrarMapa(
+          datosProyecto.municipios.map((lugar) => {
+            return { slug: lugar.slug, conteo: 1 };
+          })
+        );
+      } else {
+        filtrarMapa([]);
+      }
+
       datosFicha.set({
         visible: true,
         lista: 'Proyecto',
