@@ -8,7 +8,7 @@ body {
   font-family: var(--fuenteParrafo);
   font-feature-settings:
     'liga' 1,
-    'calt' 1; /* fix for Chrome */
+    'calt' 1;
 }
 
 main {
@@ -156,7 +156,7 @@ a:link {
   right: 0px;
   z-index: 2;
   font-family: var(--fuenteParrafo);
-  height: calc(100vh - var(--altoLineaTiempo) - var(--altoMenu));
+  height: calc(100vh - var(--altoMenu) - var(--altoLineaTiempo));
   overflow-y: auto;
   overflow-x: hidden;
   font-size: 0.8em;
