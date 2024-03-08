@@ -74,7 +74,7 @@
     #creditos {
       background-color: var(--fondoVerdeOscuro);
       color: var(--blanco);
-      height: calc(100vh - 50px);
+      height: calc(100vh - var(--altoMenu) - var(--altoLineaTiempo));
       width: 100vw;
       position: fixed;
       overflow: auto;
@@ -160,18 +160,14 @@
     @media screen and (min-width: $corte3) {
       #creditos {
         width: 40vw;
-
-        #tituloLogo {
-          width: 90%;
-        }
-      }
-    }
-
-    @media screen and (min-width: $corte3) {
-      #creditos {
+        max-width: 700px;
         padding: 4em 6em 2em 6em;
         #cerrarCreditos {
           font-size: 1.2em;
+        }
+
+        #tituloLogo {
+          width: 90%;
         }
       }
     }

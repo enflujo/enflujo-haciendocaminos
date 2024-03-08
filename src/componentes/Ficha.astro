@@ -384,11 +384,11 @@
   @import '@/scss/constantes';
 
   #contenedorFicha {
-    max-height: calc(100vh - 70px);
+    max-height: calc(100vh - var(--altoMenu) - var(--altoLineaTiempo));
     position: absolute;
     display: none;
     overflow-y: auto;
-    top: 60px;
+    top: var(--altoMenu);
     background-color: var(--fondoVerdeOscuro);
     color: var(--textoClaro);
     z-index: 5;
@@ -669,7 +669,6 @@
   // Cambiar estilos según tamaño de pantalla
   @media screen and (min-width: $corte3) {
     #contenedorFicha {
-      max-height: calc(100vh - 60px);
       width: 35vw;
       right: 0;
 
