@@ -22,8 +22,9 @@ import type { Egresado, ListasEgresados } from './egresados.js';
 import procesarPersonas from './personas.js';
 
 const datosEmpiezanEnFila = 2;
-const camposSingulares: Campos = [{ llave: 'categorias', indice: 2 }];
+const camposSingulares: Campos = [];
 const camposMultiples: Campos = [
+  { llave: 'categorias', indice: 2 },
   { llave: 'decadas', indice: 4 },
   { llave: 'lideres', indice: 5 },
   { llave: 'participantes', indice: 7 },
