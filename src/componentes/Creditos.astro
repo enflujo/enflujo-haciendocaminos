@@ -13,31 +13,75 @@
     />
   </div>
 
-  <p>
-    <span class="resaltado">Haciendo Caminos</span> es la historia del <a
-      href="https://cienciassociales.uniandes.edu.co/antropologia/"
-      >Departamento de Antropología de la Universidad de Los Andes</a
-    > contada a través de los proyectos de investigación que sus profesores y estudiantes han realizado desde su creación.
-  </p>
+  <div id="textoCreditos">
+    <p>
+      <span class="resaltado">Haciendo Caminos</span> es la historia del <a
+        href="https://cienciassociales.uniandes.edu.co/antropologia/"
+        target="_blank">Departamento de Antropología de la Universidad de Los Andes</a
+      > contada a través de los proyectos de investigación que sus profesores y estudiantes han realizado desde su creación.
+    </p>
 
-  <p>
-    Quiénes han hecho parte, sobre qué han investigado, en qué lugares se han centrado y cuándo fueron realizadas las
-    investigaciones son algunas de las preguntas que queremos ayudar a responder con esta herramienta.
-  </p>
-  <p>
-    Para navegar selecciona del menú de la izquierda un tema, personaje, fecha, lugar, elemento o proyecto. Se abrirá
-    una ficha con información donde podrás conocerlos en detalle.
-  </p>
+    <p>
+      Quiénes han hecho parte, sobre qué han investigado, en qué lugares se han centrado y cuándo fueron realizadas las
+      investigaciones son algunas de las preguntas que queremos ayudar a responder con esta herramienta.
+    </p>
+    <p>
+      Para navegar selecciona del menú de la izquierda un tema, personaje, fecha, lugar, elemento o proyecto. Se abrirá
+      una ficha con información donde podrás conocerlos en detalle.
+    </p>
+  </div>
 
   <div class="contenedorLogos">
-    <ul class="">
-      <li class="">
-        <h3><div class="rol">Investigación realizada por</div></h3>
+    <ul>
+      <li class="bloque">
+        <h3 class="rol">Investigación:</h3>
+        <ul class="nombres">
+          <p>Profesores del Departamento de Antropología</p>
+          <p>Daniel A. Medina</p>
+        </ul>
+        <p class="organizacion">
+          <a href="https://cienciassociales.uniandes.edu.co/" target="_blank">Facultad de Ciencias Sociales</a>
+        </p>
+      </li>
 
-        <h3><div class="rol">Visualización desarrollada por</div></h3>
-        <a href="https://enflujo.com" target="_blank">
-          <img class="logo" src={`${import.meta.env.BASE_URL}/imgs/logo_enflujo_blanco.svg`} alt="Logo EnFlujo" /></a
+      <li class="bloque">
+        <h3 class="rol">Apoyo:</h3>
+        <ul class="nombres">
+          <p>Comunicaciones y posicionamiento</p>
+        </ul>
+        <p class="organizacion">
+          <a href="https://cienciassociales.uniandes.edu.co/" target="_blank">Facultad de Ciencias Sociales</a>
+        </p>
+      </li>
+
+      <li class="bloque">
+        <h3 class="rol">Diseño conceptual y mediación:</h3>
+
+        <a href="https://humanidad.digital" target="_blank">
+          <img
+            class="logo"
+            src={`${import.meta.env.BASE_URL}/imgs/logo-humanidadDigital.svg`}
+            alt="Logo Colectivo Humanidad Digital"
+          /></a
         >
+      </li>
+
+      <li class="bloque">
+        <h3 class="rol">Desarrollo de la visualización:</h3>
+        <a href="https://enflujo.com" target="_blank">
+          <img
+            class="logoEnFlujo"
+            src={`${import.meta.env.BASE_URL}/imgs/logo_enflujo_blanco.svg`}
+            alt="Logo EnFlujo"
+          /></a
+        >
+      </li>
+
+      <li class="bloqueFinal">
+        <a href="https://uniandes.edu.co/" target="_blank">
+          <img class="logoAndes" src={`${import.meta.env.BASE_URL}/imgs/logo_andes_blanco.svg`} alt="Logo EnFlujo" /></a
+        >
+        <h4 class="rol">2024</h4>
       </li>
     </ul>
   </div>
@@ -74,7 +118,7 @@
     #creditos {
       background-color: var(--fondoVerdeOscuro);
       color: var(--blanco);
-      height: calc(100vh - var(--altoMenu) - var(--altoLineaTiempo));
+      height: calc(100vh - 50px);
       width: 100vw;
       position: fixed;
       overflow: auto;
@@ -89,6 +133,10 @@
       &.visible {
         left: 0;
         opacity: 1;
+      }
+
+      #textoCreditos {
+        margin-bottom: 9vh;
       }
 
       #cerrarCreditos {
@@ -120,6 +168,19 @@
       .contenedorLogos {
         margin: 0 auto;
 
+        .bloque {
+          margin-bottom: 2em;
+
+          p {
+            margin-top: 0.2em;
+            margin-bottom: 0.2em;
+          }
+        }
+
+        .bloqueFinal {
+          margin-bottom: 2em;
+          border-top: 1px solid #ffffff;
+        }
         h1 {
           font-size: 2em;
           font-weight: 500;
@@ -128,19 +189,51 @@
 
         h3 {
           margin: 0 auto;
-          padding-top: 1.5em;
-          margin: 1.5em 0em 1em 0;
+          padding-top: 0.4em;
+          margin: 0;
+          font-size: 1.5em;
+          line-height: 1em;
+          margin-bottom: 0.4em;
+        }
+
+        h4 {
+          margin: 0 auto;
+          text-align: center;
+        }
+
+        .nombres {
+          font-size: 1.1em;
+          margin-bottom: -0.3em;
+        }
+
+        .organizacion {
+          font-size: 1.1em;
+          padding-top: 0.3em;
         }
 
         .rol {
           font-weight: bold;
         }
         .logo {
-          max-width: 60%;
+          max-width: 80%;
           display: block;
-          height: 90px;
           width: auto;
-          margin: 3em auto 0;
+          margin: 3.5em auto;
+        }
+
+        .logoEnFlujo {
+          max-width: 80%;
+          display: block;
+          width: auto;
+          margin: 4em auto 6em auto;
+        }
+
+        .logoAndes {
+          max-width: 50%;
+          padding-top: 60px;
+          display: block;
+          width: auto;
+          margin: 0px auto 20px auto;
         }
       }
     }
@@ -154,20 +247,65 @@
         #tituloLogo {
           width: 90%;
         }
+
+        .contenedorLogos {
+          .logo {
+            max-width: 60%;
+          }
+
+          .logoEnFlujo {
+            max-width: 60%;
+          }
+
+          .logoAndes {
+            max-width: 60%;
+          }
+        }
       }
     }
 
     @media screen and (min-width: $corte3) {
       #creditos {
         width: 40vw;
-        max-width: 700px;
         padding: 4em 6em 2em 6em;
+
         #cerrarCreditos {
           font-size: 1.2em;
         }
-
         #tituloLogo {
           width: 90%;
+        }
+        .contenedorLogos {
+          .logo {
+            max-width: 60%;
+          }
+
+          .logoEnFlujo {
+            max-width: 60%;
+          }
+          .logoAndes {
+            max-width: 40%;
+          }
+        }
+      }
+    }
+
+    @media screen and (min-width: $corte4) {
+      #creditos {
+        .contenedorLogos {
+          .logo {
+            width: 40%;
+            max-width: 280px;
+          }
+
+          .logoEnFlujo {
+            width: 40%;
+            max-width: 280px;
+          }
+          .logoAndes {
+            width: 30%;
+            max-width: 280px;
+          }
         }
       }
     }
