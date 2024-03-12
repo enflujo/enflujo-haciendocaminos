@@ -14,7 +14,9 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
   </div>
 
   <div id="encabezado">
-    <h1>Haciendo Caminos</h1>
+    <span class="cajaLogo"></span>
+    <h1>DEPARTAMENTO DE ANTROPOLOGÍA | 60 AÑOS HACIENDO CAMINOS</h1>
+
     <span class="cajaGusanos"></span>
     <ul>
       <li class="botonVista"><a href=`${urlBase}/` class={paginaActual === '' ? 'actual' : ''}>Proyectos</a></li>
@@ -104,10 +106,22 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
       z-index: 9;
 
       h1 {
+        display: none;
         z-index: 3;
         width: 22vw;
         font-size: 1em;
         padding-left: 0.2em;
+      }
+
+      .cajaLogo {
+        background-image: url(/enflujo-haciendocaminos/imgs/60-anos_blanco.svg);
+        height: 35px;
+        width: 9vw;
+        background-repeat: no-repeat;
+        margin-left: 5px;
+        margin-top: 2px;
+        background-position-y: center;
+        opacity: 1;
       }
 
       .cajaGusanos {
@@ -127,7 +141,7 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
     // Botón para cambiar de vista (proyectos / egresados)
     .botonVista {
       cursor: pointer;
-      font-size: 0.8em;
+      font-size: 1em;
 
       &:hover {
         opacity: 0.6;
@@ -205,6 +219,10 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
   @media screen and (min-width: $corte2) {
     #menu {
       #encabezado {
+        .cajaLogo {
+          width: 4vw;
+        }
+
         .cajaGusanos {
           position: static;
           background-image: url(/enflujo-haciendocaminos/imgs/gusanitos.svg);
@@ -217,14 +235,28 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
           opacity: 1;
         }
         h1 {
-          width: 23vw;
-          font-size: 1.2em;
-          padding-left: 1vw;
+          display: block;
+          width: 40vw;
+          font-size: 1em;
+          padding-left: 0vw;
         }
       }
 
       #botonCreditos {
         margin-left: 5px;
+      }
+    }
+
+    @media screen and (min-width: $corte3) {
+      #menu {
+        #encabezado {
+          h1 {
+            display: contents;
+            // width: 13vw;
+            font-size: 1.2em;
+            padding-left: 0vw;
+          }
+        }
       }
     }
   }
