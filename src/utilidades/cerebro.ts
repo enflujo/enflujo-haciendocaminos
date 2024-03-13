@@ -35,7 +35,7 @@ export const nombresListasProyectos = {
   participantes: 'Participantes',
   ramas: 'Ramas',
   temas: 'Áreas',
-  objetos: 'Objetos',
+  objetos: 'Objetos de Análisis',
   municipios: 'Municipios',
   decadas: 'Décadas',
   años: 'Años'
