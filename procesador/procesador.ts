@@ -75,7 +75,10 @@ async function procesar() {
   procesarDatosBuscador(egresados);
   console.log('listos datos buscador');
 
-  //await agregarDescripciones();
+  await agregarDescripciones();
+  console.log('listas descripciones áreas');
+  await agregarDescripcionesRamas();
+  console.log('listas descripciones ramas');
 
   guardarJSON(listas, 'listas');
   console.log('fin');
@@ -83,49 +86,61 @@ async function procesar() {
 
 procesar().catch(console.error);
 
-// async function agregarDescripciones() {
-//   const flujoDescAreas = await getXlsxStream({
-//     filePath: archivo,
-//     sheet: 'Descripción áreas',
-//     withHeader: true,
-//     ignoreEmpty: true
-//   });
-//   let numeroFila = 0;
-//   flujoDescAreas.on('data', (fila) => {
-//     const [area, desc] = fila.formatted.arr;
-//     // console.log(area, '----', desc);
-//     const tema = listas.temas.find((t) => t.nombre.toLowerCase() === area.trim().toLowerCase());
+function agregarDescripciones(): Promise<void> {
+  return new Promise(async (resolver, rechazar) => {
+    const flujoDescAreas = await getXlsxStream({
+      filePath: archivo,
+      sheet: 'Descripción áreas',
+      withHeader: true,
+      ignoreEmpty: true
+    });
 
-//     if (tema) {
-//       console.log('SII', area);
-//       tema.descripcion = desc;
-//     } else {
-//       console.log('??????', area);
-//     }
-//     numeroFila++;
-//   });
+    flujoDescAreas.on('data', (fila) => {
+      const [area, desc] = fila.formatted.arr;
+      // console.log(area, '----', desc);
+      const tema = listas.temas.find((t) => t.nombre.toLowerCase() === area.trim().toLowerCase());
 
-// const flujoDescRamas = await getXlsxStream({
-//   filePath: archivo,
-//   sheet: 'Descripción Ramas',
-//   withHeader: false,
-//   ignoreEmpty: true
-// });
-// let numeroFila = 0;
-// flujoDescRamas.on('data', (fila) => {
-//   const [rama, desc] = fila.formatted.arr;
-//   // console.log(area, '----', desc);
-//   const ramaLista = listas.ramas.find((t) => t.nombre.toLowerCase() === rama.trim().toLowerCase());
+      if (tema) {
+        console.log('SI', area);
+        tema.descripcion = desc;
+      } else {
+        console.log('??????', area);
+      }
+    });
 
-//   if (ramaLista) {
-//     console.log('SII', rama);
-//     ramaLista.descripcion = desc;
-//   } else {
-//     console.log('??????', rama);
-//   }
-//   numeroFila++;
-// });
-//}
+    flujoDescAreas.on('close', () => {
+      resolver();
+    });
+  });
+}
+
+function agregarDescripcionesRamas(): Promise<void> {
+  return new Promise(async (resolver, rechazar) => {
+    const flujo = await getXlsxStream({
+      filePath: archivo,
+      sheet: 'Descripción Ramas',
+      withHeader: false,
+      ignoreEmpty: true
+    });
+
+    flujo.on('data', (fila) => {
+      const [nombre, desc] = fila.formatted.arr;
+      // console.log(area, '----', desc);
+      const rama = listas.ramas.find((t) => t.nombre.toLowerCase() === nombre.trim().toLowerCase());
+
+      if (rama) {
+        console.log('SI', nombre);
+        rama.descripcion = desc;
+      } else {
+        console.log('??????', nombre);
+      }
+    });
+
+    flujo.on('close', () => {
+      resolver();
+    });
+  });
+}
 
 function procesarDatosBuscador(egresados: Egresado[]) {
   const opciones: OpcionBuscadorDatos[] = [];
@@ -397,7 +412,7 @@ function validarValorSingular(valor: string, lista: ElementoLista[], tipo?: LLav
 }
 
 function validarAño(valorAño: string) {
-  if (!validarAño.length || valorAño === 'undefined') return;
+  if (!validarAño.length || valorAño === 'undefined' || valorAño.toLowerCase() === 'no aplica') return;
   const añoProcesado: Año = {
     años: [],
     tipo: 'singular',

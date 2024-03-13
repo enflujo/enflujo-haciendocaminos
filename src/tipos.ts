@@ -6,6 +6,7 @@ export interface ElementoLista {
   proyectos?: number[];
   egresados?: number[];
   academia?: number;
+  descripcion?: string;
 }
 export type DefinicionSimple = { nombre: string; slug: string };
 export type Años = [año: number, conteo: number][];
