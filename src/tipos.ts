@@ -1,5 +1,6 @@
 export interface ElementoLista {
   nombre: string;
+  descripcion?: string;
   slug: string;
   conteo: number;
   relaciones: { tipo: keyof Listas | string; conteo: number; indice: number; slug: string }[];
