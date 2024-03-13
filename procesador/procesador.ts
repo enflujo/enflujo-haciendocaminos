@@ -75,10 +75,72 @@ async function procesar() {
   procesarDatosBuscador(egresados);
   console.log('listos datos buscador');
 
+  await agregarDescripciones();
+  console.log('listas descripciones áreas');
+  await agregarDescripcionesRamas();
+  console.log('listas descripciones ramas');
+
+  guardarJSON(listas, 'listas');
   console.log('fin');
 }
 
 procesar().catch(console.error);
+
+function agregarDescripciones(): Promise<void> {
+  return new Promise(async (resolver, rechazar) => {
+    const flujoDescAreas = await getXlsxStream({
+      filePath: archivo,
+      sheet: 'Descripción áreas',
+      withHeader: true,
+      ignoreEmpty: true
+    });
+
+    flujoDescAreas.on('data', (fila) => {
+      const [area, desc] = fila.formatted.arr;
+      // console.log(area, '----', desc);
+      const tema = listas.temas.find((t) => t.nombre.toLowerCase() === area.trim().toLowerCase());
+
+      if (tema) {
+        console.log('SI', area);
+        tema.descripcion = desc;
+      } else {
+        console.log('??????', area);
+      }
+    });
+
+    flujoDescAreas.on('close', () => {
+      resolver();
+    });
+  });
+}
+
+function agregarDescripcionesRamas(): Promise<void> {
+  return new Promise(async (resolver, rechazar) => {
+    const flujo = await getXlsxStream({
+      filePath: archivo,
+      sheet: 'Descripción Ramas',
+      withHeader: false,
+      ignoreEmpty: true
+    });
+
+    flujo.on('data', (fila) => {
+      const [nombre, desc] = fila.formatted.arr;
+      // console.log(area, '----', desc);
+      const rama = listas.ramas.find((t) => t.nombre.toLowerCase() === nombre.trim().toLowerCase());
+
+      if (rama) {
+        console.log('SI', nombre);
+        rama.descripcion = desc;
+      } else {
+        console.log('??????', nombre);
+      }
+    });
+
+    flujo.on('close', () => {
+      resolver();
+    });
+  });
+}
 
 function procesarDatosBuscador(egresados: Egresado[]) {
   const opciones: OpcionBuscadorDatos[] = [];
@@ -150,7 +212,6 @@ async function procesarProyectos(): Promise<void> {
 
         campos.forEach((campoRelacion) => {
           const datosRelacion = proyecto[campoRelacion.llave];
-
           campos.forEach((campo) => {
             // Agregar datos de cada campo en todos los otros, excepto en sí mismo.
             if (campoRelacion.llave !== campo.llave && datosRelacion) {
@@ -255,7 +316,7 @@ async function procesarProyectos(): Promise<void> {
       });
 
       guardarJSON(proyectos, 'proyectos');
-      guardarJSON(listas, 'listas');
+
       resolver();
     });
   });
@@ -351,7 +412,7 @@ function validarValorSingular(valor: string, lista: ElementoLista[], tipo?: LLav
 }
 
 function validarAño(valorAño: string) {
-  if (!validarAño.length || valorAño === 'undefined') return;
+  if (!validarAño.length || valorAño === 'undefined' || valorAño.toLowerCase() === 'no aplica') return;
   const añoProcesado: Año = {
     años: [],
     tipo: 'singular',
