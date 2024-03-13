@@ -8,7 +8,7 @@
   </div>
 
   <section id="superior">
-    <div id="contedorCajaSuperior">
+    <div id="contenedorCajaSuperior">
       <div id="contenedorTitulo">
         <h2 id="listaFicha"></h2>
         <p id="tituloFicha"></p>
@@ -37,6 +37,7 @@
         style={`background-image: url(${import.meta.env.BASE_URL}/imgs/icono-enlace-externo.svg`}
         )></a>
       <iframe id="redAcademica"></iframe>
+      <p class="pieDeFoto">Red de colaboración entre personas</p>
     </div>
 
     <div class="seccionDatos" id="fichaEnlaces">
@@ -84,11 +85,11 @@
       <ul id="listaAmbitos" class="contenido"></ul>
     </div>
     <div class="seccionDatos" id="fichaObjetos">
-      <h3 class="titulo">Objetos</h3>
+      <h3 class="titulo">Objetos de Análisis</h3>
       <ul id="listaObjetos" class="contenido"></ul>
     </div>
     <div class="seccionDatos" id="fichaMunicipios">
-      <h3 class="titulo">Municipios</h3>
+      <h3 class="titulo">Regiones / Municipios / Lugares</h3>
       <ul id="listaMunicipios" class="contenido"></ul>
     </div>
     <div class="seccionDatos" id="fichaCiudades">
@@ -142,7 +143,7 @@
   const listaEnlaces = document.getElementById('listaEnlaces') as HTMLUListElement;
   const seccionImagenes = document.getElementById('fichaImagenes') as HTMLDivElement;
   const contenedorImagenes = document.getElementById('listaImagenes') as HTMLDivElement;
-  const contenedorSuperior = document.getElementById('contedorCajaSuperior') as HTMLDivElement;
+  const contenedorSuperior = document.getElementById('contenedorCajaSuperior') as HTMLDivElement;
 
   const galeria = new Galeria({
     gallery: '#listaImagenes',
@@ -287,6 +288,8 @@
     const enlaceRed = document.getElementById('enlaceRedAcademia') as HTMLAnchorElement;
     const idAcademia = datos.academia;
 
+    const seccionParticipantes = document.getElementById('fichaParticipantes');
+
     if (idAcademia) {
       seccionRed.style.display = 'block';
       contenedorRed.src = `https://academia.uniandes.edu.co/academynetsweb/personnet.html?&personId=${idAcademia}&highlight=${idAcademia}&minified=true&scale=50&force=-100"`;
@@ -308,11 +311,11 @@
     llenarCampos('proyecto', datos, vistaActual);
     llenarCampos('categorias', datos, vistaActual);
     llenarCampos('lideres', datos, vistaActual);
-    llenarCampos('participantes', datos, vistaActual);
     llenarCampos('ramas', datos, vistaActual);
     llenarCampos('objetos', datos, vistaActual);
     llenarCampos('municipios', datos, vistaActual);
     llenarCampos('decadas', datos, vistaActual);
+    llenarCampos('participantes', datos, vistaActual);
 
     /** Campos de Egresados */
     llenarCampos('egresado', datos, vistaActual);
@@ -321,6 +324,11 @@
     llenarCampos('temas', datos, vistaActual);
     llenarCampos('paises', datos, vistaActual);
     llenarCampos('ciudades', datos, vistaActual);
+
+    // Ocultar participantes en ficha de líderes de proyectos
+    if (seccionParticipantes && datos.lista === 'Líderes de Proyectos') {
+      seccionParticipantes.style.display = 'none';
+    }
   });
 
   function llenarCampos(
@@ -487,7 +495,7 @@
 
       font-family: var(--fuenteNumeros);
 
-      #contedorCajaSuperior {
+      #contenedorCajaSuperior {
         display: flex;
 
         &.sinContador {
@@ -655,6 +663,13 @@
       &:hover {
         background-color: rgba(131, 246, 187, 0.846);
       }
+    }
+
+    .pieDeFoto {
+      font-size: 0.7em;
+      text-align: right;
+      margin: 0 18px;
+      padding: 0;
     }
   }
 
