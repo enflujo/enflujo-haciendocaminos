@@ -75,10 +75,57 @@ async function procesar() {
   procesarDatosBuscador(egresados);
   console.log('listos datos buscador');
 
+  //await agregarDescripciones();
+
+  guardarJSON(listas, 'listas');
   console.log('fin');
 }
 
 procesar().catch(console.error);
+
+// async function agregarDescripciones() {
+//   const flujoDescAreas = await getXlsxStream({
+//     filePath: archivo,
+//     sheet: 'Descripción áreas',
+//     withHeader: true,
+//     ignoreEmpty: true
+//   });
+//   let numeroFila = 0;
+//   flujoDescAreas.on('data', (fila) => {
+//     const [area, desc] = fila.formatted.arr;
+//     // console.log(area, '----', desc);
+//     const tema = listas.temas.find((t) => t.nombre.toLowerCase() === area.trim().toLowerCase());
+
+//     if (tema) {
+//       console.log('SII', area);
+//       tema.descripcion = desc;
+//     } else {
+//       console.log('??????', area);
+//     }
+//     numeroFila++;
+//   });
+
+// const flujoDescRamas = await getXlsxStream({
+//   filePath: archivo,
+//   sheet: 'Descripción Ramas',
+//   withHeader: false,
+//   ignoreEmpty: true
+// });
+// let numeroFila = 0;
+// flujoDescRamas.on('data', (fila) => {
+//   const [rama, desc] = fila.formatted.arr;
+//   // console.log(area, '----', desc);
+//   const ramaLista = listas.ramas.find((t) => t.nombre.toLowerCase() === rama.trim().toLowerCase());
+
+//   if (ramaLista) {
+//     console.log('SII', rama);
+//     ramaLista.descripcion = desc;
+//   } else {
+//     console.log('??????', rama);
+//   }
+//   numeroFila++;
+// });
+//}
 
 function procesarDatosBuscador(egresados: Egresado[]) {
   const opciones: OpcionBuscadorDatos[] = [];
@@ -150,7 +197,6 @@ async function procesarProyectos(): Promise<void> {
 
         campos.forEach((campoRelacion) => {
           const datosRelacion = proyecto[campoRelacion.llave];
-
           campos.forEach((campo) => {
             // Agregar datos de cada campo en todos los otros, excepto en sí mismo.
             if (campoRelacion.llave !== campo.llave && datosRelacion) {
@@ -255,7 +301,7 @@ async function procesarProyectos(): Promise<void> {
       });
 
       guardarJSON(proyectos, 'proyectos');
-      guardarJSON(listas, 'listas');
+
       resolver();
     });
   });
