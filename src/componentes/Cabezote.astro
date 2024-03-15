@@ -19,7 +19,7 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
     <h1>HACIENDO CAMINOS | DEPARTAMENTO DE ANTROPOLOGÍA</h1>
 
     <span class="cajaGusanos"></span>
-    <ul>
+    <ul class="botonesVista">
       <li class="botonVista"><a href=`${urlBase}/` class={paginaActual === '' ? 'actual' : ''}>Proyectos</a></li>
       <li class="botonVista">
         <a href=`${urlBase}/egresados` class={paginaActual === 'egresados' ? 'actual' : ''}>Egresados</a>
@@ -74,6 +74,7 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
     width: 100%;
     height: var(--altoMenu);
     color: var(--textoClaro);
+    border-color: var(--blanco);
     z-index: 9;
     text-transform: uppercase;
     display: flex;
@@ -84,6 +85,9 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
     a:link {
       color: var(--textoClaro);
       transition: all 0.3s ease-in-out;
+      padding: 5px 5px;
+      border: 1px solid;
+      border-radius: 3px;
 
       &:hover,
       &.actual {
@@ -139,6 +143,14 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
       }
     }
 
+    // Contendedor de botones de vista
+
+    .botonesVista {
+      font-size: 0.7em;
+      display: flex;
+      gap: 10px;
+    }
+
     // Botón para cambiar de vista (proyectos / egresados)
     .botonVista {
       cursor: pointer;
@@ -147,6 +159,9 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
       &:hover {
         opacity: 0.6;
       }
+
+      color: var(--textoClaro);
+      transition: all 0.3s ease-in-out;
     }
 
     #menuListas {
@@ -237,14 +252,18 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
         }
         h1 {
           display: block;
-          width: 40vw;
-          font-size: 1em;
+          font-size: 0.8em;
           padding-left: 0vw;
         }
       }
 
       #botonCreditos {
         margin-left: 5px;
+      }
+
+      .botonesVista {
+        font-size: 0.9em;
+        gap: 20px;
       }
     }
 
@@ -253,10 +272,26 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
         #encabezado {
           h1 {
             display: contents;
-            // width: 13vw;
-            font-size: 1.2em;
+            width: 30vw;
+            font-size: 0.8em;
             padding-left: 0vw;
           }
+        }
+        .botonesVista {
+          gap: 10px;
+        }
+      }
+    }
+    @media screen and (min-width: $corte4) {
+      #menu {
+        #encabezado {
+          h1 {
+            font-size: 1.2em;
+            width: 40vw;
+          }
+        }
+        .botonesVista {
+          gap: 20px;
         }
       }
     }
