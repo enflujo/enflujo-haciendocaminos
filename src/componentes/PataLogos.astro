@@ -3,11 +3,11 @@
 ---
 
 <div id="pataLogos">
-  <div id="logosInstitucionales">
-    <a href="" target="_blank"
-      ><img src={`${import.meta.env.BASE_URL}/imgs/uniandes_guardaescobas_negro.svg`} alt="Logos institucionales" /></a
-    >
-  </div>
+  <img
+    class="logoInstitucional"
+    src={`${import.meta.env.BASE_URL}/imgs/uniandes_guardaescobas_negro.svg`}
+    alt="Logo del departamento de Antropología, facultad de ciencias sociales de la Universidad de los Andes."
+  />
 </div>
 
 <style lang="scss">
@@ -17,28 +17,19 @@
     display: flex;
     position: fixed;
     bottom: calc(var(--altoLineaTiempo) + 2vh);
-    right: 2.5vh;
+    left: 20px;
     z-index: 2;
 
-    #logosInstitucionales {
+    .logoInstitucional {
       display: block;
-      width: 90vw;
-    }
-  }
-
-  @media screen and (min-width: $corte1) {
-    #pataLogos {
-      #logosInstitucionales {
-        width: 50vw;
-      }
+      width: 250px;
     }
   }
 
   @media screen and (min-width: $corte3) {
     #pataLogos {
-      #logosInstitucionales {
-        width: 20vw;
-        max-height: 70px;
+      .logoInstitucional {
+        width: 350px;
       }
     }
   }
