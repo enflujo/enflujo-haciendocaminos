@@ -1,10 +1,9 @@
 ---
-import type { ElementoLista } from '@/tipos';
 import { convertirEscala } from '@enflujo/alquimia';
 
 interface Props {
-  tiempo: ElementoLista[];
-  decadas: ElementoLista[];
+  tiempo: string[];
+  decadas: string[];
 }
 
 const { decadas, tiempo } = Astro.props;
@@ -35,7 +34,7 @@ const listaAños = rango(1960, 2029);
         {
           decadas.map((decada, i) => (
             <rect
-              class={decadas.find(({ nombre }) => nombre === decada.nombre) ? 'decada' : 'desactivado'}
+              class={decadas.find((nombre) => nombre === decada) ? 'decada' : 'desactivado'}
               x={`${i * anchoDecada}%`}
               y="0"
               height="15px"
@@ -53,7 +52,7 @@ const listaAños = rango(1960, 2029);
         listaAños.map((fecha) => (
           <>
             <circle
-              class={tiempo.find(({ nombre }) => +nombre === fecha) ? '' : 'desactivado'}
+              class={tiempo.find((nombre) => +nombre === fecha) ? '' : 'desactivado'}
               style={`transform:translate(${posX(fecha)}%, ${45}%)`}
               r="4"
               cx="10"
@@ -67,7 +66,7 @@ const listaAños = rango(1960, 2029);
       {
         listaAños.map((marca) => (
           <text
-            class={tiempo.find(({ nombre }) => +nombre === marca) ? '' : 'desactivado'}
+            class={tiempo.find((nombre) => +nombre === marca) ? '' : 'desactivado'}
             style={`transform:translate(${posX(+marca)}%, 75%)`}
             x="0"
             y="0"

@@ -20,12 +20,11 @@ import Creditos from '@/componentes/Creditos.astro';
     <ListasEgresados />
     <EgresadosNombres />
     <Mapa />
-    <LineaTiempo tiempo={listas.años} decadas={listas.decadas} />
+    <LineaTiempo tiempo={listas.años.map((obj) => obj.slug)} decadas={listas.decadas.map((obj) => obj.slug)} />
   </main>
 </Plantilla>
 
 <script>
   import { vista } from '@/utilidades/cerebro';
-
   vista.set('egresados');
 </script>

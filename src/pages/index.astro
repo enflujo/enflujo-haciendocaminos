@@ -9,7 +9,6 @@ import Creditos from '@/componentes/Creditos.astro';
 import Listas from '@/componentes/Listas.astro';
 import Proyectos from '@/componentes/Proyectos.astro';
 import PataLogos from '@/componentes/PataLogos.astro';
-import { datosListas } from '@/utilidades/cerebro';
 ---
 
 <Plantilla>
@@ -21,7 +20,7 @@ import { datosListas } from '@/utilidades/cerebro';
     <Listas />
     <Proyectos />
     <Mapa />
-    <LineaTiempo tiempo={listas.años} decadas={listas.decadas} />
+    <LineaTiempo tiempo={listas.años.map((obj) => obj.slug)} decadas={listas.decadas.map((obj) => obj.slug)} />
   </main>
 </Plantilla>
 
@@ -29,7 +28,3 @@ import { datosListas } from '@/utilidades/cerebro';
   import { vista } from '@/utilidades/cerebro';
   vista.set('proyectos');
 </script>
-
-<style lang="scss" is:global>
-  @import '@/scss/constantes';
-</style>
