@@ -14,10 +14,10 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
   </div>
 
   <div id="encabezado">
-    <span class="cajaLogo"></span>
-
-    <h1>HACIENDO CAMINOS | DEPARTAMENTO DE ANTROPOLOGÍA</h1>
-
+    <div id="espacioLogoNombre">
+      <div class="cajaLogo"></div>
+      <h1>HACIENDO CAMINOS | DEPARTAMENTO DE ANTROPOLOGÍA</h1>
+    </div>
     <span class="cajaGusanos"></span>
     <ul class="botonesVista">
       <li class="botonVista"><a href=`${urlBase}/` class={paginaActual === '' ? 'actual' : ''}>Proyectos</a></li>
@@ -110,23 +110,29 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
       max-height: 50px;
       z-index: 9;
 
-      h1 {
-        display: none;
-        z-index: 3;
-        width: 22vw;
-        font-size: 1em;
-        padding-left: 0.2em;
-      }
+      #espacioLogoNombre {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
 
-      .cajaLogo {
-        background-image: url(/enflujo-haciendocaminos/imgs/60-anos_blanco.svg);
-        height: 35px;
-        width: 9vw;
-        background-repeat: no-repeat;
-        margin-left: 5px;
-        margin-top: 2px;
-        background-position-y: center;
-        opacity: 1;
+        .cajaLogo {
+          background-image: url(/enflujo-haciendocaminos/imgs/60-anos_blanco.svg);
+          height: 35px;
+          width: 9vw;
+          background-repeat: no-repeat;
+          margin-left: 5px;
+          margin-top: 2px;
+          background-position-y: center;
+          opacity: 1;
+        }
+        h1 {
+          display: none;
+          z-index: 3;
+          width: 22vw;
+          font-size: 1em;
+          padding-left: 0.2em;
+        }
       }
 
       .cajaGusanos {
@@ -236,10 +242,6 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
   @media screen and (min-width: $corte2) {
     #menu {
       #encabezado {
-        .cajaLogo {
-          width: 6vw;
-        }
-
         .cajaGusanos {
           position: static;
           background-image: url(/enflujo-haciendocaminos/imgs/gusanitos.svg);
@@ -251,10 +253,16 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
           background-size: cover;
           opacity: 1;
         }
-        h1 {
-          display: block;
-          font-size: 0.8em;
-          padding-left: 0vw;
+
+        #espacioLogoNombre {
+          .cajaLogo {
+            width: 6vw;
+          }
+          h1 {
+            display: block;
+            font-size: 0.8em;
+            padding-left: 0vw;
+          }
         }
       }
 
@@ -271,14 +279,16 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
     @media screen and (min-width: $corte3) {
       #menu {
         #encabezado {
-          .cajaLogo {
-            width: 4vw;
-          }
-          h1 {
-            display: contents;
-            width: 30vw;
-            font-size: 0.8em;
-            padding-left: 0vw;
+          #espacioLogoNombre {
+            .cajaLogo {
+              width: 4vw;
+            }
+            h1 {
+              display: contents;
+              width: 30vw;
+              font-size: 0.8em;
+              padding-left: 0vw;
+            }
           }
         }
         .botonesVista {
@@ -289,9 +299,12 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
     @media screen and (min-width: $corte4) {
       #menu {
         #encabezado {
-          h1 {
-            font-size: 1.2em;
-            width: 40vw;
+          #espacioLogoNombre {
+            gap: 0px;
+            h1 {
+              font-size: 1.2em;
+              width: 40vw;
+            }
           }
         }
         .botonesVista {
