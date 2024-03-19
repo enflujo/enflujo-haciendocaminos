@@ -38,7 +38,9 @@ export const nombresListasProyectos = {
   objetos: 'Objetos de Análisis',
   municipios: 'Municipios',
   decadas: 'Décadas',
-  años: 'Años'
+  años: 'Años',
+  regiones: 'Regiones',
+  departamentos: 'Departamentos'
 };
 
 export const nombresListasEgresados = {
@@ -188,7 +190,7 @@ elementoSeleccionado.subscribe((elemento) => {
         titulo: datosProyecto.nombre.nombre,
         descripcion: datosProyecto.descripcion ? datosProyecto.descripcion : '',
         paises: datosProyecto.paises ? datosProyecto.paises : [],
-        categorias: datosProyecto.categorias ? [datosProyecto.categorias] : [],
+        categorias: datosProyecto.categorias ? datosProyecto.categorias : [],
         lideres: datosProyecto.lideres ? datosProyecto.lideres : [],
         participantes: datosProyecto.participantes ? datosProyecto.participantes : [],
         ramas: datosProyecto.ramas ? datosProyecto.ramas : [],

@@ -7,7 +7,6 @@ export interface ElementoLista {
   proyectos?: number[];
   egresados?: number[];
   academia?: number;
-  descripcion?: string;
 }
 export type DefinicionSimple = { nombre: string; slug: string };
 export type Años = [año: number, conteo: number][];
@@ -15,7 +14,6 @@ export type Año = { años: number[]; tipo: 'singular' | 'rango' | 'multiples'; 
 export type Regiones = { nombre: string; slug: string; lon: number; lat: number; conteo: number }[];
 export type Municipios = { nombre: string; slug: string; lon: number; lat: number; conteo: number }[];
 
-export type LlavesSingulares = 'categorias';
 export type LLavesMultiples =
   | 'decadas'
   | 'lideres'
@@ -23,8 +21,11 @@ export type LLavesMultiples =
   | 'ramas'
   | 'temas'
   | 'objetos'
+  | 'regiones'
+  | 'departamentos'
   | 'paises'
-  | 'municipios';
+  | 'municipios'
+  | 'categorias';
 
 export type LlavesListasEgresados = 'ambitos' | 'ciudades' | 'paises' | 'temas';
 
@@ -39,7 +40,7 @@ export type Proyecto = {
   id: number;
   nombre: DefinicionSimple;
   descripcion?: string;
-  categorias?: DefinicionSimple;
+  categorias?: DefinicionSimple[];
   años?: Año;
   decadas?: DefinicionSimple[];
   lideres?: DefinicionSimple[];
@@ -49,6 +50,8 @@ export type Proyecto = {
   objetos?: DefinicionSimple[];
   paises?: DefinicionSimple[];
   municipios?: DefinicionSimple[];
+  regiones?: DefinicionSimple[];
+  departamentos?: DefinicionSimple[];
   enlaces?: string[];
   imagenes?: DatosImg[];
 };
@@ -64,9 +67,11 @@ export type Listas = {
   objetos: ElementoLista[];
   municipios: ElementoLista[];
   decadas: ElementoLista[];
+  regiones: ElementoLista[];
+  departamentos: ElementoLista[];
 };
 
-export type Campos = { llave: LlavesSingulares | LLavesMultiples; indice: number }[];
+export type Campos = { llave: LLavesMultiples; indice: number; procesarAparte?: boolean }[];
 
 export type Lugar = {
   nombre: string;
@@ -80,6 +85,8 @@ export interface ElementoFicha {
   nombre: string;
   slug: string;
   conteo?: number;
+  apellido?: string; // Sólo para lideres
+  nombreCompleto?: string; // Sólo para lideres
 }
 
 export interface ElementoProyecto {
@@ -106,6 +113,8 @@ export interface RelacionesFicha {
   egresado?: ElementoEgresado[];
   ambitos?: ElementoFicha[];
   ciudades?: ElementoFicha[];
+  regiones?: ElementoFicha[];
+  departamentos?: ElementoFicha[];
 }
 
 export interface Ficha extends RelacionesFicha {
