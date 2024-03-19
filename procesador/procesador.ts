@@ -370,7 +370,7 @@ function procesarFila(fila: string[], numeroFila: number) {
 
           return {
             nombre: nuevoNombre,
-            slug: slugificar(nombreCompleto),
+            slug: slugificar(nuevoNombre),
             nombreCompleto
           };
         });
