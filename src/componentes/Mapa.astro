@@ -10,6 +10,7 @@
   import { actualizarUrl, datosListas, datosListasEgresados, geo } from '@/utilidades/cerebro';
   import 'mapbox-gl/dist/mapbox-gl.css';
   import { vista } from '@/utilidades/cerebro';
+  import type { TiposLugaresEgresados, TiposLugaresProyectos } from '@/tipos';
 
   let mapaCreado = false; // Instancia creada
   let mapaCargado = false; // Instancia creada y ya terminó de cargar en la página
@@ -177,11 +178,14 @@
         const datosPunto = evento.features?.[0].properties;
         if (datosPunto && datosPunto.slug) {
           const esProyectos = vista.get() === 'proyectos';
-          const fuente = esProyectos ? datosListas.get().municipios : datosListasEgresados.get().ciudades;
+          const fuente = esProyectos
+            ? datosListas.get()[datosPunto.tipo as TiposLugaresProyectos]
+            : datosListasEgresados.get()[datosPunto.tipo as TiposLugaresEgresados];
           const indiceLugar = fuente.findIndex((obj) => obj.slug === datosPunto.slug);
+
           actualizarUrl([
             { nombre: 'id', valor: `${indiceLugar}` },
-            { nombre: 'tipo', valor: esProyectos ? 'municipios' : 'ciudades' }
+            { nombre: 'tipo', valor: datosPunto.tipo }
           ]);
         }
         // mapa.getCanvas().style.cursor = '';

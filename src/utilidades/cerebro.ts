@@ -9,7 +9,10 @@ import type {
   ElementoFicha,
   ElementoEgresado,
   ElementoBuscador,
-  OpcionBuscadorDatos
+  OpcionBuscadorDatos,
+  TiposLugares,
+  ElementoLista,
+  DefinicionSimple
 } from '@/tipos';
 import type { Feature, FeatureCollection, Point } from 'geojson';
 import type { Egresado, ListasEgresados } from '../../procesador/egresados';
@@ -162,6 +165,31 @@ export function filtrarMapa(lugares?: { slug: string; conteo: number }[]) {
   }
 }
 
+function actualizarLugar(tipo: string, slug: string, conteo: number, relaciones: ElementoLista['relaciones']) {
+  if (tipo === 'municipios' || tipo === 'departamentos' || tipo === 'paises') {
+    filtrarMapa([{ slug, conteo }]);
+  } else {
+    const lugaresMapa = relaciones.filter((relacion) => {
+      return relacion.tipo === 'municipios' || relacion.tipo === 'departamentos' || relacion.tipo === 'paises';
+    });
+
+    filtrarMapa(
+      lugaresMapa.map((lugar) => {
+        return { slug: lugar.slug, conteo: lugar.conteo };
+      })
+    );
+  }
+}
+
+function buscarLugares(tipoLugar: 'municipios' | 'departamentos' | 'paises', lugares: DefinicionSimple[]) {
+  const datosLugares = datosListas.get()[tipoLugar];
+
+  return lugares.map((lugar) => {
+    const mun = datosLugares.find((m) => m.slug === lugar.slug);
+    return { slug: lugar.slug, conteo: mun ? mun.conteo : 1 };
+  });
+}
+
 elementoSeleccionado.subscribe((elemento) => {
   if (!Object.keys(elemento).length) return;
 
@@ -174,12 +202,22 @@ elementoSeleccionado.subscribe((elemento) => {
 
       if (!datosProyecto) return;
 
+      const lugares: { slug: string; conteo: number }[] = [];
+
       if (datosProyecto.municipios) {
-        filtrarMapa(
-          datosProyecto.municipios.map((lugar) => {
-            return { slug: lugar.slug, conteo: 1 };
-          })
-        );
+        lugares.push(...buscarLugares('municipios', datosProyecto.municipios));
+      }
+
+      if (datosProyecto.departamentos) {
+        lugares.push(...buscarLugares('departamentos', datosProyecto.departamentos));
+      }
+
+      if (datosProyecto.paises) {
+        lugares.push(...buscarLugares('paises', datosProyecto.paises));
+      }
+
+      if (lugares.length) {
+        filtrarMapa(lugares);
       } else {
         filtrarMapa([]);
       }
@@ -205,6 +243,7 @@ elementoSeleccionado.subscribe((elemento) => {
     } else {
       const listas = datosListas.value;
       if (!listas) return;
+
       const datos = listas[tipo as keyof Listas][+id];
 
       if (datos) {
@@ -236,17 +275,7 @@ elementoSeleccionado.subscribe((elemento) => {
           {}
         );
 
-        if (tipo === 'municipios') {
-          filtrarMapa([{ slug: datos.slug, conteo: datos.conteo }]);
-        } else {
-          const lugaresMapa = datos.relaciones.filter((relacion) => relacion.tipo === 'municipios');
-
-          filtrarMapa(
-            lugaresMapa.map((lugar) => {
-              return { slug: lugar.slug, conteo: lugar.conteo };
-            })
-          );
-        }
+        actualizarLugar(tipo, datos.slug, datos.conteo, datos.relaciones);
 
         datosFicha.set({
           visible: true,
@@ -318,17 +347,7 @@ elementoSeleccionado.subscribe((elemento) => {
           {}
         );
 
-        if (tipo === 'ciudades') {
-          filtrarMapa([{ slug: datos.slug, conteo: datos.conteo }]);
-        } else {
-          const lugaresMapa = datos.relaciones.filter((relacion) => relacion.tipo === 'ciudades');
-
-          filtrarMapa(
-            lugaresMapa.map((lugar) => {
-              return { slug: lugar.slug, conteo: lugar.conteo };
-            })
-          );
-        }
+        actualizarLugar(tipo, datos.slug, datos.conteo, datos.relaciones);
 
         datosFicha.set({
           visible: true,
