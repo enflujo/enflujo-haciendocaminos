@@ -18,3 +18,5 @@ export const normalizar = (texto: string): string => {
     .normalize('NFD')
     .replace(/\p{Diacritic}/gu, '');
 };
+
+export const enMinusculas = (texto: string) => texto === texto.toLowerCase() && texto !== texto.toUpperCase();

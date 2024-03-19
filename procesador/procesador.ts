@@ -5,14 +5,13 @@ import type {
   ElementoLista,
   LLavesMultiples,
   Listas,
-  LlavesSingulares,
   OpcionBuscadorDatos,
   PersonaID,
   Proyecto
 } from '../src/tipos.ts';
 import { getXlsxStream } from 'xlstream';
 import slugificar from 'slug';
-import { guardarJSON, ordenarListaObjetos } from './ayudas.js';
+import { enMinusculas, guardarJSON, ordenarListaObjetos } from './ayudas.js';
 import { procesarLugares, procesarLugaresEgresados } from './lugares.js';
 import procesarEgresados from './egresados.js';
 import { existsSync, readdirSync } from 'fs';
@@ -22,19 +21,19 @@ import type { Egresado, ListasEgresados } from './egresados.js';
 import procesarPersonas from './personas.js';
 
 const datosEmpiezanEnFila = 2;
-const camposSingulares: Campos = [];
-const camposMultiples: Campos = [
+const campos: Campos = [
+  { llave: 'lideres', indice: 5, procesarAparte: true },
   { llave: 'categorias', indice: 2 },
   { llave: 'decadas', indice: 4 },
-  { llave: 'lideres', indice: 5 },
-  { llave: 'participantes', indice: 7 },
-  { llave: 'ramas', indice: 8 },
-  { llave: 'temas', indice: 9 },
-  { llave: 'objetos', indice: 10 },
-  { llave: 'paises', indice: 11 },
-  { llave: 'municipios', indice: 14 }
+  { llave: 'participantes', indice: 8 },
+  { llave: 'ramas', indice: 9 },
+  { llave: 'temas', indice: 10 },
+  { llave: 'objetos', indice: 11 },
+  { llave: 'paises', indice: 12 },
+  { llave: 'regiones', indice: 13 },
+  { llave: 'departamentos', indice: 14 },
+  { llave: 'municipios', indice: 15 }
 ];
-const campos = [...camposSingulares, ...camposMultiples];
 
 const proyectos: Proyecto[] = [];
 
@@ -48,7 +47,9 @@ const listas: Listas = {
   temas: [],
   objetos: [],
   municipios: [],
-  decadas: []
+  decadas: [],
+  regiones: [],
+  departamentos: []
 };
 
 const listasEgresados: ListasEgresados = {
@@ -101,10 +102,10 @@ function agregarDescripciones(): Promise<void> {
       const tema = listas.temas.find((t) => t.nombre.toLowerCase() === area.trim().toLowerCase());
 
       if (tema) {
-        console.log('SI', area);
+        // console.log('SI', area);
         tema.descripcion = desc;
       } else {
-        console.log('??????', area);
+        // console.log('??????', area);
       }
     });
 
@@ -129,10 +130,10 @@ function agregarDescripcionesRamas(): Promise<void> {
       const rama = listas.ramas.find((t) => t.nombre.toLowerCase() === nombre.trim().toLowerCase());
 
       if (rama) {
-        console.log('SI', nombre);
+        // console.log('SI', nombre);
         rama.descripcion = desc;
       } else {
-        console.log('??????', nombre);
+        // console.log('??????', nombre);
       }
     });
 
@@ -196,7 +197,7 @@ async function procesarProyectos(): Promise<void> {
   return new Promise((resolver) => {
     flujo.on('data', (fila) => {
       if (numeroFila > datosEmpiezanEnFila) {
-        procesarFila(fila.formatted.arr);
+        procesarFila(fila.formatted.arr, numeroFila);
       }
 
       numeroFila++;
@@ -212,6 +213,7 @@ async function procesarProyectos(): Promise<void> {
 
         campos.forEach((campoRelacion) => {
           const datosRelacion = proyecto[campoRelacion.llave];
+
           campos.forEach((campo) => {
             // Agregar datos de cada campo en todos los otros, excepto en sí mismo.
             if (campoRelacion.llave !== campo.llave && datosRelacion) {
@@ -230,7 +232,7 @@ async function procesarProyectos(): Promise<void> {
                   const i = listas[llaveALlenar].findIndex((obj) => obj.slug === slug);
                   const elementosDondeConectar = Array.isArray(datosRelacion)
                     ? (datosRelacion as DefinicionSimple[]).map(({ slug }) => slug)
-                    : [datosRelacion.slug];
+                    : [(datosRelacion as DefinicionSimple).slug];
 
                   elementosDondeConectar.forEach((elementoConector) => {
                     const elementoALlenar = listas[llaveDondeLllenar].find((obj) => obj.slug === elementoConector);
@@ -264,11 +266,14 @@ async function procesarProyectos(): Promise<void> {
         if (proyecto.años) {
           proyecto.años.años.forEach((año) => {
             const añoEnSlug = `${año}`;
+
             campos.forEach((campo) => {
               const datosCampo = proyecto[campo.llave];
               const llaveALlenar = campo.llave;
               if (datosCampo) {
-                const slugs = Array.isArray(datosCampo) ? datosCampo.map(({ slug }) => slug) : [datosCampo.slug];
+                const slugs = Array.isArray(datosCampo)
+                  ? datosCampo.map(({ slug }) => slug)
+                  : [(datosCampo as DefinicionSimple).slug];
 
                 slugs.forEach((slug) => {
                   const objALlenar = listas[llaveALlenar].find((obj) => obj.slug === slug);
@@ -309,7 +314,7 @@ async function procesarProyectos(): Promise<void> {
       });
 
       proyectos.forEach((proyecto) => {
-        camposMultiples.forEach((campo) => {
+        campos.forEach((campo) => {
           if (proyecto[campo.llave as LLavesMultiples])
             ordenarListaObjetos(proyecto[campo.llave as LLavesMultiples] as DefinicionSimple[], 'slug', true);
         });
@@ -322,20 +327,93 @@ async function procesarProyectos(): Promise<void> {
   });
 }
 
-function procesarFila(fila: string[]) {
+function procesarFila(fila: string[], numeroFila: number) {
   const nombreProyecto = fila[1].trim();
   const respuesta: Proyecto = {
     id: +fila[0],
     nombre: { nombre: nombreProyecto, slug: slugificar(nombreProyecto) },
-    descripcion: fila[16],
-    enlaces: fila[17] && fila[17].toLocaleLowerCase() !== 'no aplica' ? fila[17].trim().split(' ') : [],
-    imagenes: []
+    descripcion: fila[17],
+    enlaces: fila[18] && fila[18].toLocaleLowerCase() !== 'no aplica' ? fila[18].trim().split(' ') : [],
+    imagenes: [],
+    lideres: []
   };
+
   const años = validarAño(`${fila[3]}`.trim());
   if (años) respuesta.años = años;
 
-  if (fila[19] && fila[19] !== 'No aplica') {
-    const nombresFotos = fila[19].split(',').map((nombre) => nombre.trim());
+  let lideres: { nombre: string; slug: string; nombreCompleto?: string }[] = [];
+
+  if (fila[5] && fila[6]) {
+    const nombre = fila[5].trim();
+    const apellido = fila[6].trim();
+
+    const nombres = nombre ? nombre.split(',') : [];
+    const apellidos = apellido ? apellido.split(',') : [];
+
+    if (nombres.length && apellidos.length) {
+      if (nombres.length !== apellidos.length) {
+        console.log(
+          'En fila',
+          numeroFila,
+          'no coincide el numero de nombres y apellidos, hay',
+          nombres.length,
+          `nombres (${fila[5]}) y`,
+          apellidos.length,
+          `apellidos (${fila[6]}).`
+        );
+      } else {
+        const lista = nombres.map((nombreLider, i) => {
+          const nombreLimpio = nombreLider.trim();
+          const apellidoLimpio = apellidos[i].trim();
+          const nuevoNombre = [apellidoLimpio, nombreLimpio].join(', ');
+          const nombreCompleto = [nombreLimpio, apellidoLimpio].join(' ');
+
+          return {
+            nombre: nuevoNombre,
+            slug: slugificar(nombreCompleto),
+            nombreCompleto
+          };
+        });
+
+        lideres.push(...lista);
+      }
+    }
+  } else {
+    if (!fila[6]) {
+      console.log(`El proyecto ${nombreProyecto} en fila`, numeroFila, ' no tiene nombre o apellido de líder');
+    } else if (fila[6].toLowerCase() !== 'no aplica') {
+      const completo = fila[6].trim();
+      lideres.push({ nombre: completo, slug: slugificar(completo) });
+    }
+  }
+
+  lideres.forEach((lider) => {
+    const existe = listas.lideres.find((obj) => obj.slug === lider.slug);
+
+    if (!existe) {
+      const objeto: ElementoLista = {
+        nombre: lider.nombre,
+        conteo: 1,
+        slug: lider.slug,
+        relaciones: [],
+        proyectos: []
+      };
+
+      // Agregar ID de Academia para mostrar red
+      if (lider.nombreCompleto && personas[lider.nombreCompleto]) {
+        objeto.academia = personas[lider.nombreCompleto];
+      }
+
+      listas.lideres.push(objeto);
+    } else {
+      existe.conteo++;
+    }
+
+    respuesta.lideres?.push(lider);
+  });
+
+  if (fila[20] && fila[20] !== 'No aplica') {
+    const nombresFotos = fila[20].split(',').map((nombre) => nombre.trim());
     const carpetaFotos = resolve('./estaticos/imgs/fotos', `${fila[0]}`);
 
     if (existsSync(carpetaFotos)) {
@@ -362,25 +440,35 @@ function procesarFila(fila: string[]) {
     }
   }
 
-  camposSingulares.forEach((campo) => {
-    const validacion = validarValorSingular(fila[campo.indice], listas[campo.llave]);
-    if (validacion) respuesta[campo.llave as LlavesSingulares] = validacion;
-  });
-
-  camposMultiples.forEach((campo) => {
-    const validacion = validarValorMultiple(fila[campo.indice], listas[campo.llave], campo.llave);
-    if (validacion) respuesta[campo.llave as LLavesMultiples] = validacion;
+  campos.forEach((campo) => {
+    if (!campo.procesarAparte) {
+      const validacion = validarValorMultiple(fila[campo.indice], listas[campo.llave], campo.llave);
+      if (validacion) respuesta[campo.llave as LLavesMultiples] = validacion;
+    }
   });
 
   proyectos.push(respuesta);
 }
 
-function validarValorMultiple(valor: string, lista: ElementoLista[], tipo: LLavesMultiples | 'categorias') {
+function validarValorMultiple(valor: string, lista: ElementoLista[], tipo: LLavesMultiples) {
   if (!valor) return null;
-  const partes = `${valor}`.trim().split(',');
+  const partes = valor.includes(';') ? valor.trim().split(';') : valor.trim().split(',');
+  const nombres: string[] = [];
+
+  partes.forEach((valorCrudo, i) => {
+    const valor = valorCrudo.trim();
+
+    if (enMinusculas(valor.charAt(0)) && i > 0) {
+      nombres[i - 1] += `, ${valor}`;
+      return '';
+    } else {
+      nombres.push(valor);
+    }
+  });
+
   const respuesta: DefinicionSimple[] = [];
 
-  partes.forEach((elemento) => {
+  nombres.forEach((elemento) => {
     const valorProcesado = validarValorSingular(elemento, lista, tipo);
 
     if (valorProcesado) respuesta.push(valorProcesado);
@@ -389,7 +477,7 @@ function validarValorMultiple(valor: string, lista: ElementoLista[], tipo: LLave
   return respuesta.length ? respuesta : null;
 }
 
-function validarValorSingular(valor: string, lista: ElementoLista[], tipo?: LLavesMultiples | LlavesSingulares) {
+function validarValorSingular(valor: string, lista: ElementoLista[], tipo?: LLavesMultiples) {
   if (!valor || valor === 'No aplica' || valor === 'undefined' || valor === 'Sin Información') return;
   const nombre = `${valor}`.trim();
   const slug = slugificar(nombre);

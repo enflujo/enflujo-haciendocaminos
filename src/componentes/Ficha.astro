@@ -1,5 +1,20 @@
 ---
-
+const secciones = [
+  { nombre: 'Enlaces', slug: 'enlaces' },
+  { nombre: 'Proyectos', slug: 'proyecto' },
+  { nombre: 'Egresados', slug: 'egresado' },
+  { nombre: 'Países', slug: 'paises' },
+  { nombre: 'Categorías', slug: 'categorias' },
+  { nombre: 'Líderes de Proyectos', slug: 'lideres' },
+  { nombre: 'Participantes', slug: 'participantes' },
+  { nombre: 'Ramas', slug: 'ramas' },
+  { nombre: 'Áreas', slug: 'temas' },
+  { nombre: 'Ámbitos', slug: 'ambitos' }, // Egresados
+  { nombre: 'Objetos de Análisis', slug: 'objetos' },
+  { nombre: 'Ciudades', slug: 'ciudades' },
+  { nombre: 'Regiones / Municipios / Lugares', slug: 'municipios' },
+  { nombre: 'Décadas', slug: 'decadas' }
+];
 ---
 
 <div id="contenedorFicha">
@@ -25,11 +40,11 @@
   </section>
 
   <section id="inferior">
-    <div class="seccionDatos" id="fichaDescripcion">
-      <p id="descripcion" class="contenido descripcion"></p>
+    <div class="seccionDatos" data-nombre="descripcion">
+      <p class="contenido descripcion"></p>
     </div>
 
-    <div class="seccionRed" id="fichaRed">
+    <div class="seccionRed" id="fichaRed" data-nombre="red">
       <a
         id="enlaceRedAcademia"
         href="#"
@@ -37,69 +52,19 @@
         style={`background-image: url(${import.meta.env.BASE_URL}/imgs/icono-enlace-externo.svg`}
         )></a>
       <iframe id="redAcademica"></iframe>
+
       <p class="pieDeFoto">Red de colaboración entre personas</p>
     </div>
 
-    <div class="seccionDatos" id="fichaEnlaces">
-      <h3 class="titulo">Enlaces</h3>
-      <ul id="listaEnlaces" class="contenido enlaces"></ul>
-    </div>
+    {
+      secciones.map((seccion) => (
+        <enflujo-seccion-ficha class="seccionDatos seccionFicha" data-nombre={seccion.slug}>
+          <h3 class="titulo">{seccion.nombre}</h3>
+          <ul class="contenido" />
+        </enflujo-seccion-ficha>
+      ))
+    }
 
-    <div class="seccionDatos" id="fichaProyecto">
-      <h3 class="titulo">Proyectos</h3>
-      <ul id="listaProyecto" class="contenido"></ul>
-    </div>
-
-    <div class="seccionDatos" id="fichaEgresado">
-      <h3 class="titulo">Egresados</h3>
-      <ul id="listaEgresado" class="contenido"></ul>
-    </div>
-
-    <div class="seccionDatos" id="fichaPaises">
-      <h3 class="titulo">Países</h3>
-      <ul id="listaPaises" class="contenido"></ul>
-    </div>
-
-    <div class="seccionDatos" id="fichaCategorias">
-      <h3 class="titulo">Categorías</h3>
-      <ul id="listaCategorias" class="contenido"></ul>
-    </div>
-    <div class="seccionDatos" id="fichaLideres">
-      <h3 class="titulo">Líderes de Proyectos</h3>
-      <ul id="listaLideres" class="contenido"></ul>
-    </div>
-    <div class="seccionDatos" id="fichaParticipantes">
-      <h3 class="titulo">Participantes</h3>
-      <ul id="listaParticipantes" class="contenido"></ul>
-    </div>
-    <div class="seccionDatos" id="fichaRamas">
-      <h3 class="titulo">Ramas</h3>
-      <ul id="listaRamas" class="contenido"></ul>
-    </div>
-    <div class="seccionDatos" id="fichaTemas">
-      <h3 class="titulo">Áreas</h3>
-      <ul id="listaTemas" class="contenido"></ul>
-    </div>
-    <div class="seccionDatos" id="fichaAmbitos">
-      <h3 class="titulo">Ámbitos</h3>
-      <ul id="listaAmbitos" class="contenido"></ul>
-    </div>
-    <div class="seccionDatos" id="fichaObjetos">
-      <h3 class="titulo">Objetos de Análisis</h3>
-      <ul id="listaObjetos" class="contenido"></ul>
-    </div>
-    <div class="seccionDatos" id="fichaMunicipios">
-      <h3 class="titulo">Regiones / Municipios / Lugares</h3>
-      <ul id="listaMunicipios" class="contenido"></ul>
-    </div>
-    <div class="seccionDatos" id="fichaCiudades">
-      <h3 class="titulo">Ciudades</h3>
-      <ul id="listaCiudades" class="contenido"></ul>
-    </div>
-    <div class="seccionDatos" id="fichaDecadas">
-      <h3 class="titulo">Décadas</h3>
-      <ul id="listaDecadas" class="contenido"></ul>
-    </div>
     <div class="seccionDatos" id="fichaImagenes">
       <div id="listaImagenes" class="contenido imagenes"></div>
     </div>
@@ -118,17 +83,37 @@
     vista,
     actualizarUrl
   } from '@/utilidades/cerebro';
-  import type {
-    ElementoProyecto,
-    Ficha,
-    LLavesMultiples,
-    Listas,
-    LlavesListasEgresados,
-    LlavesSingulares
-  } from '@/tipos';
+  import type { ElementoFicha, ElementoProyecto, Ficha, LLavesMultiples, Listas, LlavesListasEgresados } from '@/tipos';
   import { marked } from 'marked';
   import 'photoswipe/style.css';
   import Galeria from 'photoswipe/lightbox';
+
+  class SeccionFicha extends HTMLElement {
+    lista: HTMLUListElement;
+
+    constructor() {
+      super();
+      this.lista = this.querySelector<HTMLUListElement>('.contenido') as HTMLUListElement;
+    }
+
+    agregarElemento(elemento: HTMLElement) {
+      this.lista.appendChild(elemento);
+    }
+
+    limpiar() {
+      this.lista.innerHTML = '';
+    }
+
+    mostrar() {
+      this.classList.add('visible');
+    }
+
+    esconder() {
+      this.classList.remove('visible');
+    }
+  }
+
+  customElements.define('enflujo-seccion-ficha', SeccionFicha);
 
   import type { ListasEgresados } from 'procesador/egresados';
   const urlBase = import.meta.env.BASE_URL;
@@ -137,10 +122,7 @@
   const botonCerrarFicha = document.getElementById('cerrarFicha') as HTMLDivElement;
   const titulo = document.getElementById('tituloFicha') as HTMLParagraphElement;
   const conteoFicha = document.getElementById('conteoFicha') as HTMLDivElement;
-  const contenedorDescripcion = document.getElementById('fichaDescripcion') as HTMLDivElement;
-  const descripcionFicha = document.getElementById('descripcion') as HTMLParagraphElement;
-  const seccionEnlaces = document.getElementById('fichaEnlaces') as HTMLDivElement;
-  const listaEnlaces = document.getElementById('listaEnlaces') as HTMLUListElement;
+
   const seccionImagenes = document.getElementById('fichaImagenes') as HTMLDivElement;
   const contenedorImagenes = document.getElementById('listaImagenes') as HTMLDivElement;
   const contenedorSuperior = document.getElementById('contenedorCajaSuperior') as HTMLDivElement;
@@ -154,6 +136,14 @@
 
   const siguiente = document.getElementById('fichaElementoSiguiente') as HTMLSpanElement;
   const anterior = document.getElementById('fichaElementoAnterior') as HTMLSpanElement;
+
+  const contenedorDescripcion = ficha.querySelector<HTMLDivElement>(
+    '.seccionDatos[data-nombre="descripcion"]'
+  ) as HTMLDivElement;
+  const descripcionFicha = contenedorDescripcion.querySelector('p') as HTMLParagraphElement;
+
+  // const seccionEnlaces = document.getElementById('fichaEnlaces') as HTMLDivElement;
+  const seccionEnlaces = ficha.querySelector<SeccionFicha>('.seccionDatos[data-nombre="enlaces"]') as SeccionFicha;
 
   // Cargar ficha anterior o ficha siguiente al hace click en los botones
   siguiente.onclick = () => {
@@ -237,7 +227,8 @@
 
     // Llenar enlaces, si tiene
     if (datos.enlaces && datos.enlaces.length) {
-      seccionEnlaces.style.display = 'flex';
+      seccionEnlaces.mostrar();
+
       datos.enlaces.forEach((elemento) => {
         const fila = document.createElement('li');
         const enlace = document.createElement('a');
@@ -245,10 +236,10 @@
         enlace.innerText = elemento;
         enlace.target = '_blank';
         fila.append(enlace);
-        listaEnlaces.append(fila);
+        seccionEnlaces.agregarElemento(fila);
       });
     } else {
-      seccionEnlaces.style.display = 'none';
+      seccionEnlaces.esconder();
     }
 
     // Llenar imágenes, si hay
@@ -288,8 +279,6 @@
     const enlaceRed = document.getElementById('enlaceRedAcademia') as HTMLAnchorElement;
     const idAcademia = datos.academia;
 
-    const seccionParticipantes = document.getElementById('fichaParticipantes');
-
     if (idAcademia) {
       seccionRed.style.display = 'block';
       contenedorRed.src = `https://academia.uniandes.edu.co/academynetsweb/personnet.html?&personId=${idAcademia}&highlight=${idAcademia}&minified=true&scale=50&force=-100"`;
@@ -311,11 +300,12 @@
     llenarCampos('proyecto', datos, vistaActual);
     llenarCampos('categorias', datos, vistaActual);
     llenarCampos('lideres', datos, vistaActual);
+    llenarCampos('participantes', datos, vistaActual);
     llenarCampos('ramas', datos, vistaActual);
+
     llenarCampos('objetos', datos, vistaActual);
     llenarCampos('municipios', datos, vistaActual);
     llenarCampos('decadas', datos, vistaActual);
-    llenarCampos('participantes', datos, vistaActual);
 
     /** Campos de Egresados */
     llenarCampos('egresado', datos, vistaActual);
@@ -324,32 +314,34 @@
     llenarCampos('temas', datos, vistaActual);
     llenarCampos('paises', datos, vistaActual);
     llenarCampos('ciudades', datos, vistaActual);
-
     // Ocultar participantes en ficha de líderes de proyectos
-    if (seccionParticipantes && datos.lista === 'Líderes de Proyectos') {
+
+    if (datos.lista === 'Líderes de Proyectos') {
+      const seccionParticipantes = ficha.querySelector<SeccionFicha>(
+        `.seccionDatos[data-nombre="participantes"]`
+      ) as SeccionFicha;
       seccionParticipantes.style.display = 'none';
     }
   });
 
   function llenarCampos(
-    campo: LLavesMultiples | LlavesSingulares | 'proyecto' | 'egresado' | 'ambitos' | 'ciudades',
+    campo: LLavesMultiples | 'proyecto' | 'egresado' | 'ambitos' | 'ciudades',
     datos: Ficha,
     vistaActual: 'proyectos' | 'egresados'
   ) {
-    const primeraLetra = campo.charAt(0).toUpperCase();
-    const campoMayuscula = primeraLetra + campo.slice(1);
-    const listaCampo = document.getElementById(`lista${campoMayuscula}`) as HTMLUListElement;
-    const contenedorCampo = document.getElementById(`ficha${campoMayuscula}`) as HTMLDivElement;
+    const seccion = ficha.querySelector<SeccionFicha>(`.seccionDatos[data-nombre="${campo}"]`) as SeccionFicha;
+    const datosSeccion = datos[campo];
 
-    listaCampo.innerText = '';
-    if (datos[campo] && datos[campo]?.length) {
-      contenedorCampo.style.display = 'flex';
+    seccion.limpiar();
 
-      datos[campo]?.forEach((dato) => {
+    if (datosSeccion && datosSeccion?.length) {
+      seccion.mostrar();
+
+      datosSeccion.forEach((dato) => {
         const fila = document.createElement('li');
         fila.innerText = '';
         fila.innerText = dato.nombre;
-        listaCampo.appendChild(fila);
+        seccion.agregarElemento(fila);
 
         let indice = '0';
 
@@ -360,7 +352,7 @@
           } else {
             const i = datosListas
               .get()
-              [campo as LlavesSingulares | LLavesMultiples].findIndex((elemento) => elemento.nombre === dato.nombre);
+              [campo as LLavesMultiples].findIndex((elemento) => elemento.slug === (dato as ElementoFicha).slug);
             indice = `${i}`;
           }
         } else if (vistaActual === 'egresados') {
@@ -383,7 +375,7 @@
         };
       });
     } else {
-      contenedorCampo.style.display = 'none';
+      seccion.esconder();
     }
   }
 </script>
@@ -569,6 +561,10 @@
         align-items: flex-start;
         align-self: stretch;
 
+        &.visible {
+          display: flex;
+        }
+
         .contenido {
           display: flex;
           padding: 0.4em 0;
@@ -586,7 +582,6 @@
 
         .descripcion {
           font-size: 0.8em;
-
           margin: 1.5rem;
           max-width: 92%;
 
