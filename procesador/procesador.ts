@@ -88,7 +88,7 @@ async function procesar() {
 procesar().catch(console.error);
 
 function agregarDescripciones(): Promise<void> {
-  return new Promise(async (resolver, rechazar) => {
+  return new Promise(async (resolver) => {
     const flujoDescAreas = await getXlsxStream({
       filePath: archivo,
       sheet: 'Descripción áreas',
@@ -116,7 +116,7 @@ function agregarDescripciones(): Promise<void> {
 }
 
 function agregarDescripcionesRamas(): Promise<void> {
-  return new Promise(async (resolver, rechazar) => {
+  return new Promise(async (resolver) => {
     const flujo = await getXlsxStream({
       filePath: archivo,
       sheet: 'Descripción Ramas',
