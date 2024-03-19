@@ -6,9 +6,10 @@
 
 <script>
   import mapbox from 'mapbox-gl';
-  import type { GeoJSONSource, Map } from 'mapbox-gl';
-  import { geo } from '@/utilidades/cerebro';
+  import { GeoJSONSource, type Map } from 'mapbox-gl';
+  import { actualizarUrl, datosListas, datosListasEgresados, geo } from '@/utilidades/cerebro';
   import 'mapbox-gl/dist/mapbox-gl.css';
+  import { vista } from '@/utilidades/cerebro';
 
   let mapaCreado = false; // Instancia creada
   let mapaCargado = false; // Instancia creada y ya terminó de cargar en la página
@@ -96,7 +97,7 @@
        * 🅰 Texto dentro del círculo
        */
       mapa.addLayer({
-        id: 'contadorObras',
+        id: 'contadorProyectos',
         type: 'symbol',
         source: 'ubicaciones',
         // Sólo mostrarlo cuando tiene más de un lugar agrupado ("point_count" lo crea mapbox y se va actualizando con el zoom).
@@ -122,9 +123,9 @@
         paint: {
           'circle-stroke-color': '#ff00ff',
           'circle-color': '#ff00ff',
-          'circle-radius': 15,
-          'circle-stroke-width': 2,
-          'circle-opacity': 0.05
+          'circle-radius': 7,
+          'circle-stroke-width': 0,
+          'circle-opacity': 1
         }
       });
 
@@ -141,25 +142,95 @@
             'format',
             ['get', 'nombre'],
             { 'font-scale': 0.8 },
-            ' ',
+            ' (',
             ['get', 'conteo'],
-            { 'font-scale': 0.75 }
+            { 'font-scale': 0.75 },
+            ')'
           ]
         },
         paint: {
-          'text-color': '#000',
-          'text-halo-width': ['case', ['boolean', ['feature-state', 'activo'], false], 3, 2],
-          'text-halo-blur': 0
+          'text-color': '#ff00ff',
+          'text-translate': [0, -15]
         }
       });
 
       mapaCargado = true;
-    });
+      const popup = new mapbox.Popup({
+        closeButton: false
+      });
 
-    // Función para mostrar algo al pasar el mouse por un punto
-    // mapa.on('mouseenter', 'grupos', (evento) => {
-    //   console.log(evento);
-    // });
+      function eventoEncima() {
+        mapa.getCanvas().style.cursor = 'pointer';
+      }
+
+      function eventoFuera() {
+        mapa.getCanvas().style.cursor = '';
+      }
+
+      // Función para mostrar algo al pasar el mouse por un punto
+      mapa.on('mouseenter', 'grupos', eventoEncima);
+      mapa.on('mouseleave', 'grupos', eventoFuera);
+      mapa.on('mouseenter', 'punto', eventoEncima);
+      mapa.on('mouseleave', 'punto', eventoFuera);
+
+      mapa.on('click', 'punto', (evento) => {
+        const datosPunto = evento.features?.[0].properties;
+        if (datosPunto && datosPunto.slug) {
+          const esProyectos = vista.get() === 'proyectos';
+          const fuente = esProyectos ? datosListas.get().municipios : datosListasEgresados.get().ciudades;
+          const indiceLugar = fuente.findIndex((obj) => obj.slug === datosPunto.slug);
+          actualizarUrl([
+            { nombre: 'id', valor: `${indiceLugar}` },
+            { nombre: 'tipo', valor: esProyectos ? 'municipios' : 'ciudades' }
+          ]);
+        }
+        // mapa.getCanvas().style.cursor = '';
+      });
+
+      mapa.on('click', 'grupos', (evento) => {
+        const datosGrupo = evento.features?.[0].properties;
+        if (!datosGrupo) return;
+
+        const clusterId = datosGrupo.cluster_id;
+        const conteoPuntos = datosGrupo.point_count;
+        const fuenteZonas = mapa.getSource('ubicaciones') as GeoJSONSource;
+
+        fuenteZonas.getClusterLeaves(clusterId, conteoPuntos, 0, (error, features) => {
+          if (error) {
+            // hacer algo si hay error
+          } else {
+            const contenedor = document.createElement('div');
+            contenedor.className = 'listaLugares';
+
+            const esProyectos = vista.get() === 'proyectos';
+            const fuente = esProyectos ? datosListas.get().municipios : datosListasEgresados.get().ciudades;
+
+            features.forEach((lugar) => {
+              const indiceLugar = fuente.findIndex((obj) => obj.slug === lugar.properties?.slug);
+              const datosLugar = fuente[indiceLugar];
+
+              const enlaceIdeaJulian = document.createElement('a');
+              enlaceIdeaJulian.classList.add('enlaceMapa');
+              enlaceIdeaJulian.innerText = `${datosLugar?.nombre}: ${datosLugar?.conteo}`;
+
+              enlaceIdeaJulian.onclick = () => {
+                popup.remove();
+                actualizarUrl([
+                  { nombre: 'id', valor: `${indiceLugar}` },
+                  { nombre: 'tipo', valor: esProyectos ? 'municipios' : 'ciudades' }
+                ]);
+              };
+
+              if (datosLugar) {
+                contenedor.appendChild(enlaceIdeaJulian);
+              }
+            });
+
+            popup.setLngLat(evento.lngLat).setDOMContent(contenedor).addTo(mapa);
+          }
+        });
+      });
+    });
   });
 </script>
 
@@ -169,5 +240,16 @@
     top: 0;
     width: 100%;
     height: 100%;
+
+    .listaLugares {
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      max-height: 200px;
+
+      .enlaceMapa {
+        cursor: pointer;
+      }
+    }
   }
 </style>

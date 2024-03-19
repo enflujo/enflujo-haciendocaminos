@@ -64,6 +64,7 @@ export async function procesarLugares(archivo: string, listas: Listas): Promise<
           type: 'Feature',
           properties: {
             slug: lugares[lugar].slug,
+            nombre: lugares[lugar].nombre,
             conteo
           },
           geometry: { type: 'Point', coordinates: [lugares[lugar].lon, lugares[lugar].lat] }
@@ -136,6 +137,7 @@ export async function procesarLugaresEgresados(archivo: string, listas: ListasEg
           type: 'Feature',
           properties: {
             slug: lugares[lugar].slug,
+            nombre: lugares[lugar].nombre,
             conteo
           },
           geometry: { type: 'Point', coordinates: [lugares[lugar].lon, lugares[lugar].lat] }

@@ -68,10 +68,12 @@ vista.subscribe(async (vistaActual) => {
 
     const proyectos = await pedirDatos<Proyecto[]>(`${base}/proyectos.json`);
     datosProyectos.set(proyectos);
+
     revisarVariablesURL();
   } else if (vistaActual === 'egresados') {
     const geoEgresados = await pedirDatos<FeatureCollection<Point>>(`${base}/datosMapaEgresados.geo.json`);
     geo.set(geoEgresados);
+    _copiaDatosMapaEgresados = geoEgresados;
 
     const listasEgresados = await pedirDatos<ListasEgresados>(`${base}/listasEgresados.json`);
     datosListasEgresados.set(listasEgresados);
@@ -79,7 +81,6 @@ vista.subscribe(async (vistaActual) => {
     const egresados = await pedirDatos<Egresado[]>(`${base}/egresados.json`);
     datosEgresados.set(egresados);
 
-    _copiaDatosMapaEgresados = geoEgresados;
     revisarVariablesURL();
   }
 
@@ -235,13 +236,17 @@ elementoSeleccionado.subscribe((elemento) => {
           {}
         );
 
-        const lugaresMapa = datos.relaciones.filter((relacion) => relacion.tipo === 'municipios');
+        if (tipo === 'municipios') {
+          filtrarMapa([{ slug: datos.slug, conteo: datos.conteo }]);
+        } else {
+          const lugaresMapa = datos.relaciones.filter((relacion) => relacion.tipo === 'municipios');
 
-        filtrarMapa(
-          lugaresMapa.map((lugar) => {
-            return { slug: lugar.slug, conteo: lugar.conteo };
-          })
-        );
+          filtrarMapa(
+            lugaresMapa.map((lugar) => {
+              return { slug: lugar.slug, conteo: lugar.conteo };
+            })
+          );
+        }
 
         datosFicha.set({
           visible: true,
@@ -313,13 +318,17 @@ elementoSeleccionado.subscribe((elemento) => {
           {}
         );
 
-        const lugaresMapa = datos.relaciones.filter((relacion) => relacion.tipo === 'ciudades');
+        if (tipo === 'ciudades') {
+          filtrarMapa([{ slug: datos.slug, conteo: datos.conteo }]);
+        } else {
+          const lugaresMapa = datos.relaciones.filter((relacion) => relacion.tipo === 'ciudades');
 
-        filtrarMapa(
-          lugaresMapa.map((lugar) => {
-            return { slug: lugar.slug, conteo: lugar.conteo };
-          })
-        );
+          filtrarMapa(
+            lugaresMapa.map((lugar) => {
+              return { slug: lugar.slug, conteo: lugar.conteo };
+            })
+          );
+        }
 
         datosFicha.set({
           visible: true,
