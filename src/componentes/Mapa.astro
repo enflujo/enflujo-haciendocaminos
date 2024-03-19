@@ -123,9 +123,9 @@
         paint: {
           'circle-stroke-color': '#ff00ff',
           'circle-color': '#ff00ff',
-          'circle-radius': 15,
-          'circle-stroke-width': 2,
-          'circle-opacity': 0.05
+          'circle-radius': 7,
+          'circle-stroke-width': 0,
+          'circle-opacity': 1
         }
       });
 
@@ -142,10 +142,15 @@
             'format',
             ['get', 'nombre'],
             { 'font-scale': 0.8 },
-            ' ',
+            ' (',
             ['get', 'conteo'],
-            { 'font-scale': 0.75 }
+            { 'font-scale': 0.75 },
+            ')'
           ]
+        },
+        paint: {
+          'text-color': '#ff00ff',
+          'text-translate': [0, -15]
         }
       });
 
@@ -154,15 +159,43 @@
         closeButton: false
       });
 
+      function eventoEncima() {
+        mapa.getCanvas().style.cursor = 'pointer';
+      }
+
+      function eventoFuera() {
+        mapa.getCanvas().style.cursor = '';
+      }
+
+      // Función para mostrar algo al pasar el mouse por un punto
+      mapa.on('mouseenter', 'grupos', eventoEncima);
+      mapa.on('mouseleave', 'grupos', eventoFuera);
+      mapa.on('mouseenter', 'punto', eventoEncima);
+      mapa.on('mouseleave', 'punto', eventoFuera);
+
+      mapa.on('click', 'punto', (evento) => {
+        const datosPunto = evento.features?.[0].properties;
+        if (datosPunto && datosPunto.slug) {
+          const esProyectos = vista.get() === 'proyectos';
+          const fuente = esProyectos ? datosListas.get().municipios : datosListasEgresados.get().ciudades;
+          const indiceLugar = fuente.findIndex((obj) => obj.slug === datosPunto.slug);
+          actualizarUrl([
+            { nombre: 'id', valor: `${indiceLugar}` },
+            { nombre: 'tipo', valor: esProyectos ? 'municipios' : 'ciudades' }
+          ]);
+        }
+        // mapa.getCanvas().style.cursor = '';
+      });
+
       mapa.on('click', 'grupos', (evento) => {
         const datosGrupo = evento.features?.[0].properties;
         if (!datosGrupo) return;
 
         const clusterId = datosGrupo.cluster_id;
-        const pointCount = datosGrupo.point_count;
+        const conteoPuntos = datosGrupo.point_count;
         const fuenteZonas = mapa.getSource('ubicaciones') as GeoJSONSource;
 
-        fuenteZonas.getClusterLeaves(clusterId, pointCount, 0, (error, features) => {
+        fuenteZonas.getClusterLeaves(clusterId, conteoPuntos, 0, (error, features) => {
           if (error) {
             // hacer algo si hay error
           } else {
@@ -170,64 +203,34 @@
             contenedor.className = 'listaLugares';
 
             const esProyectos = vista.get() === 'proyectos';
+            const fuente = esProyectos ? datosListas.get().municipios : datosListasEgresados.get().ciudades;
 
-            if (esProyectos) {
-              const datosMunicipios = datosListas.get().municipios;
+            features.forEach((lugar) => {
+              const indiceLugar = fuente.findIndex((obj) => obj.slug === lugar.properties?.slug);
+              const datosLugar = fuente[indiceLugar];
 
-              //const enlacesMunicipios =
-              features.forEach((lugar) => {
-                const indiceLugar = datosMunicipios.findIndex((mun) => mun.slug === lugar.properties?.slug);
-                const datosLugar = datosMunicipios[indiceLugar];
+              const enlaceIdeaJulian = document.createElement('a');
+              enlaceIdeaJulian.classList.add('enlaceMapa');
+              enlaceIdeaJulian.innerText = `${datosLugar?.nombre}: ${datosLugar?.conteo}`;
 
-                const enlaceIdeaJulian = document.createElement('a');
-                enlaceIdeaJulian.classList.add('enlaceMapa');
-                enlaceIdeaJulian.innerText = `${datosLugar?.nombre}: ${datosLugar?.conteo}`;
+              enlaceIdeaJulian.onclick = () => {
+                popup.remove();
+                actualizarUrl([
+                  { nombre: 'id', valor: `${indiceLugar}` },
+                  { nombre: 'tipo', valor: esProyectos ? 'municipios' : 'ciudades' }
+                ]);
+              };
 
-                enlaceIdeaJulian.onclick = () => {
-                  actualizarUrl([
-                    { nombre: 'id', valor: `${indiceLugar}` },
-                    { nombre: 'tipo', valor: 'municipios' }
-                  ]);
-                };
-
-                if (datosLugar) {
-                  contenedor.appendChild(enlaceIdeaJulian);
-                }
-              });
-            } else {
-              const datosCiudades = datosListasEgresados.get().ciudades;
-
-              features.forEach((lugar) => {
-                const indiceLugar = datosCiudades.findIndex((ciudad) => ciudad.slug === lugar.properties?.slug);
-                const datosLugar = datosCiudades[indiceLugar];
-
-                const enlaceIdeaJulian = document.createElement('a');
-                enlaceIdeaJulian.classList.add('enlaceMapa');
-                enlaceIdeaJulian.innerText = `${datosLugar?.nombre}: ${datosLugar?.conteo}`;
-
-                enlaceIdeaJulian.onclick = () => {
-                  actualizarUrl([
-                    { nombre: 'id', valor: `${indiceLugar}` },
-                    { nombre: 'tipo', valor: 'ciudades' }
-                  ]);
-                };
-
-                if (datosLugar) {
-                  contenedor.appendChild(enlaceIdeaJulian);
-                }
-              });
-            }
+              if (datosLugar) {
+                contenedor.appendChild(enlaceIdeaJulian);
+              }
+            });
 
             popup.setLngLat(evento.lngLat).setDOMContent(contenedor).addTo(mapa);
           }
         });
       });
     });
-
-    // Función para mostrar algo al pasar el mouse por un punto
-    // mapa.on('mouseenter', 'grupos', (evento) => {
-    //   // console.log(evento);
-    // });
   });
 </script>
 
