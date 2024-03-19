@@ -1,0 +1,42 @@
+---
+
+---
+
+<div class="seccionRed" id="fichaRed" data-nombre="red">
+  <a
+    id="enlaceRedAcademia"
+    href="#"
+    target="_blank"
+    style={`background-image: url(${import.meta.env.BASE_URL}/imgs/icono-enlace-externo.svg`}
+    )></a>
+  <iframe id="redAcademica"></iframe>
+
+  <p class="pieDeFoto">Red de colaboración entre personas</p>
+</div>
+
+<script>
+  import { datosFicha } from '@/utilidades/cerebro';
+
+  datosFicha.subscribe((datos) => {
+    if (!datos.visible) return;
+    /**
+     * RED Académica de lideres
+     */
+    const seccionRed = document.getElementById('fichaRed') as HTMLDivElement;
+    const contenedorRed = document.getElementById('redAcademica') as HTMLIFrameElement;
+    const enlaceRed = document.getElementById('enlaceRedAcademia') as HTMLAnchorElement;
+    const idAcademia = datos.academia;
+
+    if (idAcademia) {
+      seccionRed.style.display = 'block';
+      contenedorRed.src = `https://academia.uniandes.edu.co/academynetsweb/personnet.html?&personId=${idAcademia}&highlight=${idAcademia}&minified=true&scale=50&force=-100"`;
+      enlaceRed.onclick = () => {
+        const enlace = `https://academia.uniandes.edu.co/academynetsweb/personnet.html?&personId=${idAcademia}&highlight=${idAcademia}`;
+        enlaceRed.setAttribute('href', enlace);
+      };
+    } else {
+      contenedorRed.src = '';
+      seccionRed.style.display = 'none';
+    }
+  });
+</script>

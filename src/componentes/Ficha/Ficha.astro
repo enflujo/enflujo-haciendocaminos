@@ -1,4 +1,7 @@
 ---
+import Galeria from './Galeria.astro';
+import Red from './Red.astro';
+
 const secciones = [
   { nombre: 'Enlaces', slug: 'enlaces' },
   { nombre: 'Proyectos', slug: 'proyecto' },
@@ -44,17 +47,7 @@ const secciones = [
       <p class="contenido descripcion"></p>
     </div>
 
-    <div class="seccionRed" id="fichaRed" data-nombre="red">
-      <a
-        id="enlaceRedAcademia"
-        href="#"
-        target="_blank"
-        style={`background-image: url(${import.meta.env.BASE_URL}/imgs/icono-enlace-externo.svg`}
-        )></a>
-      <iframe id="redAcademica"></iframe>
-
-      <p class="pieDeFoto">Red de colaboración entre personas</p>
-    </div>
+    <Red />
 
     {
       secciones.map((seccion) => (
@@ -65,9 +58,7 @@ const secciones = [
       ))
     }
 
-    <div class="seccionDatos" id="fichaImagenes">
-      <div id="listaImagenes" class="contenido imagenes"></div>
-    </div>
+    <Galeria />
   </section>
 </div>
 
@@ -85,64 +76,21 @@ const secciones = [
   } from '@/utilidades/cerebro';
   import type { ElementoFicha, ElementoProyecto, Ficha, LLavesMultiples, Listas, LlavesListasEgresados } from '@/tipos';
   import { marked } from 'marked';
-  import 'photoswipe/style.css';
-  import Galeria from 'photoswipe/lightbox';
-
-  class SeccionFicha extends HTMLElement {
-    lista: HTMLUListElement;
-
-    constructor() {
-      super();
-      this.lista = this.querySelector<HTMLUListElement>('.contenido') as HTMLUListElement;
-    }
-
-    agregarElemento(elemento: HTMLElement) {
-      this.lista.appendChild(elemento);
-    }
-
-    limpiar() {
-      this.lista.innerHTML = '';
-    }
-
-    mostrar() {
-      this.classList.add('visible');
-    }
-
-    esconder() {
-      this.classList.remove('visible');
-    }
-  }
-
-  customElements.define('enflujo-seccion-ficha', SeccionFicha);
-
   import type { ListasEgresados } from 'procesador/egresados';
-  const urlBase = import.meta.env.BASE_URL;
+  import SeccionFicha from './SeccionFicha';
+
   const ficha = document.getElementById('contenedorFicha') as HTMLDivElement;
   const lista = document.getElementById('listaFicha') as HTMLTitleElement;
   const botonCerrarFicha = document.getElementById('cerrarFicha') as HTMLDivElement;
   const titulo = document.getElementById('tituloFicha') as HTMLParagraphElement;
   const conteoFicha = document.getElementById('conteoFicha') as HTMLDivElement;
-
-  const seccionImagenes = document.getElementById('fichaImagenes') as HTMLDivElement;
-  const contenedorImagenes = document.getElementById('listaImagenes') as HTMLDivElement;
   const contenedorSuperior = document.getElementById('contenedorCajaSuperior') as HTMLDivElement;
-
-  const galeria = new Galeria({
-    gallery: '#listaImagenes',
-    children: 'a',
-    pswpModule: () => import('photoswipe')
-  });
-  galeria.init();
-
   const siguiente = document.getElementById('fichaElementoSiguiente') as HTMLSpanElement;
   const anterior = document.getElementById('fichaElementoAnterior') as HTMLSpanElement;
-
   const contenedorDescripcion = ficha.querySelector<HTMLDivElement>(
     '.seccionDatos[data-nombre="descripcion"]'
   ) as HTMLDivElement;
   const descripcionFicha = contenedorDescripcion.querySelector('p') as HTMLParagraphElement;
-
-  // const seccionEnlaces = document.getElementById('fichaEnlaces') as HTMLDivElement;
   const seccionEnlaces = ficha.querySelector<SeccionFicha>('.seccionDatos[data-nombre="enlaces"]') as SeccionFicha;
 
   // Cargar ficha anterior o ficha siguiente al hace click en los botones
@@ -240,55 +188,6 @@ const secciones = [
       });
     } else {
       seccionEnlaces.esconder();
-    }
-
-    // Llenar imágenes, si hay
-    if (datos.imagenes && datos.imagenes.length) {
-      contenedorImagenes.innerHTML = '';
-      seccionImagenes.style.display = 'flex';
-
-      datos.imagenes.forEach((elemento) => {
-        const imagenAncho = document.createElement('a');
-        imagenAncho.classList.add('imagenAncho');
-        imagenAncho.href = `${urlBase}/imgs/fotos/${datos.id}/${elemento.grande}`;
-        imagenAncho.setAttribute('data-pswp-width', `${elemento.ancho}`);
-        imagenAncho.setAttribute('data-pswp-height', `${elemento.alto}`);
-
-        const imagen = document.createElement('img');
-        imagen.classList.add('imagenFicha');
-        imagen.src = `${urlBase}/imgs/fotos/${datos.id}/${elemento.peque}`;
-        imagen.alt = '';
-
-        imagenAncho.appendChild(imagen);
-        contenedorImagenes.append(imagenAncho);
-        imagen.alt = '';
-
-        imagen.addEventListener('click', () => {
-          imagen.classList.toggle('grande');
-        });
-      });
-    } else {
-      seccionImagenes.style.display = 'none';
-    }
-
-    /**
-     * RED Académica de lideres
-     */
-    const seccionRed = document.getElementById('fichaRed') as HTMLDivElement;
-    const contenedorRed = document.getElementById('redAcademica') as HTMLIFrameElement;
-    const enlaceRed = document.getElementById('enlaceRedAcademia') as HTMLAnchorElement;
-    const idAcademia = datos.academia;
-
-    if (idAcademia) {
-      seccionRed.style.display = 'block';
-      contenedorRed.src = `https://academia.uniandes.edu.co/academynetsweb/personnet.html?&personId=${idAcademia}&highlight=${idAcademia}&minified=true&scale=50&force=-100"`;
-      enlaceRed.onclick = () => {
-        const enlace = `https://academia.uniandes.edu.co/academynetsweb/personnet.html?&personId=${idAcademia}&highlight=${idAcademia}`;
-        enlaceRed.setAttribute('href', enlace);
-      };
-    } else {
-      contenedorRed.src = '';
-      seccionRed.style.display = 'none';
     }
 
     const vistaActual = vista.get();
