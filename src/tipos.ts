@@ -159,3 +159,21 @@ export interface ElementoBuscador extends OpcionBuscadorDatos {
 export interface PersonaID {
   [nombre: string]: number;
 }
+
+export interface Egresado {
+  id: number;
+  nombre: string;
+  graduacion?: string;
+  institucion?: DefinicionSimple;
+  temas?: DefinicionSimple[];
+  ambitos?: DefinicionSimple[];
+  ciudades?: DefinicionSimple[];
+  paises?: DefinicionSimple[];
+}
+
+export interface ListasEgresados {
+  temas: ElementoLista[];
+  ambitos: ElementoLista[];
+  paises: ElementoLista[];
+  ciudades: ElementoLista[];
+}

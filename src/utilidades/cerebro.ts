@@ -10,12 +10,14 @@ import type {
   ElementoEgresado,
   ElementoBuscador,
   OpcionBuscadorDatos,
-  TiposLugares,
   ElementoLista,
-  DefinicionSimple
+  DefinicionSimple,
+  TiposLugaresProyectos,
+  TiposLugaresEgresados,
+  ListasEgresados,
+  Egresado
 } from '@/tipos';
-import type { Feature, FeatureCollection, Point } from 'geojson';
-import type { Egresado, ListasEgresados } from '../../procesador/egresados';
+import type { FeatureCollection, Point } from 'geojson';
 
 export const datosProyectos = atom<Proyecto[]>([]);
 export const datosFicha = map<Ficha>({ visible: false });
@@ -125,34 +127,18 @@ vista.subscribe(async (vistaActual) => {
 export function filtrarMapa(lugares?: { slug: string; conteo: number }[]) {
   if (lugares) {
     const vistaActual = vista.get();
-    let lugaresFiltrados: Feature<Point>[] = [];
+    const fuente = vistaActual === 'proyectos' ? _copiaDatosMapa : _copiaDatosMapaEgresados;
+    const lugaresFiltrados = fuente?.features.filter((lugar) =>
+      lugares.find((obj) => obj.slug === lugar.properties?.slug)
+    );
 
-    if (vistaActual === 'proyectos') {
-      lugaresFiltrados = _copiaDatosMapa?.features.filter((lugar) =>
-        lugares.find((obj) => obj.slug === lugar.properties?.slug)
-      );
+    lugaresFiltrados.forEach((punto) => {
+      if (punto.properties) {
+        const datosLugar = lugares.find((obj) => obj.slug === punto.properties?.slug);
+        punto.properties.conteo = datosLugar?.conteo;
+      }
+    });
 
-      lugaresFiltrados.map((punto) => {
-        if (punto.properties) {
-          const datosLugar = lugares.find((obj) => obj.slug === punto.properties?.slug);
-          punto.properties.conteo = datosLugar?.conteo;
-        }
-        return punto;
-      });
-    } else if (vistaActual === 'egresados') {
-      lugaresFiltrados = _copiaDatosMapaEgresados?.features.filter((lugar) =>
-        lugares.find((obj) => obj.slug === lugar.properties?.slug)
-      );
-
-      lugaresFiltrados.map((punto) => {
-        if (punto.properties) {
-          const datosLugar = lugares.find((obj) => obj.slug === punto.properties?.slug);
-          punto.properties.conteo = datosLugar?.conteo;
-        }
-
-        return punto;
-      });
-    }
     if (lugaresFiltrados) {
       geo.setKey('features', lugaresFiltrados);
     }
@@ -166,11 +152,16 @@ export function filtrarMapa(lugares?: { slug: string; conteo: number }[]) {
 }
 
 function actualizarLugar(tipo: string, slug: string, conteo: number, relaciones: ElementoLista['relaciones']) {
-  if (tipo === 'municipios' || tipo === 'departamentos' || tipo === 'paises') {
+  if (tipo === 'municipios' || tipo === 'departamentos' || tipo === 'paises' || tipo === 'ciudades') {
     filtrarMapa([{ slug, conteo }]);
   } else {
     const lugaresMapa = relaciones.filter((relacion) => {
-      return relacion.tipo === 'municipios' || relacion.tipo === 'departamentos' || relacion.tipo === 'paises';
+      return (
+        relacion.tipo === 'municipios' ||
+        relacion.tipo === 'departamentos' ||
+        relacion.tipo === 'paises' ||
+        relacion.tipo === 'ciudades'
+      );
     });
 
     filtrarMapa(
@@ -181,13 +172,58 @@ function actualizarLugar(tipo: string, slug: string, conteo: number, relaciones:
   }
 }
 
-function buscarLugares(tipoLugar: 'municipios' | 'departamentos' | 'paises', lugares: DefinicionSimple[]) {
-  const datosLugares = datosListas.get()[tipoLugar];
+function buscarLugares(tipo: 'proyectos' | 'egresados', datos: Proyecto | Egresado) {
+  const lugares: { slug: string; conteo: number }[] = [];
 
-  return lugares.map((lugar) => {
-    const mun = datosLugares.find((m) => m.slug === lugar.slug);
-    return { slug: lugar.slug, conteo: mun ? mun.conteo : 1 };
-  });
+  if (tipo === 'proyectos') {
+    const { departamentos, municipios } = datos as Proyecto;
+    if (municipios) lugares.push(...filtrar('municipios', municipios));
+    if (departamentos) lugares.push(...filtrar('departamentos', departamentos));
+  } else {
+    const { ciudades } = datos as Egresado;
+    if (ciudades) lugares.push(...filtrar('ciudades', ciudades));
+  }
+
+  if (datos.paises) lugares.push(...filtrar('paises', datos.paises));
+  lugares.length ? filtrarMapa(lugares) : filtrarMapa([]);
+
+  function filtrar(tipoLugar: 'municipios' | 'departamentos' | 'paises' | 'ciudades', lugares: DefinicionSimple[]) {
+    const esProyectos = tipo === 'proyectos';
+
+    const datosLugares = esProyectos
+      ? datosListas.get()[tipoLugar as TiposLugaresProyectos]
+      : datosListasEgresados.get()[tipoLugar as TiposLugaresEgresados];
+
+    return lugares.map((obj) => {
+      const lugar = datosLugares.find((l) => l.slug === obj.slug);
+      return { slug: obj.slug, conteo: lugar ? lugar.conteo : 1 };
+    });
+  }
+}
+
+function agruparRelaciones(
+  tipo: 'proyectos' | 'egresados',
+  relaciones: ElementoLista['relaciones'],
+  listas: Listas | ListasEgresados
+) {
+  return relaciones.reduce((lista: { [llave: string]: ElementoFicha[] }, valorActual) => {
+    if (!lista[valorActual.tipo]) {
+      lista[valorActual.tipo] = [];
+    }
+    const { nombre } =
+      tipo === 'proyectos'
+        ? (listas as Listas)[valorActual.tipo as keyof Listas][valorActual.indice]
+        : (listas as ListasEgresados)[valorActual.tipo as keyof ListasEgresados][valorActual.indice];
+
+    lista[valorActual.tipo].push({
+      slug: valorActual.slug,
+      conteo: valorActual.conteo,
+      nombre
+    });
+
+    ordenarListaObjetos(lista[valorActual.tipo], 'slug', true);
+    return lista;
+  }, {});
 }
 
 elementoSeleccionado.subscribe((elemento) => {
@@ -199,28 +235,9 @@ elementoSeleccionado.subscribe((elemento) => {
   if (!enEgresados) {
     if (tipo === 'proyecto') {
       const datosProyecto = datosProyectos.get()[+id];
-
       if (!datosProyecto) return;
 
-      const lugares: { slug: string; conteo: number }[] = [];
-
-      if (datosProyecto.municipios) {
-        lugares.push(...buscarLugares('municipios', datosProyecto.municipios));
-      }
-
-      if (datosProyecto.departamentos) {
-        lugares.push(...buscarLugares('departamentos', datosProyecto.departamentos));
-      }
-
-      if (datosProyecto.paises) {
-        lugares.push(...buscarLugares('paises', datosProyecto.paises));
-      }
-
-      if (lugares.length) {
-        filtrarMapa(lugares);
-      } else {
-        filtrarMapa([]);
-      }
+      buscarLugares('proyectos', datosProyecto);
 
       datosFicha.set({
         visible: true,
@@ -249,33 +266,13 @@ elementoSeleccionado.subscribe((elemento) => {
       if (datos) {
         const proyectos = datos.proyectos?.reduce((lista: ElementoProyecto[], indiceProyecto) => {
           const proyecto = datosProyectos.value?.find((p) => p.id === indiceProyecto);
-          if (proyecto) {
-            lista.push({ nombre: proyecto.nombre.nombre, id: proyecto.id });
-          }
-
+          if (proyecto) lista.push({ nombre: proyecto.nombre.nombre, id: proyecto.id });
           ordenarListaObjetos(lista, 'nombre', true);
           return lista;
         }, []);
 
-        const relaciones: RelacionesFicha = datos.relaciones.reduce(
-          (lista: { [llave: string]: ElementoFicha[] }, valorActual) => {
-            if (!lista[valorActual.tipo]) {
-              lista[valorActual.tipo] = [];
-            }
-
-            lista[valorActual.tipo].push({
-              slug: valorActual.slug,
-              conteo: valorActual.conteo,
-              nombre: listas[valorActual.tipo as keyof Listas][valorActual.indice].nombre
-            });
-
-            ordenarListaObjetos(lista[valorActual.tipo], 'slug', true);
-            return lista;
-          },
-          {}
-        );
-
         actualizarLugar(tipo, datos.slug, datos.conteo, datos.relaciones);
+        const relaciones: RelacionesFicha = agruparRelaciones('proyectos', datos.relaciones, listas);
 
         datosFicha.set({
           visible: true,
@@ -300,8 +297,9 @@ elementoSeleccionado.subscribe((elemento) => {
   } else {
     if (tipo === 'egresado') {
       const datosEgresado = datosEgresados.get()[+id];
-
       if (!datosEgresado) return;
+
+      buscarLugares('egresados', datosEgresado);
 
       datosFicha.set({
         visible: true,
@@ -321,33 +319,13 @@ elementoSeleccionado.subscribe((elemento) => {
       if (datos) {
         const egresados = datos.egresados?.reduce((lista: ElementoEgresado[], indiceEgresado) => {
           const egresado = datosEgresados.value?.find((p) => p.id === indiceEgresado);
-          if (egresado) {
-            lista.push({ nombre: egresado.nombre, id: egresado.id });
-          }
-
+          if (egresado) lista.push({ nombre: egresado.nombre, id: egresado.id });
           ordenarListaObjetos(lista, 'nombre', true);
           return lista;
         }, []);
 
-        const relaciones: RelacionesFicha = datos.relaciones.reduce(
-          (lista: { [llave: string]: ElementoFicha[] }, valorActual) => {
-            if (!lista[valorActual.tipo]) {
-              lista[valorActual.tipo] = [];
-            }
-
-            lista[valorActual.tipo].push({
-              slug: valorActual.slug,
-              conteo: valorActual.conteo,
-              nombre: listas[valorActual.tipo as keyof ListasEgresados][valorActual.indice].nombre
-            });
-
-            ordenarListaObjetos(lista[valorActual.tipo], 'slug', true);
-            return lista;
-          },
-          {}
-        );
-
         actualizarLugar(tipo, datos.slug, datos.conteo, datos.relaciones);
+        const relaciones: RelacionesFicha = agruparRelaciones('egresados', datos.relaciones, listas);
 
         datosFicha.set({
           visible: true,
@@ -379,11 +357,8 @@ export function actualizarUrl(valores: { nombre: string; valor: string }[], nuev
     const parametros = new URLSearchParams(window.location.search);
 
     valores.forEach((obj) => {
-      if (obj.valor) {
-        parametros.set(obj.nombre, obj.valor);
-      } else {
-        parametros.delete(obj.nombre);
-      }
+      if (obj.valor) parametros.set(obj.nombre, obj.valor);
+      else parametros.delete(obj.nombre);
     });
 
     window.history.pushState({}, '', decodeURIComponent(`${window.location.pathname}?${parametros}`));
