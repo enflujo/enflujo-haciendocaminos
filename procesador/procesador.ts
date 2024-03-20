@@ -57,7 +57,8 @@ const listasEgresados: ListasEgresados = {
   paises: [],
   temas: [],
   ambitos: [],
-  ciudades: []
+  ciudades: [],
+  graduacion: []
 };
 
 const archivo = './procesador/datos/Listado de proyectos - 60 años dpto antropología .xlsx';

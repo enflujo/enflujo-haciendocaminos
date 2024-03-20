@@ -3,14 +3,13 @@ import slugificar from 'slug';
 import type { DefinicionSimple, ElementoLista, CamposEgresados, ListasEgresados, Egresado } from '../src/tipos.js';
 import { guardarJSON, ordenarListaObjetos } from './ayudas.js';
 
-const camposMultiplesEgresados: CamposEgresados = [
+const camposEgresados: CamposEgresados = [
   { llave: 'ambitos', indice: 4 },
   { llave: 'paises', indice: 6 },
   { llave: 'temas', indice: 3 },
-  { llave: 'ciudades', indice: 5 }
+  { llave: 'ciudades', indice: 5 },
+  { llave: 'graduacion', indice: 1 }
 ];
-
-const camposEgresados = [...camposMultiplesEgresados];
 
 export default async function procesarEgresados(
   archivo: string,
@@ -33,9 +32,9 @@ export default async function procesarEgresados(
         const datosFila = fila.formatted.arr;
         const egresado: Egresado = { nombre: datosFila[0].trim(), id: numeroFila - 2 };
 
-        const añoGraduacion = datosFila[1] ? `${datosFila[1]}` : null;
-        if (añoGraduacion && añoGraduacion.trim().toLocaleLowerCase() !== 'no disponible')
-          egresado.graduacion = añoGraduacion.trim();
+        // const añoGraduacion = datosFila[1] ? `${datosFila[1]}` : null;
+        const añoGraduacion = validarValorSingular(datosFila[1], listasEgresados.graduacion);
+        if (añoGraduacion) egresado.graduacion = añoGraduacion;
 
         const institucion = validarValorSingular(datosFila[2]);
         if (institucion) egresado.institucion = institucion;
@@ -54,7 +53,7 @@ export default async function procesarEgresados(
 
         egresados.push(egresado);
       }
-
+      console.log(egresados);
       numeroFila++;
     });
 

@@ -1,7 +1,7 @@
 ---
 import Mapa from '@/componentes/Mapa.astro';
 import Plantilla from '@/plantillas/Plantilla.astro';
-import listas from '../../estaticos/listas.json';
+import listas from '../../estaticos/listasEgresados.json';
 import LineaTiempo from '@/componentes/LineaTiempo.astro';
 import Ficha from '@/componentes/Ficha/Ficha.astro';
 import Cabezote from '@/componentes/Cabezote.astro';
@@ -20,7 +20,7 @@ import Creditos from '@/componentes/Creditos.astro';
     <ListasEgresados />
     <EgresadosNombres />
     <Mapa />
-    <LineaTiempo tiempo={listas.años.map((obj) => obj.slug)} decadas={listas.decadas.map((obj) => obj.slug)} />
+    <!-- <LineaTiempo tiempo={listas.años.map((obj) => obj.slug)} decadas={listas.decadas.map((obj) => obj.slug)} /> -->
   </main>
 </Plantilla>
 
