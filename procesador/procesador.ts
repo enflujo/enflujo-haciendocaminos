@@ -12,7 +12,7 @@ import type {
 import { getXlsxStream } from 'xlstream';
 import slugificar from 'slug';
 import { enMinusculas, guardarJSON, ordenarListaObjetos } from './ayudas.js';
-import { procesarLugares, procesarLugaresEgresados } from './lugares.js';
+import { procesarLugares } from './lugares.js';
 import procesarEgresados from './egresados.js';
 import { existsSync, readdirSync } from 'fs';
 import { resolve } from 'path';
@@ -66,21 +66,17 @@ async function procesar() {
   personas = await procesarPersonas(archivo);
 
   const egresados = await procesarEgresados(archivo, listasEgresados);
+
   await procesarProyectos();
   console.log('Proyectos procesados');
-  await procesarLugares(archivo, listas);
-
+  await procesarLugares(archivo, listas, listasEgresados);
   console.log('fin de lugares');
-  await procesarLugaresEgresados(archivo, listasEgresados);
-
   procesarDatosBuscador(egresados);
   console.log('listos datos buscador');
-
   await agregarDescripciones();
   console.log('listas descripciones áreas');
   await agregarDescripcionesRamas();
   console.log('listas descripciones ramas');
-
   guardarJSON(listas, 'listas');
   console.log('fin');
 }

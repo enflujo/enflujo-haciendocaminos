@@ -72,6 +72,9 @@ export type Listas = {
 };
 
 export type Campos = { llave: LLavesMultiples; indice: number; procesarAparte?: boolean }[];
+export type TiposLugaresProyectos = 'municipios' | 'departamentos' | 'paises';
+export type TiposLugaresEgresados = 'ciudades' | 'paises';
+export type TiposLugares = TiposLugaresProyectos | TiposLugaresEgresados;
 
 export type Lugar = {
   nombre: string;
@@ -79,6 +82,7 @@ export type Lugar = {
   lat: number;
   lon: number;
   conteo: number;
+  tipo: TiposLugares;
 };
 
 export interface ElementoFicha {
@@ -154,4 +158,22 @@ export interface ElementoBuscador extends OpcionBuscadorDatos {
 
 export interface PersonaID {
   [nombre: string]: number;
+}
+
+export interface Egresado {
+  id: number;
+  nombre: string;
+  graduacion?: string;
+  institucion?: DefinicionSimple;
+  temas?: DefinicionSimple[];
+  ambitos?: DefinicionSimple[];
+  ciudades?: DefinicionSimple[];
+  paises?: DefinicionSimple[];
+}
+
+export interface ListasEgresados {
+  temas: ElementoLista[];
+  ambitos: ElementoLista[];
+  paises: ElementoLista[];
+  ciudades: ElementoLista[];
 }

@@ -1,152 +1,101 @@
 import { getXlsxStream } from 'xlstream';
 import slugificar from 'slug';
-import type { Listas, Lugar } from '../src/tipos.js';
+import type { Listas, Lugar, TiposLugares } from '../src/tipos.js';
 import { guardarJSON } from './ayudas.js';
 import type { Feature, FeatureCollection, Point } from 'geojson';
 import type { ListasEgresados } from './egresados.js';
 
-export async function procesarLugares(archivo: string, listas: Listas): Promise<void> {
-  return new Promise(async (resolver) => {
-    const flujoLugares = await getXlsxStream({
-      filePath: archivo,
-      sheet: 'lugares',
-      withHeader: false,
-      ignoreEmpty: true
-    });
+function procesarDatosMapa(lugares: Lugar[]) {
+  const geojson: FeatureCollection = { type: 'FeatureCollection', features: [] };
 
-    let numeroFila = 1;
-    const lugares: Lugar[] = [];
-    const geojson: FeatureCollection = { type: 'FeatureCollection', features: [] };
+  for (let lugar in lugares) {
+    const datosLugar = lugares[lugar];
+    const conteo = datosLugar.conteo;
 
-    flujoLugares.on('data', (fila) => {
-      if (numeroFila > 2) {
-        procesarLugar(fila.formatted.arr);
-      } else {
-      }
-
-      numeroFila++;
-    });
-
-    flujoLugares.on('close', () => {
-      procesarDatosMapa();
-      guardarJSON(geojson, 'datosMapa.geo');
-
-      resolver();
-    });
-
-    function procesarLugar(fila: string[]) {
-      const nombreLugar = fila[0].trim();
-      const slug = slugificar(nombreLugar);
-      const longitud = fila[6];
-      const latitud = fila[5];
-      const lugar = listas.municipios.filter((elemento) => elemento.slug === slug);
-      const conteo = lugar[0] ? lugar[0].conteo : 0;
-
-      const respuesta: Lugar = {
-        nombre: nombreLugar,
-        slug: slug,
-        lon: +longitud,
-        lat: +latitud,
+    const elemento: Feature<Point> = {
+      type: 'Feature',
+      properties: {
+        slug: datosLugar.slug,
+        nombre: datosLugar.nombre,
+        tipo: datosLugar.tipo,
         conteo
-      };
+      },
+      geometry: { type: 'Point', coordinates: [datosLugar.lon, datosLugar.lat] }
+    };
 
-      if (respuesta.lon && respuesta.lat) {
-        lugares.push(respuesta);
-      }
+    if (conteo > 0) {
+      geojson.features.push(elemento);
     }
+  }
 
-    // Función para crear geojson con lugares y cantidad de proyectos por lugar
-    function procesarDatosMapa() {
-      for (let lugar in lugares) {
-        const conteo = lugares[lugar].conteo;
-
-        const elemento: Feature<Point> = {
-          type: 'Feature',
-          properties: {
-            slug: lugares[lugar].slug,
-            nombre: lugares[lugar].nombre,
-            conteo
-          },
-          geometry: { type: 'Point', coordinates: [lugares[lugar].lon, lugares[lugar].lat] }
-        };
-
-        if (conteo > 0) {
-          geojson.features.push(elemento);
-        }
-      }
-    }
-  });
+  return geojson;
 }
 
-export async function procesarLugaresEgresados(archivo: string, listas: ListasEgresados): Promise<void> {
+function agregarLugarALista(
+  nombre: string,
+  slug: string,
+  lon: number,
+  lat: number,
+  conteo: number,
+  tipo: TiposLugares,
+  lista: Lugar[]
+) {
+  const respuesta: Lugar = {
+    nombre,
+    slug,
+    lon,
+    lat,
+    conteo,
+    tipo
+  };
+
+  if (respuesta.lon && respuesta.lat) {
+    lista.push(respuesta);
+  }
+}
+
+export async function procesarLugares(archivo: string, listas: Listas, listasE: ListasEgresados): Promise<void> {
   return new Promise(async (resolver) => {
     const flujoLugares = await getXlsxStream({
       filePath: archivo,
       sheet: 'lugares',
-      withHeader: false,
+      withHeader: true,
       ignoreEmpty: true
     });
 
-    let numeroFila = 1;
-    const lugares: Lugar[] = [];
-    const geojson: FeatureCollection = { type: 'FeatureCollection', features: [] };
+    const lugaresProyectos: Lugar[] = [];
+    const lugaresEgresados: Lugar[] = [];
 
     flujoLugares.on('data', (fila) => {
-      if (numeroFila > 2) {
-        procesarLugar(fila.formatted.arr);
-      } else {
-      }
+      const datos = fila.formatted.arr;
+      const nombreLugar = datos[0].trim();
+      const slug = slugificar(nombreLugar);
+      const longitud = datos[6];
+      const latitud = datos[5];
 
-      numeroFila++;
+      const mun = listas.municipios.find((m) => m.slug === slug);
+      if (mun) agregarLugarALista(nombreLugar, slug, +longitud, +latitud, mun.conteo, 'municipios', lugaresProyectos);
+
+      const dep = listas.departamentos.find((d) => d.slug === slug);
+      if (dep)
+        agregarLugarALista(nombreLugar, slug, +longitud, +latitud, dep.conteo, 'departamentos', lugaresProyectos);
+
+      const pais = listas.paises.find((p) => p.slug === slug);
+      if (pais) agregarLugarALista(nombreLugar, slug, +longitud, +latitud, pais.conteo, 'paises', lugaresProyectos);
+
+      // Egresados
+      const ciudad = listasE.ciudades.find((c) => c.slug === slug);
+      if (ciudad)
+        agregarLugarALista(nombreLugar, slug, +longitud, +latitud, ciudad.conteo, 'ciudades', lugaresEgresados);
+
+      const paisE = listasE.paises.find((p) => p.slug === slug);
+      if (paisE) agregarLugarALista(nombreLugar, slug, +longitud, +latitud, paisE.conteo, 'paises', lugaresEgresados);
     });
 
     flujoLugares.on('close', () => {
-      procesarDatosMapaEgresados();
-      guardarJSON(geojson, 'datosMapaEgresados.geo');
-      console.log('listo');
+      guardarJSON(procesarDatosMapa(lugaresProyectos), 'datosMapa.geo');
+      guardarJSON(procesarDatosMapa(lugaresEgresados), 'datosMapaEgresados.geo');
       resolver();
     });
-
-    function procesarLugar(fila: string[]) {
-      const nombreLugar = fila[0].trim();
-      const slug = slugificar(nombreLugar);
-      const longitud = fila[6];
-      const latitud = fila[5];
-      const lugar = listas.ciudades.filter((elemento) => elemento.slug === slug);
-      const conteo = lugar[0] ? lugar[0].conteo : 0;
-
-      const respuesta: Lugar = {
-        nombre: nombreLugar,
-        slug: slug,
-        lon: +longitud,
-        lat: +latitud,
-        conteo
-      };
-
-      if (respuesta.lon && respuesta.lat) {
-        lugares.push(respuesta);
-      }
-    }
-
-    // Función para crear geojson con lugares y cantidad de proyectos por lugar
-    function procesarDatosMapaEgresados() {
-      for (let lugar in lugares) {
-        const conteo = lugares[lugar].conteo;
-
-        const elemento: Feature<Point> = {
-          type: 'Feature',
-          properties: {
-            slug: lugares[lugar].slug,
-            nombre: lugares[lugar].nombre,
-            conteo
-          },
-          geometry: { type: 'Point', coordinates: [lugares[lugar].lon, lugares[lugar].lat] }
-        };
-
-        if (conteo > 0) {
-          geojson.features.push(elemento);
-        }
-      }
-    }
   });
 }

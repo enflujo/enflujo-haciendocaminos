@@ -1,25 +1,7 @@
 import { getXlsxStream } from 'xlstream';
 import slugificar from 'slug';
-import type { DefinicionSimple, ElementoLista, CamposEgresados } from '../src/tipos.js';
+import type { DefinicionSimple, ElementoLista, CamposEgresados, ListasEgresados, Egresado } from '../src/tipos.js';
 import { guardarJSON, ordenarListaObjetos } from './ayudas.js';
-
-export interface Egresado {
-  id: number;
-  nombre: string;
-  graduacion?: string;
-  institucion?: DefinicionSimple;
-  temas?: DefinicionSimple[];
-  ambitos?: DefinicionSimple[];
-  ciudades?: DefinicionSimple[];
-  paises?: DefinicionSimple[];
-}
-
-export interface ListasEgresados {
-  temas: ElementoLista[];
-  ambitos: ElementoLista[];
-  paises: ElementoLista[];
-  ciudades: ElementoLista[];
-}
 
 const camposMultiplesEgresados: CamposEgresados = [
   { llave: 'ambitos', indice: 4 },
