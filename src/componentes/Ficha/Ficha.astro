@@ -150,7 +150,7 @@ const secciones = [
   };
 
   botonCerrarFicha.onclick = () => {
-    ficha.style.display = 'none';
+    datosFicha.setKey('visible', false);
     window.history.pushState({}, '', decodeURIComponent(window.location.pathname));
     filtrarMapa();
   };

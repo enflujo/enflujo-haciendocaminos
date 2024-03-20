@@ -104,6 +104,7 @@ export interface ElementoEgresado {
 }
 
 export interface RelacionesFicha {
+  años?: ElementoFicha[];
   paises?: ElementoFicha[];
   categorias?: ElementoFicha[];
   lideres?: ElementoFicha[];
@@ -134,7 +135,7 @@ export interface Ficha extends RelacionesFicha {
 }
 
 // Tipos egresados
-export type CamposEgresados = { llave: LLavesMultiplesEgresados; indice: number }[];
+export type CamposEgresados = { llave: LLavesMultiplesEgresados | 'graduacion'; indice: number }[];
 export type LLavesMultiplesEgresados = 'ambitos' | 'temas' | 'paises' | 'ciudades';
 
 export interface ElementoListaEgresados {
@@ -163,7 +164,7 @@ export interface PersonaID {
 export interface Egresado {
   id: number;
   nombre: string;
-  graduacion?: string;
+  graduacion?: DefinicionSimple;
   institucion?: DefinicionSimple;
   temas?: DefinicionSimple[];
   ambitos?: DefinicionSimple[];
@@ -176,4 +177,5 @@ export interface ListasEgresados {
   ambitos: ElementoLista[];
   paises: ElementoLista[];
   ciudades: ElementoLista[];
+  graduacion: ElementoLista[];
 }

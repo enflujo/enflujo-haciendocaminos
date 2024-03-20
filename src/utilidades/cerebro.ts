@@ -29,6 +29,8 @@ export const geoEgresados = map<FeatureCollection<Point>>();
 export const elementoSeleccionado = map<{ tipo: string; id: string }>();
 export const opcionesBuscador = atom<ElementoBuscador[] | null>(null);
 export const vista = atom<'proyectos' | 'egresados' | null>(null);
+export const datosLinea = map<{ años: string[]; decadas: string[] }>();
+
 let _copiaDatosMapa: FeatureCollection<Point>;
 let _copiaDatosMapaEgresados: FeatureCollection<Point>;
 
@@ -52,7 +54,7 @@ export const nombresListasEgresados = {
   paises: 'Países',
   temas: 'Áreas',
   municipios: 'Municipios',
-  años: 'Años',
+  graduacion: 'Año de Graduación',
   egresado: 'Egresado/a',
   ambitos: 'Ámbitos',
   ciudades: 'Ciudades'
@@ -239,6 +241,15 @@ elementoSeleccionado.subscribe((elemento) => {
 
       buscarLugares('proyectos', datosProyecto);
 
+      if (datosProyecto.años?.años) {
+        datosLinea.setKey(
+          'años',
+          datosProyecto.años.años.map((a) => `${a}`)
+        );
+      } else {
+        datosLinea.setKey('años', []);
+      }
+
       datosFicha.set({
         visible: true,
         lista: 'Proyecto',
@@ -276,6 +287,15 @@ elementoSeleccionado.subscribe((elemento) => {
         actualizarLugar(tipo, datos.slug, datos.conteo, datos.relaciones);
         const relaciones: RelacionesFicha = agruparRelaciones('proyectos', datos.relaciones, listas);
 
+        if (relaciones.años) {
+          datosLinea.setKey(
+            'años',
+            relaciones.años.map((obj) => obj.nombre)
+          );
+        } else {
+          datosLinea.setKey('años', []);
+        }
+
         datosFicha.set({
           visible: true,
           lista: nombresListasProyectos[tipo as keyof Listas],
@@ -294,7 +314,8 @@ elementoSeleccionado.subscribe((elemento) => {
           decadas: relaciones.decadas ? relaciones.decadas : [],
           proyecto: proyectos,
           academia: datos.academia ? datos.academia : undefined,
-          descripcion: datos.descripcion ? datos.descripcion : ''
+          descripcion: datos.descripcion ? datos.descripcion : '',
+          años: relaciones.años ? relaciones.años : []
         });
       }
     }
@@ -304,6 +325,12 @@ elementoSeleccionado.subscribe((elemento) => {
       if (!datosEgresado) return;
 
       buscarLugares('egresados', datosEgresado);
+      // no funciona aún
+      if (datosEgresado.graduacion) {
+        datosLinea.setKey('años', [datosEgresado.graduacion.nombre]);
+      } else {
+        datosLinea.setKey('años', []);
+      }
 
       datosFicha.set({
         visible: true,
@@ -330,6 +357,15 @@ elementoSeleccionado.subscribe((elemento) => {
 
         actualizarLugar(tipo, datos.slug, datos.conteo, datos.relaciones);
         const relaciones: RelacionesFicha = agruparRelaciones('egresados', datos.relaciones, listas);
+        console.log(datos);
+        // if (relaciones.años) {
+        //   datosLinea.setKey(
+        //     'años',
+        //     relaciones.años.map((obj) => obj.nombre)
+        //   );
+        // } else {
+        //   datosLinea.setKey('años', []);
+        // }
 
         datosFicha.set({
           visible: true,
