@@ -2,11 +2,33 @@
 
 ---
 
+<div id="leyendaMapa">
+  <div class="elementoLeyenda">
+    <span class="color varios"></span>
+    <span class="nombre">Múltiples Lugares</span>
+  </div>
+
+  <div class="elementoLeyenda">
+    <span class="color ciudades"></span>
+    <span class="nombre">Ciudades / Municipios</span>
+  </div>
+
+  <div class="elementoLeyenda">
+    <span class="color departamentos"></span>
+    <span class="nombre">Departamentos</span>
+  </div>
+
+  <div class="elementoLeyenda">
+    <span class="color paises"></span>
+    <span class="nombre">Países</span>
+  </div>
+</div>
+
 <div id="contenedorMapa"></div>
 
 <script>
   import mapbox from 'mapbox-gl';
-  import { GeoJSONSource, type Map } from 'mapbox-gl';
+  import type { Expression, GeoJSONSource, Map } from 'mapbox-gl';
   import { actualizarUrl, datosListas, datosListasEgresados, geo } from '@/utilidades/cerebro';
   import 'mapbox-gl/dist/mapbox-gl.css';
   import { vista } from '@/utilidades/cerebro';
@@ -18,6 +40,29 @@
   const contenedorMapa = document.getElementById('contenedorMapa') as HTMLDivElement;
   const estilo = 'mapbox://styles/enflujo/clpcruhsj005z01qr10czhk1d';
   mapbox.accessToken = 'pk.eyJ1IjoiZW5mbHVqbyIsImEiOiJjbDNrOXNndXQwMnZsM2lvNDd4N2x0M3dvIn0.eWs4BHs67PcETEUI00T66Q';
+
+  const estilos = getComputedStyle(document.documentElement);
+
+  const colores = {
+    varios: estilos.getPropertyValue('--colorVarios'),
+    ciudades: estilos.getPropertyValue('--colorCiudades'),
+    departamentos: estilos.getPropertyValue('--colorDepartamentos'),
+    paises: estilos.getPropertyValue('--colorPaises')
+  };
+
+  const configColorLugar: Expression = [
+    'match',
+    ['get', 'tipo'],
+    'ciudades',
+    colores.ciudades,
+    'municipios',
+    colores.ciudades,
+    'departamentos',
+    colores.departamentos,
+    'paises',
+    colores.paises,
+    '#ccc'
+  ];
 
   geo.subscribe((datosGeo) => {
     if (!Object.keys(datosGeo).length) return;
@@ -80,7 +125,7 @@
         source: 'ubicaciones',
         filter: ['has', 'point_count'],
         paint: {
-          'circle-stroke-color': '#ff00ff',
+          'circle-stroke-color': colores.varios,
           'circle-stroke-width': 3,
           /**
            * ['step'] | A diferencia de "interpolate", "step" crea una serie de puntos donde algo debe cambiar.
@@ -89,7 +134,7 @@
            * anchoMin, corte1, ancho1, corte2, ancho2, ....
            */
           'circle-radius': ['interpolate', ['linear'], ['get', 'conteo'], 1, 15, 100, 80],
-          'circle-color': '#ff00ff',
+          'circle-color': colores.varios,
           'circle-opacity': 0.05
         }
       });
@@ -122,10 +167,8 @@
         source: 'ubicaciones',
         filter: ['!', ['has', 'point_count']], // Cuando NO tiene "point_count" ya no es un grupo y es sólo 1 punto.
         paint: {
-          'circle-stroke-color': '#ff00ff',
-          'circle-color': '#ff00ff',
+          'circle-color': configColorLugar,
           'circle-radius': 7,
-          'circle-stroke-width': 0,
           'circle-opacity': 1
         }
       });
@@ -150,7 +193,7 @@
           ]
         },
         paint: {
-          'text-color': '#ff00ff',
+          'text-color': configColorLugar,
           'text-translate': [0, -15]
         }
       });
@@ -250,6 +293,42 @@
 </script>
 
 <style>
+  #leyendaMapa {
+    position: fixed;
+    top: calc(var(--altoMenu) + 10px);
+    left: 10px;
+    z-index: 2;
+    font-size: 0.7em;
+    background-color: rgba(217, 221, 219, 0.8);
+    padding: 10px;
+
+    .color {
+      width: 10px;
+      height: 10px;
+      display: inline-block;
+      vertical-align: middle;
+      border-radius: 50%;
+      margin-right: 2px;
+
+      &.ciudades {
+        background-color: var(--colorCiudades);
+      }
+
+      &.departamentos {
+        background-color: var(--colorDepartamentos);
+      }
+
+      &.paises {
+        background-color: var(--colorPaises);
+      }
+
+      &.varios {
+        background-color: rgba(255, 255, 255, 0.5);
+        border: 2px solid var(--colorVarios);
+      }
+    }
+  }
+
   #contenedorMapa {
     position: absolute;
     top: 0;

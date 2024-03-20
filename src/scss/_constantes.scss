@@ -35,6 +35,12 @@ $corte4: 1333px;
   --altoMenu: 50px;
   --altoLineaTiempo: 80px;
   --anchoLineaTiempo: 420%;
+
+  // Colores mapa
+  --colorVarios: #ff00ff;
+  --colorCiudades: #1089e0;
+  --colorDepartamentos: #e09b10;
+  --colorPaises: #b068f7;
 }
 
 @supports (font-variation-settings: normal) {
