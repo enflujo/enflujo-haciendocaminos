@@ -6,16 +6,20 @@ const secciones = [
   { nombre: 'Enlaces', slug: 'enlaces' },
   { nombre: 'Proyectos', slug: 'proyecto' },
   { nombre: 'Egresados', slug: 'egresado' },
-  { nombre: 'Países', slug: 'paises' },
-  { nombre: 'Categorías', slug: 'categorias' },
+
   { nombre: 'Líderes de Proyectos', slug: 'lideres' },
   { nombre: 'Participantes', slug: 'participantes' },
+
+  { nombre: 'Categorías', slug: 'categorias' },
   { nombre: 'Ramas', slug: 'ramas' },
   { nombre: 'Áreas', slug: 'temas' },
   { nombre: 'Ámbitos', slug: 'ambitos' }, // Egresados
   { nombre: 'Objetos de Análisis', slug: 'objetos' },
   { nombre: 'Ciudades', slug: 'ciudades' },
-  { nombre: 'Regiones / Municipios / Lugares', slug: 'municipios' },
+  { nombre: 'Municipios / Lugares', slug: 'municipios' },
+  { nombre: 'Departamentos', slug: 'departamentos' },
+  { nombre: 'Regiones', slug: 'regiones' },
+  { nombre: 'Países', slug: 'paises' },
   { nombre: 'Décadas', slug: 'decadas' }
 ];
 ---
@@ -211,6 +215,8 @@ const secciones = [
 
     llenarCampos('objetos', datos, vistaActual);
     llenarCampos('municipios', datos, vistaActual);
+    llenarCampos('departamentos', datos, vistaActual);
+    llenarCampos('regiones', datos, vistaActual);
     llenarCampos('decadas', datos, vistaActual);
 
     /** Campos de Egresados */

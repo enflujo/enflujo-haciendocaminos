@@ -253,6 +253,8 @@ elementoSeleccionado.subscribe((elemento) => {
         temas: datosProyecto.temas ? datosProyecto.temas : [],
         objetos: datosProyecto.objetos ? datosProyecto.objetos : [],
         municipios: datosProyecto.municipios ? datosProyecto.municipios : [],
+        departamentos: datosProyecto.departamentos ? datosProyecto.departamentos : [],
+        regiones: datosProyecto.regiones ? datosProyecto.regiones : [],
         decadas: datosProyecto.decadas ? datosProyecto.decadas : [],
         enlaces: datosProyecto.enlaces ? datosProyecto.enlaces : [],
         imagenes: datosProyecto.imagenes ? datosProyecto.imagenes : []
@@ -287,6 +289,8 @@ elementoSeleccionado.subscribe((elemento) => {
           temas: relaciones.temas ? relaciones.temas : [],
           objetos: relaciones.objetos ? relaciones.objetos : [],
           municipios: relaciones.municipios ? relaciones.municipios : [],
+          departamentos: relaciones.departamentos ? relaciones.departamentos : [],
+          regiones: relaciones.regiones ? relaciones.regiones : [],
           decadas: relaciones.decadas ? relaciones.decadas : [],
           proyecto: proyectos,
           academia: datos.academia ? datos.academia : undefined,
