@@ -266,8 +266,8 @@
               const indiceLugar = fuente.findIndex((obj) => obj.slug === lugar.properties?.slug);
               const datosLugar = fuente[indiceLugar];
 
-              const enlaceIdeaJulian = document.createElement('a');
-              enlaceIdeaJulian.classList.add('enlaceMapa');
+              const enlaceIdeaJulian = document.createElement('span');
+              enlaceIdeaJulian.classList.add('enlaceMapa', tipo);
               enlaceIdeaJulian.innerText = `${datosLugar?.nombre}: ${datosLugar?.conteo}`;
 
               enlaceIdeaJulian.onclick = () => {
@@ -337,12 +337,26 @@
 
     .listaLugares {
       overflow-y: auto;
-      display: flex;
-      flex-direction: column;
       max-height: 200px;
+      font-family: var(--fuenteParrafo);
+      padding: 1em;
 
       .enlaceMapa {
+        display: block;
         cursor: pointer;
+
+        &.ciudades,
+        &.municipios {
+          color: var(--colorCiudades);
+        }
+
+        &.departamentos {
+          color: var(--colorDepartamentos);
+        }
+
+        &.paises {
+          color: var(--colorPaises);
+        }
       }
     }
   }
