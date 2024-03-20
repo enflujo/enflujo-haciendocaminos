@@ -1,9 +1,8 @@
 import { getXlsxStream } from 'xlstream';
 import slugificar from 'slug';
-import type { Listas, Lugar, TiposLugares } from '../src/tipos.js';
+import type { Listas, ListasEgresados, Lugar, TiposLugares } from '../src/tipos.js';
 import { guardarJSON } from './ayudas.js';
 import type { Feature, FeatureCollection, Point } from 'geojson';
-import type { ListasEgresados } from './egresados.js';
 
 function procesarDatosMapa(lugares: Lugar[]) {
   const geojson: FeatureCollection = { type: 'FeatureCollection', features: [] };

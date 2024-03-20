@@ -74,9 +74,16 @@ const secciones = [
     vista,
     actualizarUrl
   } from '@/utilidades/cerebro';
-  import type { ElementoFicha, ElementoProyecto, Ficha, LLavesMultiples, Listas, LlavesListasEgresados } from '@/tipos';
+  import type {
+    ElementoFicha,
+    ElementoProyecto,
+    Ficha,
+    LLavesMultiples,
+    Listas,
+    ListasEgresados,
+    LlavesListasEgresados
+  } from '@/tipos';
   import { marked } from 'marked';
-  import type { ListasEgresados } from 'procesador/egresados';
   import SeccionFicha from './SeccionFicha';
 
   const ficha = document.getElementById('contenedorFicha') as HTMLDivElement;

@@ -2,9 +2,11 @@ import type {
   Año,
   Campos,
   DefinicionSimple,
+  Egresado,
   ElementoLista,
   LLavesMultiples,
   Listas,
+  ListasEgresados,
   OpcionBuscadorDatos,
   PersonaID,
   Proyecto
@@ -17,7 +19,6 @@ import procesarEgresados from './egresados.js';
 import { existsSync, readdirSync } from 'fs';
 import { resolve } from 'path';
 import { imageSize } from 'image-size';
-import type { Egresado, ListasEgresados } from './egresados.js';
 import procesarPersonas from './personas.js';
 
 const datosEmpiezanEnFila = 2;
