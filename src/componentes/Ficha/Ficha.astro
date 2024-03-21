@@ -6,6 +6,7 @@ const secciones = [
   { nombre: 'Enlaces', slug: 'enlaces' },
   { nombre: 'Proyectos', slug: 'proyecto' },
   { nombre: 'Egresados', slug: 'egresado' },
+  { nombre: 'Año de Graduación', slug: 'graduacion' },
 
   { nombre: 'Líderes de Proyectos', slug: 'lideres' },
   { nombre: 'Participantes', slug: 'participantes' },
@@ -39,12 +40,12 @@ const secciones = [
     </div>
   </section>
 
-  <section id="navegacion">
+  <div id="navegacion">
     <div id="navegacionProyectos">
       <div id="fichaElementoAnterior"><span class="botonNavegacion izquierda"></span></div>
       <div id="fichaElementoSiguiente"><span class="botonNavegacion derecha"></span></div>
     </div>
-  </section>
+  </div>
 
   <section id="inferior">
     <div class="seccionDatos" data-nombre="descripcion">
@@ -150,7 +151,7 @@ const secciones = [
   };
 
   botonCerrarFicha.onclick = () => {
-    ficha.style.display = 'none';
+    datosFicha.setKey('visible', false);
     window.history.pushState({}, '', decodeURIComponent(window.location.pathname));
     filtrarMapa();
   };
@@ -226,6 +227,7 @@ const secciones = [
     llenarCampos('temas', datos, vistaActual);
     llenarCampos('paises', datos, vistaActual);
     llenarCampos('ciudades', datos, vistaActual);
+    llenarCampos('graduacion', datos, vistaActual);
     // Ocultar participantes en ficha de líderes de proyectos
 
     if (datos.lista === 'Líderes de Proyectos') {
@@ -237,7 +239,7 @@ const secciones = [
   });
 
   function llenarCampos(
-    campo: LLavesMultiples | 'proyecto' | 'egresado' | 'ambitos' | 'ciudades',
+    campo: LLavesMultiples | 'proyecto' | 'egresado' | 'ambitos' | 'ciudades' | 'graduacion',
     datos: Ficha,
     vistaActual: 'proyectos' | 'egresados'
   ) {

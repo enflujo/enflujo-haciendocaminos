@@ -49,7 +49,7 @@ a:link {
   z-index: 4;
   position: relative;
   max-width: 400px;
-  height: calc(100vh - 50px);
+  height: calc(100vh - var(--altoMenu) - var(--altoLineaTiempo));
   margin-top: 50px;
   background-color: var(--grisClaro);
   padding: 3rem 2rem;

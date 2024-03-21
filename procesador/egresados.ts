@@ -3,14 +3,13 @@ import slugificar from 'slug';
 import type { DefinicionSimple, ElementoLista, CamposEgresados, ListasEgresados, Egresado } from '../src/tipos.js';
 import { guardarJSON, ordenarListaObjetos } from './ayudas.js';
 
-const camposMultiplesEgresados: CamposEgresados = [
+const camposEgresados: CamposEgresados = [
   { llave: 'ambitos', indice: 4 },
   { llave: 'paises', indice: 6 },
   { llave: 'temas', indice: 3 },
-  { llave: 'ciudades', indice: 5 }
+  { llave: 'ciudades', indice: 5 },
+  { llave: 'graduacion', indice: 1 }
 ];
-
-const camposEgresados = [...camposMultiplesEgresados];
 
 export default async function procesarEgresados(
   archivo: string,
@@ -30,12 +29,13 @@ export default async function procesarEgresados(
 
     flujo.on('data', (fila) => {
       if (numeroFila > 2) {
+        fila.formatted.arr[1] = `${fila.formatted.arr[1]}`;
         const datosFila = fila.formatted.arr;
         const egresado: Egresado = { nombre: datosFila[0].trim(), id: numeroFila - 2 };
 
-        const añoGraduacion = datosFila[1] ? `${datosFila[1]}` : null;
-        if (añoGraduacion && añoGraduacion.trim().toLocaleLowerCase() !== 'no disponible')
-          egresado.graduacion = añoGraduacion.trim();
+        // const añoGraduacion = datosFila[1] ? `${datosFila[1]}` : null;
+        const añoGraduacion = validarValorSingular(datosFila[1], listasEgresados.graduacion);
+        if (añoGraduacion) egresado.graduacion = [añoGraduacion];
 
         const institucion = validarValorSingular(datosFila[2]);
         if (institucion) egresado.institucion = institucion;
@@ -54,11 +54,13 @@ export default async function procesarEgresados(
 
         egresados.push(egresado);
       }
-
       numeroFila++;
     });
 
     flujo.on('close', () => {
+      for (const lista in listasEgresados) {
+        ordenarListaObjetos(listasEgresados[lista as keyof ListasEgresados], 'slug', true);
+      }
       ordenarListaObjetos(egresados, 'slug', true);
 
       egresados.forEach((egresado) => {
@@ -83,9 +85,10 @@ export default async function procesarEgresados(
 
                 slugsCampoEgresado.forEach((slug) => {
                   const i = listasEgresados[llaveALlenar].findIndex((obj) => obj.slug === slug);
+
                   const elementosDondeConectar = Array.isArray(datosRelacion)
                     ? (datosRelacion as DefinicionSimple[]).map(({ slug }) => slug)
-                    : [datosRelacion];
+                    : [(datosRelacion as DefinicionSimple).slug];
 
                   elementosDondeConectar.forEach((elementoConector) => {
                     const elementoALlenar = listasEgresados[llaveDondeLllenar].find(
@@ -111,6 +114,19 @@ export default async function procesarEgresados(
                       }
                     }
                   });
+                });
+              } else {
+                const elementosDondeConectar = Array.isArray(datosRelacion)
+                  ? (datosRelacion as DefinicionSimple[]).map(({ slug }) => slug)
+                  : [(datosRelacion as DefinicionSimple).slug];
+                elementosDondeConectar.forEach((elementoConector) => {
+                  const elementoALlenar = listasEgresados[llaveDondeLllenar].find(
+                    (obj) => obj.slug === elementoConector
+                  );
+
+                  if (!elementoALlenar?.egresados?.includes(id)) {
+                    elementoALlenar?.egresados?.push(id);
+                  }
                 });
               }
             }

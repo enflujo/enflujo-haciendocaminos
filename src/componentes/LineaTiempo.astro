@@ -9,18 +9,25 @@ interface Props {
 const { decadas, tiempo } = Astro.props;
 
 const numeroDecadas = decadas.length;
-
 const anchoLineaPorcentaje = 98;
 const anchoDecada = anchoLineaPorcentaje / numeroDecadas;
-const posX = (valor: number) => convertirEscala(valor, 1960, 2030, 0, anchoLineaPorcentaje);
+const años = tiempo.map((t) => +t);
+const fechaMin = Math.min(...años);
+const fechaMax = Math.max(...años);
+const inicio = fechaMin - (fechaMin % 10);
+const fin = fechaMax - ((fechaMax % 10) - 10);
+const posX = (valor: number) => convertirEscala(valor, inicio, fin, 0, anchoLineaPorcentaje);
 
-function rango(min: number, max: number): number[] {
+function rango(min: number, max: number) {
   const lon = max - min + 1;
-  const arr = new Array(lon);
+  const arr: { año: number; indice: number }[] = [];
 
   for (let i = 0; i < lon; i++) {
-    arr[i] = min + i;
+    const año = min + i;
+    const indice = tiempo.findIndex((fecha) => fecha === `${año}`);
+    arr.push({ año, indice });
   }
+
   return arr;
 }
 
@@ -44,41 +51,64 @@ const listaAños = rango(1960, 2029);
           ))
         }
       </g>
-
-      <g> </g>
     </svg>
 
     <svg id="marcas" width={`${anchoLineaPorcentaje}%`} height="100%" style={`transform:translateX(2%)`}>
       {
-        listaAños.map((fecha) => (
-          <>
-            <circle
-              class={tiempo.find((nombre) => +nombre === fecha) ? '' : 'desactivado'}
-              style={`transform:translate(${posX(fecha)}%, ${45}%)`}
-              r="4"
-              cx="10"
-              cy="0"
-              stroke="#62e595"
-              stroke-width="1px"
-            />
-          </>
-        ))
-      }
-      {
-        listaAños.map((marca) => (
-          <text
-            class={tiempo.find((nombre) => +nombre === marca) ? '' : 'desactivado'}
-            style={`transform:translate(${posX(+marca)}%, 75%)`}
-            x="0"
-            y="0"
+        listaAños.map((obj) => (
+          <g
+            class={`${tiempo.find((nombre) => +nombre === obj.año) ? 'punto' : 'desactivado'}`}
+            style={`transform:translate(${posX(obj.año)}%, 45%)`}
+            data-año={obj.año}
+            data-indice={obj.indice}
           >
-            {marca}
-          </text>
+            <circle r="4" cx="10" cy="0" stroke="#62e595" stroke-width="1px" />
+            <text class="fecha" style="transform:translateY(25%)" x="0" y="0">
+              {obj.año}
+            </text>
+            <rect x="0" y="-5" width="20" height="28" fill="transparent" />
+          </g>
         ))
       }
     </svg>
   </div>
 </div>
+
+<script>
+  import { actualizarUrl, datosFicha, datosLinea, vista } from '@/utilidades/cerebro';
+  const marcas = document.getElementById('marcas') as HTMLElement & SVGElement;
+  const puntos = marcas.querySelectorAll<SVGGElement>('.punto');
+
+  puntos.forEach((punto) => {
+    punto.onclick = () => {
+      actualizarUrl([
+        { nombre: 'id', valor: punto.dataset.indice as string },
+        { nombre: 'tipo', valor: vista.get() === 'proyectos' ? 'años' : 'graduacion' }
+      ]);
+    };
+  });
+
+  datosLinea.subscribe((datos) => {
+    if (!datos.años?.length) {
+      puntos.forEach((punto) => punto.classList.remove('desactivado'));
+      return;
+    }
+
+    puntos.forEach((punto) => punto.classList.add('desactivado'));
+
+    datos.años.forEach((año) => {
+      const elemento = marcas.querySelector<SVGGElement>(`.punto[data-año="${año}"]`);
+      elemento?.classList.remove('desactivado');
+    });
+  });
+
+  // esto vuelve a activar todos los años cuando se cierra la ficha
+  datosFicha.subscribe((ficha) => {
+    if (!ficha.visible) {
+      datosLinea.setKey('años', []);
+    }
+  });
+</script>
 
 <style lang="scss">
   @import '@/scss/constantes';
@@ -113,14 +143,36 @@ const listaAños = rango(1960, 2029);
       fill: var(--fondoVerdeOscuro);
     }
 
+    .punto {
+      cursor: pointer;
+    }
+
+    .punto,
+    .punto circle {
+      transition: all 0.8s ease-out;
+    }
+
+    .desactivado {
+      opacity: 0.5;
+
+      &:hover {
+        cursor: pointer;
+        opacity: 0.8;
+        circle {
+          opacity: 0.8;
+        }
+      }
+
+      circle {
+        fill: rgba(26, 42, 34, 0.8);
+        opacity: 0.2;
+      }
+    }
+
     text {
       font-size: 0.5em;
       fill: rgba(255, 255, 222, 1);
       text-shadow: 1px 1px 1px rgba(26, 42, 34, 1);
-
-      &.desactivado {
-        opacity: 0.5;
-      }
     }
 
     rect {
@@ -128,17 +180,10 @@ const listaAños = rango(1960, 2029);
         fill: #62e595;
         width: var(--anchoLineaTiempo);
       }
-      &.desactivado {
-        opacity: 0.5;
-      }
     }
 
     circle {
       fill: #62e595;
-      &.desactivado {
-        fill: transparent;
-        opacity: 0.2;
-      }
     }
   }
 

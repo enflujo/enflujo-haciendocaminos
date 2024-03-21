@@ -36,65 +36,64 @@
   </div>
 
   <div class="contenedorLogos">
-    <ul>
-      <li class="bloque">
-        <h3 class="rol">Investigación:</h3>
-        <ul class="nombres">
-          <p>Profesores del Departamento de Antropología</p>
-          <p>Daniel A. Medina</p>
-        </ul>
-        <p class="organizacion">
-          <a href="https://cienciassociales.uniandes.edu.co/" target="_blank">Facultad de Ciencias Sociales</a>
-        </p>
-      </li>
+    <section class="bloque">
+      <h3 class="rol">Investigación:</h3>
 
-      <li class="bloque">
-        <h3 class="rol">Apoyo:</h3>
-        <ul class="nombres">
-          <p>Comunicaciones y posicionamiento</p>
-        </ul>
-        <p class="organizacion">
-          <a href="https://cienciassociales.uniandes.edu.co/" target="_blank">Facultad de Ciencias Sociales</a>
-        </p>
-      </li>
+      <div class="nombres">
+        <p>Profesores del Departamento de Antropología</p>
+        <p>Daniel A. Medina</p>
+      </div>
+      <p class="organizacion">
+        <a href="https://cienciassociales.uniandes.edu.co/" target="_blank">Facultad de Ciencias Sociales</a>
+      </p>
+    </section>
 
-      <li class="bloque">
-        <h3 class="rol">Diseño conceptual y mediación:</h3>
+    <section class="bloque">
+      <h3 class="rol">Apoyo:</h3>
+      <div class="nombres">
+        <p>Comunicaciones y posicionamiento</p>
+      </div>
+      <p class="organizacion">
+        <a href="https://cienciassociales.uniandes.edu.co/" target="_blank">Facultad de Ciencias Sociales</a>
+      </p>
+    </section>
 
-        <a href="https://humanidad.digital" target="_blank">
-          <img
-            class="logo"
-            loading="lazy"
-            src={`${import.meta.env.BASE_URL}/imgs/logo-humanidadDigital.svg`}
-            alt="Logo Colectivo Humanidad Digital"
-          /></a
-        >
-      </li>
+    <section class="bloque">
+      <h3 class="rol">Diseño conceptual y mediación:</h3>
 
-      <li class="bloque">
-        <h3 class="rol">Desarrollo de la visualización:</h3>
-        <a href="https://enflujo.com" target="_blank">
-          <img
-            class="logoEnFlujo"
-            loading="lazy"
-            src={`${import.meta.env.BASE_URL}/imgs/logo_enflujo_blanco.svg`}
-            alt="Logo EnFlujo"
-          /></a
-        >
-      </li>
+      <a href="https://humanidad.digital" target="_blank">
+        <img
+          class="logo"
+          loading="lazy"
+          src={`${import.meta.env.BASE_URL}/imgs/logo-humanidadDigital.svg`}
+          alt="Logo Colectivo Humanidad Digital"
+        /></a
+      >
+    </section>
 
-      <li class="bloqueFinal">
-        <a href="https://uniandes.edu.co/" target="_blank">
-          <img
-            class="logoAndes"
-            loading="lazy"
-            src={`${import.meta.env.BASE_URL}/imgs/logo_andes_blanco.svg`}
-            alt="Logo EnFlujo"
-          /></a
-        >
-        <h4 class="rol">2024</h4>
-      </li>
-    </ul>
+    <section class="bloque">
+      <h3 class="rol">Desarrollo de la visualización:</h3>
+      <a href="https://enflujo.com" target="_blank">
+        <img
+          class="logoEnFlujo"
+          loading="lazy"
+          src={`${import.meta.env.BASE_URL}/imgs/logo_enflujo_blanco.svg`}
+          alt="Logo EnFlujo"
+        /></a
+      >
+    </section>
+
+    <section class="bloqueFinal">
+      <a href="https://uniandes.edu.co/" target="_blank">
+        <img
+          class="logoAndes"
+          loading="lazy"
+          src={`${import.meta.env.BASE_URL}/imgs/logo_andes_blanco.svg`}
+          alt="Logo EnFlujo"
+        /></a
+      >
+      <h4 class="rol">2024</h4>
+    </section>
   </div>
 
   <script>
@@ -181,6 +180,7 @@
 
         .bloque {
           margin-bottom: 2em;
+          font-size: 0.85em;
 
           p {
             margin-top: 0.2em;

@@ -1,7 +1,7 @@
 ---
 import Mapa from '@/componentes/Mapa.astro';
 import Plantilla from '@/plantillas/Plantilla.astro';
-import listas from '../../estaticos/listas.json';
+import listas from '../../estaticos/listasEgresados.json';
 import LineaTiempo from '@/componentes/LineaTiempo.astro';
 import Ficha from '@/componentes/Ficha/Ficha.astro';
 import Cabezote from '@/componentes/Cabezote.astro';
@@ -9,6 +9,17 @@ import EgresadosNombres from '@/componentes/EgresadosNombres.astro';
 import ListasEgresados from '@/componentes/ListasEgresados.astro';
 import PataLogos from '@/componentes/PataLogos.astro';
 import Creditos from '@/componentes/Creditos.astro';
+
+const decadas: string[] = [];
+
+listas.graduacion.forEach((obj) => {
+  const año = +obj.nombre;
+  const decada = `${año - (año % 10)}`;
+
+  if (!decadas.includes(decada)) {
+    decadas.push(decada);
+  }
+});
 ---
 
 <Plantilla>
@@ -20,7 +31,7 @@ import Creditos from '@/componentes/Creditos.astro';
     <ListasEgresados />
     <EgresadosNombres />
     <Mapa />
-    <LineaTiempo tiempo={listas.años.map((obj) => obj.slug)} decadas={listas.decadas.map((obj) => obj.slug)} />
+    <LineaTiempo tiempo={listas.graduacion.map((obj) => obj.slug)} decadas={decadas} />
   </main>
 </Plantilla>
 

@@ -57,7 +57,8 @@ const listasEgresados: ListasEgresados = {
   paises: [],
   temas: [],
   ambitos: [],
-  ciudades: []
+  ciudades: [],
+  graduacion: []
 };
 
 const archivo = './procesador/datos/Listado de proyectos - 60 años dpto antropología .xlsx';
@@ -65,9 +66,7 @@ let personas: PersonaID;
 
 async function procesar() {
   personas = await procesarPersonas(archivo);
-
   const egresados = await procesarEgresados(archivo, listasEgresados);
-
   await procesarProyectos();
   console.log('Proyectos procesados');
   await procesarLugares(archivo, listas, listasEgresados);
