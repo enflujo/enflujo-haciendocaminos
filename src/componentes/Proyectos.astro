@@ -25,11 +25,13 @@ import proyectos from '../../estaticos/proyectos.json';
   const contenidoLista = document.getElementById('contenidoLista') as HTMLUListElement;
   const cajaNombreVista = document.getElementById('cajaNombreVista') as HTMLDivElement;
   const botonListas = document.getElementById('botonListas') as HTMLSpanElement;
+  const contenedorProyectos = document.getElementById('listaProyectos') as HTMLDivElement;
 
   cajaNombreVista.onclick = () => {
     contenidoLista.classList.toggle('oculta');
     botonListas.classList.toggle('abierta');
     cajaNombreVista.classList.toggle('cerrada');
+    contenedorProyectos.classList.toggle('cerrado');
   };
 
   datosProyectos.subscribe((datos) => {

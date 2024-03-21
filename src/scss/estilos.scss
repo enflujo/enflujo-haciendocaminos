@@ -161,6 +161,10 @@ a:link {
   font-size: 0.8em;
   border-radius: 0% 0% 0% 3%;
 
+  &.cerrado {
+    height: 50px;
+  }
+
   #cajaNombreVista {
     background-color: var(--resaltadoVerde);
     position: sticky;

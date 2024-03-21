@@ -25,10 +25,12 @@ import egresados from '../../estaticos/egresados.json';
   const contenidoLista = document.getElementById('contenidoLista') as HTMLUListElement;
   const cajaNombreVista = document.getElementById('cajaNombreVista') as HTMLDivElement;
   const botonListas = document.getElementById('botonListas') as HTMLSpanElement;
+  const contenedorEgresados = document.getElementById('listaProyectos') as HTMLDivElement;
 
   cajaNombreVista.onclick = () => {
     contenidoLista.classList.toggle('oculta');
     botonListas.classList.toggle('abierta');
+    contenedorEgresados.classList.toggle('cerrado');
   };
 
   datosEgresados.subscribe((datos) => {
