@@ -30,6 +30,13 @@ const secciones = [
     <span id="cerrarFicha">X</span>
   </div>
 
+  <div id="navegacion">
+    <div id="navegacionProyectos">
+      <div id="fichaElementoAnterior"><span class="botonNavegacion izquierda"></span></div>
+      <div id="fichaElementoSiguiente"><span class="botonNavegacion derecha"></span></div>
+    </div>
+  </div>
+
   <section id="superior">
     <div id="contenedorCajaSuperior">
       <div id="contenedorTitulo">
@@ -39,13 +46,6 @@ const secciones = [
       <div id="conteoFicha"></div>
     </div>
   </section>
-
-  <div id="navegacion">
-    <div id="navegacionProyectos">
-      <div id="fichaElementoAnterior"><span class="botonNavegacion izquierda"></span></div>
-      <div id="fichaElementoSiguiente"><span class="botonNavegacion derecha"></span></div>
-    </div>
-  </div>
 
   <section id="inferior">
     <div class="seccionDatos" data-nombre="descripcion">
@@ -352,7 +352,6 @@ const secciones = [
     }
 
     #navegacion {
-      margin-bottom: 0.62rem;
       position: sticky;
       top: -10px;
       cursor: pointer;
@@ -398,12 +397,10 @@ const secciones = [
 
     #superior {
       border: 1px solid var(--resaltadoVerde);
-
       display: flex;
       flex-direction: column;
       text-align: center;
       color: var(--textoOscuro);
-
       font-family: var(--fuenteNumeros);
 
       #contenedorCajaSuperior {
@@ -420,7 +417,7 @@ const secciones = [
           flex-basis: 90%;
           margin: 0;
           display: flex;
-          padding: 1.2em 0 0 0;
+          padding: 0 0 1.2em 0;
           gap: 0.15em 0;
           flex-direction: column;
           justify-content: center;
