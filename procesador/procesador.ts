@@ -66,9 +66,7 @@ let personas: PersonaID;
 
 async function procesar() {
   personas = await procesarPersonas(archivo);
-
   const egresados = await procesarEgresados(archivo, listasEgresados);
-
   await procesarProyectos();
   console.log('Proyectos procesados');
   await procesarLugares(archivo, listas, listasEgresados);

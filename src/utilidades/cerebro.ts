@@ -292,6 +292,8 @@ elementoSeleccionado.subscribe((elemento) => {
             'años',
             relaciones.años.map((obj) => obj.nombre)
           );
+        } else if (tipo === 'años') {
+          datosLinea.setKey('años', [datos.nombre]);
         } else {
           datosLinea.setKey('años', []);
         }
@@ -327,7 +329,7 @@ elementoSeleccionado.subscribe((elemento) => {
       buscarLugares('egresados', datosEgresado);
       // no funciona aún
       if (datosEgresado.graduacion) {
-        datosLinea.setKey('años', [datosEgresado.graduacion.nombre]);
+        datosLinea.setKey('años', [datosEgresado.graduacion[0].nombre]);
       } else {
         datosLinea.setKey('años', []);
       }
@@ -340,7 +342,8 @@ elementoSeleccionado.subscribe((elemento) => {
         paises: datosEgresado.paises ? datosEgresado.paises : [],
         temas: datosEgresado.temas ? datosEgresado.temas : [],
         ciudades: datosEgresado.ciudades ? datosEgresado.ciudades : [],
-        ambitos: datosEgresado.ambitos ? datosEgresado.ambitos : []
+        ambitos: datosEgresado.ambitos ? datosEgresado.ambitos : [],
+        graduacion: datosEgresado.graduacion ? datosEgresado.graduacion : []
       });
     } else {
       const listas = datosListasEgresados.value;
@@ -357,15 +360,17 @@ elementoSeleccionado.subscribe((elemento) => {
 
         actualizarLugar(tipo, datos.slug, datos.conteo, datos.relaciones);
         const relaciones: RelacionesFicha = agruparRelaciones('egresados', datos.relaciones, listas);
-        console.log(datos);
-        // if (relaciones.años) {
-        //   datosLinea.setKey(
-        //     'años',
-        //     relaciones.años.map((obj) => obj.nombre)
-        //   );
-        // } else {
-        //   datosLinea.setKey('años', []);
-        // }
+
+        if (relaciones.graduacion) {
+          datosLinea.setKey(
+            'años',
+            relaciones.graduacion.map((obj) => obj.nombre)
+          );
+        } else if (tipo === 'graduacion') {
+          datosLinea.setKey('años', [datos.nombre]);
+        } else {
+          datosLinea.setKey('años', []);
+        }
 
         datosFicha.set({
           visible: true,
@@ -376,7 +381,8 @@ elementoSeleccionado.subscribe((elemento) => {
           temas: relaciones.temas ? relaciones.temas : [],
           ciudades: relaciones.ciudades ? relaciones.ciudades : [],
           egresado: egresados,
-          ambitos: relaciones.ambitos ? relaciones.ambitos : []
+          ambitos: relaciones.ambitos ? relaciones.ambitos : [],
+          graduacion: relaciones.graduacion ? relaciones.graduacion : []
         });
       }
     }

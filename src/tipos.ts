@@ -120,6 +120,7 @@ export interface RelacionesFicha {
   ciudades?: ElementoFicha[];
   regiones?: ElementoFicha[];
   departamentos?: ElementoFicha[];
+  graduacion?: ElementoFicha[];
 }
 
 export interface Ficha extends RelacionesFicha {
@@ -164,7 +165,7 @@ export interface PersonaID {
 export interface Egresado {
   id: number;
   nombre: string;
-  graduacion?: DefinicionSimple;
+  graduacion?: DefinicionSimple[];
   institucion?: DefinicionSimple;
   temas?: DefinicionSimple[];
   ambitos?: DefinicionSimple[];

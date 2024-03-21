@@ -6,6 +6,7 @@ const secciones = [
   { nombre: 'Enlaces', slug: 'enlaces' },
   { nombre: 'Proyectos', slug: 'proyecto' },
   { nombre: 'Egresados', slug: 'egresado' },
+  { nombre: 'Año de Graduación', slug: 'graduacion' },
 
   { nombre: 'Líderes de Proyectos', slug: 'lideres' },
   { nombre: 'Participantes', slug: 'participantes' },
@@ -226,6 +227,7 @@ const secciones = [
     llenarCampos('temas', datos, vistaActual);
     llenarCampos('paises', datos, vistaActual);
     llenarCampos('ciudades', datos, vistaActual);
+    llenarCampos('graduacion', datos, vistaActual);
     // Ocultar participantes en ficha de líderes de proyectos
 
     if (datos.lista === 'Líderes de Proyectos') {
@@ -237,7 +239,7 @@ const secciones = [
   });
 
   function llenarCampos(
-    campo: LLavesMultiples | 'proyecto' | 'egresado' | 'ambitos' | 'ciudades',
+    campo: LLavesMultiples | 'proyecto' | 'egresado' | 'ambitos' | 'ciudades' | 'graduacion',
     datos: Ficha,
     vistaActual: 'proyectos' | 'egresados'
   ) {

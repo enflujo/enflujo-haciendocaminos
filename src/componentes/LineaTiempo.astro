@@ -75,7 +75,7 @@ const listaAños = rango(1960, 2029);
 </div>
 
 <script>
-  import { actualizarUrl, datosFicha, datosLinea } from '@/utilidades/cerebro';
+  import { actualizarUrl, datosFicha, datosLinea, vista } from '@/utilidades/cerebro';
   const marcas = document.getElementById('marcas') as HTMLElement & SVGElement;
   const puntos = marcas.querySelectorAll<SVGGElement>('.punto');
 
@@ -83,7 +83,7 @@ const listaAños = rango(1960, 2029);
     punto.onclick = () => {
       actualizarUrl([
         { nombre: 'id', valor: punto.dataset.indice as string },
-        { nombre: 'tipo', valor: 'años' }
+        { nombre: 'tipo', valor: vista.get() === 'proyectos' ? 'años' : 'graduacion' }
       ]);
     };
   });
@@ -154,6 +154,14 @@ const listaAños = rango(1960, 2029);
 
     .desactivado {
       opacity: 0.5;
+
+      &:hover {
+        cursor: pointer;
+        opacity: 0.8;
+        circle {
+          opacity: 0.8;
+        }
+      }
 
       circle {
         fill: rgba(26, 42, 34, 0.8);
