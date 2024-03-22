@@ -145,6 +145,16 @@ const listaAños = rango(1960, 2029);
 
     .punto {
       cursor: pointer;
+
+      &.desactivado {
+        opacity: 0.7;
+        &:hover {
+          opacity: 0.8;
+          circle {
+            opacity: 0.8;
+          }
+        }
+      }
     }
 
     .punto,
@@ -153,22 +163,13 @@ const listaAños = rango(1960, 2029);
     }
 
     .desactivado {
-      opacity: 0.5;
-
-      &:hover {
-        cursor: pointer;
-        opacity: 0.8;
-        circle {
-          opacity: 0.8;
-        }
-      }
+      opacity: 0.3;
 
       circle {
         fill: rgba(26, 42, 34, 0.8);
         opacity: 0.2;
       }
     }
-
     text {
       font-size: 0.5em;
       fill: rgba(255, 255, 222, 1);
