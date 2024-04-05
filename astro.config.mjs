@@ -7,8 +7,8 @@ export default defineConfig({
   publicDir: './estaticos',
   compressHTML: true,
   outDir: './publico',
-  site: 'https://enflujo.github.io',
-  base: '/enflujo-haciendocaminos',
+  site: 'http://haciendocaminos.uniandes.edu.co',
+  base: '',
   build: {
     assets: 'estaticos'
   },

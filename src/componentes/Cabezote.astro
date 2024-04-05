@@ -6,28 +6,28 @@ const { pathname } = Astro.url;
 const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
 ---
 
-<nav id="menu">
-  <div id="menuListas">
-    <span class="lineaMenu"></span>
-    <span class="lineaMenu"></span>
-    <span class="lineaMenu"></span>
+<nav id='menu'>
+  <div id='menuListas'>
+    <span class='lineaMenu'></span>
+    <span class='lineaMenu'></span>
+    <span class='lineaMenu'></span>
   </div>
 
-  <div id="encabezado">
-    <div id="espacioLogoNombre">
-      <div class="cajaLogo"></div>
+  <div id='encabezado'>
+    <div id='espacioLogoNombre'>
+      <div class='cajaLogo'></div>
       <h1>HACIENDO CAMINOS | DEPARTAMENTO DE ANTROPOLOGÍA</h1>
     </div>
-    <span class="cajaGusanos"></span>
-    <ul class="botonesVista">
-      <li class="botonVista"><a href=`${urlBase}/` class={paginaActual === '' ? 'actual' : ''}>Proyectos</a></li>
-      <li class="botonVista">
-        <a href=`${urlBase}/egresados` class={paginaActual === 'egresados' ? 'actual' : ''}>Egresados</a>
+    <span class='cajaGusanos'></span>
+    <ul class='botonesVista'>
+      <li class='botonVista'><a href=`${urlBase}` class={paginaActual === '' ? 'actual' : ''}>Proyectos</a></li>
+      <li class='botonVista'>
+        <a href=`${urlBase}egresados` class={paginaActual === 'egresados' ? 'actual' : ''}>Egresados</a>
       </li>
     </ul>
 
     <Buscador />
-    <div id="botonCreditos" class="activo">?</div>
+    <div id='botonCreditos' class='activo'>?</div>
   </div>
 </nav>
 
@@ -62,7 +62,7 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
   });
 </script>
 
-<style lang="scss">
+<style lang='scss'>
   @import '@/scss/constantes';
   #menu {
     margin: 0;
@@ -117,7 +117,7 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
         gap: 10px;
 
         .cajaLogo {
-          background-image: url(/enflujo-haciendocaminos/imgs/60-anos_blanco.svg);
+          background-image: url(/imgs/60-anos_blanco.svg);
           height: 35px;
           width: 9vw;
           background-repeat: no-repeat;
@@ -137,7 +137,7 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
 
       .cajaGusanos {
         position: absolute;
-        background-image: url(/enflujo-haciendocaminos/imgs/gusanitos.svg);
+        background-image: url(/imgs/gusanitos.svg);
         height: 50px;
         width: 10vw;
         left: 30vw;
@@ -244,7 +244,7 @@ const paginaActual = pathname.replace(urlBase, '').replaceAll('/', '');
       #encabezado {
         .cajaGusanos {
           position: static;
-          background-image: url(/enflujo-haciendocaminos/imgs/gusanitos.svg);
+          background-image: url(/imgs/gusanitos.svg);
           height: 50px;
           width: 10vw;
           min-width: 70px;

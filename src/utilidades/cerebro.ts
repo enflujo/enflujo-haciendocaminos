@@ -66,32 +66,32 @@ vista.subscribe(async (vistaActual) => {
   if (!vistaActual) return;
 
   if (vistaActual === 'proyectos') {
-    const geoProyectos = await pedirDatos<FeatureCollection<Point>>(`${base}/datosMapa.geo.json`);
+    const geoProyectos = await pedirDatos<FeatureCollection<Point>>(`${base}datosMapa.geo.json`);
     geo.set(geoProyectos);
     _copiaDatosMapa = geoProyectos;
 
-    const listas = await pedirDatos<Listas>(`${base}/listas.json`);
+    const listas = await pedirDatos<Listas>(`${base}listas.json`);
     datosListas.set(listas);
 
-    const proyectos = await pedirDatos<Proyecto[]>(`${base}/proyectos.json`);
+    const proyectos = await pedirDatos<Proyecto[]>(`${base}proyectos.json`);
     datosProyectos.set(proyectos);
 
     revisarVariablesURL();
   } else if (vistaActual === 'egresados') {
-    const geoEgresados = await pedirDatos<FeatureCollection<Point>>(`${base}/datosMapaEgresados.geo.json`);
+    const geoEgresados = await pedirDatos<FeatureCollection<Point>>(`${base}datosMapaEgresados.geo.json`);
     geo.set(geoEgresados);
     _copiaDatosMapaEgresados = geoEgresados;
 
-    const listasEgresados = await pedirDatos<ListasEgresados>(`${base}/listasEgresados.json`);
+    const listasEgresados = await pedirDatos<ListasEgresados>(`${base}listasEgresados.json`);
     datosListasEgresados.set(listasEgresados);
 
-    const egresados = await pedirDatos<Egresado[]>(`${base}/egresados.json`);
+    const egresados = await pedirDatos<Egresado[]>(`${base}egresados.json`);
     datosEgresados.set(egresados);
 
     revisarVariablesURL();
   }
 
-  const datosBuscador = await pedirDatos<OpcionBuscadorDatos[]>(`${base}/datosBuscador.json`);
+  const datosBuscador = await pedirDatos<OpcionBuscadorDatos[]>(`${base}datosBuscador.json`);
   const sugerencias = document.getElementById('sugerencias') as HTMLDataListElement;
   const opciones: ElementoBuscador[] = datosBuscador.map((opcion) => {
     const elemento = document.createElement('li');
@@ -103,7 +103,7 @@ vista.subscribe(async (vistaActual) => {
 
       if (opcion.tipo)
         if (opcion.vista !== vistaActual) {
-          const ruta = opcion.vista === 'proyectos' ? base : `${base}/egresados`;
+          const ruta = opcion.vista === 'proyectos' ? base : `${base}egresados`;
           actualizarUrl(
             [
               { nombre: 'id', valor: opcion.id },
