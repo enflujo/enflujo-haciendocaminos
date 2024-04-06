@@ -17,6 +17,7 @@
     "@astrojs/check": "^0.5.9",
     "@astrojs/sitemap": "^3.1.1",
     "@enflujo/alquimia": "^2.0.0",
+    "D": "^1.0.0",
     "astro": "^4.5.6",
     "astro-robots-txt": "^1.0.0",
     "fuzzysort": "^2.0.4",
@@ -24,6 +25,7 @@
     "marked": "^12.0.1",
     "nanostores": "^0.10.0",
     "photoswipe": "^5.4.3",
+    "schema-dts": "^1.1.2",
     "typescript": "^5.4.2"
   },
   "devDependencies": {
