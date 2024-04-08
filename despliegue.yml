@@ -1,0 +1,44 @@
+name: Despliegue
+
+on:
+  push:
+    branches: ['main']
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: 🐘 Desplegar
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🐯 Obtener código del repositorio
+        uses: actions/checkout@v3
+      - name: 🐝 Usar Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 'lts/*'
+      - name: 🦒 Instalar dependencias y hacer build
+        run: |
+          yarn install --frozen-lockfile
+          yarn build
+      - name: 🐝 Configurar página de GitHub
+        uses: actions/configure-pages@v3
+      - name: 🦅 Enviar archivos
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './publico'
+      - name: 🐘 Desplegar a Github Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
