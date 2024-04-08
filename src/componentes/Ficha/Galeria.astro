@@ -2,8 +2,8 @@
 
 ---
 
-<div class="seccionDatos" id="fichaImagenes">
-  <div id="listaImagenes" class="contenido imagenes"></div>
+<div class='seccionDatos' id='fichaImagenes'>
+  <div id='listaImagenes' class='contenido imagenes'></div>
 </div>
 
 <script>
@@ -34,13 +34,13 @@
       datos.imagenes.forEach((elemento) => {
         const imagenAncho = document.createElement('a');
         imagenAncho.classList.add('imagenAncho');
-        imagenAncho.href = `${urlBase}/imgs/fotos/${datos.id}/${elemento.grande}`;
+        imagenAncho.href = `${urlBase}fotos/${elemento.grande}`;
         imagenAncho.setAttribute('data-pswp-width', `${elemento.ancho}`);
         imagenAncho.setAttribute('data-pswp-height', `${elemento.alto}`);
 
         const imagen = document.createElement('img');
         imagen.classList.add('imagenFicha');
-        imagen.src = `${urlBase}/imgs/fotos/${datos.id}/${elemento.peque}`;
+        imagen.src = `${urlBase}fotos/${elemento.peque}`;
         imagen.alt = '';
 
         imagenAncho.appendChild(imagen);
