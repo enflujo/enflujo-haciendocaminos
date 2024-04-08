@@ -25,40 +25,38 @@ const secciones = [
 ];
 ---
 
-<div id='contenedorFicha'>
-  <div id='botonesFicha'>
-    <span id='cerrarFicha'>X</span>
+<div id="contenedorFicha">
+  <div id="botonesFicha">
+    <span id="cerrarFicha">X</span>
   </div>
 
-  <div id='navegacion'>
-    <div id='navegacionProyectos'>
-      <div id='fichaElementoAnterior'><span class='botonNavegacion izquierda'></span></div>
-      <div id='fichaElementoSiguiente'><span class='botonNavegacion derecha'></span></div>
+  <div id="navegacion">
+    <div id="navegacionProyectos">
+      <div id="fichaElementoAnterior"><span class="botonNavegacion izquierda"></span></div>
+      <div id="fichaElementoSiguiente"><span class="botonNavegacion derecha"></span></div>
     </div>
   </div>
 
-  <section id='superior'>
-    <div id='contenedorCajaSuperior'>
-      <div id='contenedorTitulo'>
-        <h2 id='listaFicha'></h2>
-        <p id='tituloFicha'></p>
+  <section id="superior">
+    <div id="contenedorCajaSuperior">
+      <div id="contenedorTitulo">
+        <h2 id="listaFicha"></h2>
+        <p id="tituloFicha"></p>
       </div>
-      <div id='conteoFicha'></div>
+      <div id="conteoFicha"></div>
     </div>
   </section>
 
-  <section id='inferior'>
-    <div class='seccionDatos' data-nombre='descripcion'>
-      <p class='contenido descripcion'></p>
-    </div>
+  <section id="inferior">
+    <div class="seccionDatos descripcion" data-nombre="descripcion"></div>
 
     <Red />
 
     {
       secciones.map((seccion) => (
-        <enflujo-seccion-ficha class='seccionDatos seccionFicha' data-nombre={seccion.slug}>
-          <h3 class='titulo'>{seccion.nombre}</h3>
-          <ul class='contenido' />
+        <enflujo-seccion-ficha class="seccionDatos seccionFicha" data-nombre={seccion.slug}>
+          <h3 class="titulo">{seccion.nombre}</h3>
+          <ul class="contenido" />
         </enflujo-seccion-ficha>
       ))
     }
@@ -102,7 +100,6 @@ const secciones = [
   const contenedorDescripcion = ficha.querySelector<HTMLDivElement>(
     '.seccionDatos[data-nombre="descripcion"]'
   ) as HTMLDivElement;
-  const descripcionFicha = contenedorDescripcion.querySelector('p') as HTMLParagraphElement;
   const seccionEnlaces = ficha.querySelector<SeccionFicha>('.seccionDatos[data-nombre="enlaces"]') as SeccionFicha;
 
   // Cargar ficha anterior o ficha siguiente al hace click en los botones
@@ -179,8 +176,8 @@ const secciones = [
 
     // Llenar descripción, si tiene
     if (datos.descripcion) {
-      contenedorDescripcion.style.display = 'flex';
-      descripcionFicha.innerHTML = marked.parse(datos.descripcion) as string;
+      contenedorDescripcion.style.display = 'block';
+      contenedorDescripcion.innerHTML = marked.parse(datos.descripcion) as string;
     } else {
       contenedorDescripcion.style.display = 'none';
     }
@@ -294,7 +291,7 @@ const secciones = [
   }
 </script>
 
-<style lang='scss' is:global>
+<style lang="scss" is:global>
   @import '@/scss/constantes';
 
   #contenedorFicha {
@@ -454,15 +451,6 @@ const secciones = [
       gap: 10px;
       align-self: stretch;
 
-      li {
-        cursor: pointer;
-        &:hover,
-        &.resaltado {
-          background-color: var(--fondoAmarilloClaro);
-          color: var(--textoOscuro);
-        }
-      }
-
       .seccionDatos {
         display: none;
         border-bottom: 1px solid var(--resaltadoVerde);
@@ -485,23 +473,41 @@ const secciones = [
           flex: 1 0 0;
           align-self: stretch;
 
+          ul {
+            max-width: 59%;
+          }
+
           li {
+            cursor: pointer;
             margin-bottom: 0.5em;
+            &:hover,
+            &.resaltado {
+              background-color: var(--fondoAmarilloClaro);
+              color: var(--textoOscuro);
+            }
           }
         }
 
-        .descripcion {
+        &.descripcion {
           font-size: 0.8em;
-          margin: 1.5rem;
-          max-width: 92%;
+          // max-width: 92%;
 
           p {
             font-size: 1.1em;
-
             line-height: 1.4em;
           }
           h2 {
             font-size: 1.2em;
+          }
+
+          ul {
+            max-width: 100%;
+            list-style-type: disc;
+
+            li {
+              cursor: default;
+              margin-bottom: 1.3em;
+            }
           }
         }
 
@@ -542,10 +548,6 @@ const secciones = [
 
         &.oculta {
           display: none;
-        }
-
-        ul {
-          max-width: 59%;
         }
       }
 
