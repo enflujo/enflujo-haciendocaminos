@@ -25,11 +25,10 @@ jobs:
           yarn install --frozen-lockfile
           yarn build
       - name: 🦅 Enviar por SFTP
-        uses: wangyucode/sftp-upload-action@v2.0.2
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          host: ${{ secrets.DOMINIO }}
+          server: ${{ secrets.DOMINIO }}
           username: ${{ secrets.USUARIO }}
           password: ${{ secrets.CLAVE }}
-          localDir: 'publico'
-          remoteDir: '/'
-          removeExtraFilesOnServer: true
+          local-dir: './publico'
+          dangerous-clean-slate: true
