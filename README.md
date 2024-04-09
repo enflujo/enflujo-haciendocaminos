@@ -9,13 +9,11 @@
 
 Haciendo Caminos es la historia del Departamento de Antropología de la Universidad de Los Andes contada a través de los proyectos de investigación que sus profesores y estudiantes han realizado desde su creación.
 
-## Actualizar datos
-
 Para poder actualizar el sitio debe tener una copia local de este repositorio.
 
-### Copia local del repositorio
+## Hacer una copia local del repositorio
 
-Debe tener instalado las siguientes aplicaciones:
+Deben tener instaladas en el computador las siguientes aplicaciones:
 
 - <a href="https://nodejs.org/en/learn/getting-started/how-to-install-nodejs" target="_blank">Node.js</a>
 - <a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git" target="_blank">Git</a>
@@ -25,11 +23,40 @@ Debe tener instalado las siguientes aplicaciones:
 npm i yarn -g
 ```
 
-Fork
+### Fork
+
+Desde el repositorio original hacer un *fork* a la cuenta de GitHub personal:
+
+![fork](https://github.com/enflujo/enflujo-haciendocaminos/assets/5365329/57d8579b-f6a2-4228-bd66-761d59e2910d)
+
+Una vez hecho el fork, clonar el repositorio:
+- Copiar la url del repositorio que sale en el botón `< > Code`:
+
+  ![fork2](https://github.com/enflujo/enflujo-haciendocaminos/assets/5365329/0a26c4b9-dc2c-4f7c-b259-b839ed21e567)
+
+- En la terminal, ubicados en la carpeta en la que queremos guardar el proyecto, correr el siguiente comando:
 
 ```bash
-
+git clone <url-del-repositorio-que-acabamos-de-copiar>
 ```
+
+ej. (reemplazar la url por la propia):
+
+```bash
+git clone https://github.com/anattolia/enflujo-haciendocaminos.git
+```
+- Una vez clonado, entrar a la carpeta:
+
+```bash
+cd enflujo-haciendocaminos
+```
+- Y  correr yarn desde la terminal para instalar las dependiencias:
+  
+```bash
+yarn
+```
+
+## Reemplazar los datos
 
 ### Paso 1: Descargar y reemplazar archivo de Excel.
 
@@ -56,7 +83,7 @@ Se deben copiar a la siguiente carpeta:
 
 ### Paso 2: Procesar datos
 
-Correr el siguiente comando en la terminal:
+Ubicados en la carpeta donde clonamos el repositorio, correr el siguiente comando en la terminal:
 
 ```bash
 yarn procesar
@@ -66,13 +93,32 @@ Cuando vea el mensaje `🦊 FIN 🦚` significa que ya se procesaron todos los d
 
 ### Paso 3: Enviar actualización
 
-Pull request
-
+- Alistar todos los archivos que se cambiaron para enviarlos al repositorio remoto:
+  
 ```bash
-
+git add .
+```
+- Dejar un mensaje explicando qué cambió (el mensaje entre comillas puede cambiarse):
+  
+```bash
+git commit -m "Actualización de datos e imágenes"
 ```
 
-## Problemas con librería Sharp
+Enviar los cambios al repositorio remoto:
+
+```bash
+git push
+```
+
+### Hacer un *pull request*
+
+Desde el repositorio donde hicimos el *fork* solicitar la integración de los cambios haciendo un *pull request*:
+
+![pull-request](https://github.com/enflujo/enflujo-haciendocaminos/assets/5365329/2c7eebc1-1276-486b-90dc-11b3c9490968)
+
+
+
+## Posibles problemas con librería Sharp
 
 A veces la librería que procesa las imágenes no funciona, probar el siguiente comando para que se instale bien en Windows y Linux.
 
