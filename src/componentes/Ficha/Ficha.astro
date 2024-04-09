@@ -25,38 +25,38 @@ const secciones = [
 ];
 ---
 
-<div id="contenedorFicha">
-  <div id="botonesFicha">
-    <span id="cerrarFicha">X</span>
+<div id='contenedorFicha'>
+  <div id='botonesFicha'>
+    <span id='cerrarFicha'>X</span>
   </div>
 
-  <div id="navegacion">
-    <div id="navegacionProyectos">
-      <div id="fichaElementoAnterior"><span class="botonNavegacion izquierda"></span></div>
-      <div id="fichaElementoSiguiente"><span class="botonNavegacion derecha"></span></div>
+  <div id='navegacion'>
+    <div id='navegacionProyectos'>
+      <div id='fichaElementoAnterior'><span class='botonNavegacion izquierda'></span></div>
+      <div id='fichaElementoSiguiente'><span class='botonNavegacion derecha'></span></div>
     </div>
   </div>
 
-  <section id="superior">
-    <div id="contenedorCajaSuperior">
-      <div id="contenedorTitulo">
-        <h2 id="listaFicha"></h2>
-        <p id="tituloFicha"></p>
+  <section id='superior'>
+    <div id='contenedorCajaSuperior'>
+      <div id='contenedorTitulo'>
+        <h2 id='listaFicha'></h2>
+        <p id='tituloFicha'></p>
       </div>
-      <div id="conteoFicha"></div>
+      <div id='conteoFicha'></div>
     </div>
   </section>
 
-  <section id="inferior">
-    <div class="seccionDatos descripcion" data-nombre="descripcion"></div>
+  <section id='inferior'>
+    <div class='seccionDatos descripcion' data-nombre='descripcion'></div>
 
     <Red />
 
     {
       secciones.map((seccion) => (
-        <enflujo-seccion-ficha class="seccionDatos seccionFicha" data-nombre={seccion.slug}>
-          <h3 class="titulo">{seccion.nombre}</h3>
-          <ul class="contenido" />
+        <enflujo-seccion-ficha class='seccionDatos seccionFicha' data-nombre={seccion.slug}>
+          <h3 class='titulo'>{seccion.nombre}</h3>
+          <ul class='contenido' />
         </enflujo-seccion-ficha>
       ))
     }
@@ -184,6 +184,7 @@ const secciones = [
 
     // Llenar enlaces, si tiene
     if (datos.enlaces && datos.enlaces.length) {
+      seccionEnlaces.limpiar();
       seccionEnlaces.mostrar();
 
       datos.enlaces.forEach((elemento) => {
@@ -291,7 +292,7 @@ const secciones = [
   }
 </script>
 
-<style lang="scss" is:global>
+<style lang='scss' is:global>
   @import '@/scss/constantes';
 
   #contenedorFicha {
@@ -528,22 +529,9 @@ const secciones = [
           flex-direction: row;
           justify-content: space-around;
         }
+
         .imagenFicha {
-          position: relative;
-          width: 100%;
-          margin: 0.62em 0;
-        }
-
-        .imagenAncho {
-          position: relative;
-          width: 100%;
-          margin: 0.62em 0;
-        }
-
-        .imagenAncho {
-          position: relative;
-          width: 45%;
-          margin: 0.62em 0;
+          max-width: 100%;
         }
 
         &.oculta {

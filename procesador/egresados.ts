@@ -1,7 +1,7 @@
 import { getXlsxStream } from 'xlstream';
 import slugificar from 'slug';
 import type { DefinicionSimple, ElementoLista, CamposEgresados, ListasEgresados, Egresado } from '../src/tipos.js';
-import { guardarJSON, ordenarListaObjetos } from './ayudas.js';
+import { guardarJSON, ordenarListaObjetos, separarPartes } from './ayudas.js';
 
 const camposEgresados: CamposEgresados = [
   { llave: 'ambitos', indice: 4 },
@@ -33,7 +33,6 @@ export default async function procesarEgresados(
         const datosFila = fila.formatted.arr;
         const egresado: Egresado = { nombre: datosFila[0].trim(), id: numeroFila - 2 };
 
-        // const añoGraduacion = datosFila[1] ? `${datosFila[1]}` : null;
         const añoGraduacion = validarValorSingular(datosFila[1], listasEgresados.graduacion);
         if (añoGraduacion) egresado.graduacion = [añoGraduacion];
 
@@ -134,7 +133,6 @@ export default async function procesarEgresados(
         });
       });
 
-      console.log('fin egresados');
       guardarJSON(egresados, 'egresados');
       guardarJSON(listasEgresados, 'listasEgresados');
       resolver(egresados);
@@ -168,7 +166,8 @@ export default async function procesarEgresados(
 
   function validarValorMultiple(valor: string, lista: ElementoLista[]) {
     if (!valor) return null;
-    const partes = `${valor}`.trim().split(',');
+    const partes = separarPartes(valor);
+    console.log(partes);
     const respuesta: DefinicionSimple[] = [];
 
     partes.forEach((elemento) => {

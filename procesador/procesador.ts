@@ -13,13 +13,12 @@ import type {
 } from '../src/tipos.ts';
 import { getXlsxStream } from 'xlstream';
 import slugificar from 'slug';
-import { enMinusculas, guardarJSON, ordenarListaObjetos } from './ayudas.js';
+import { enMinusculas, guardarJSON, logBloque, mensajeExito, ordenarListaObjetos, separarPartes } from './ayudas.js';
 import { procesarLugares } from './lugares.js';
 import procesarEgresados from './egresados.js';
-import { existsSync, readdirSync } from 'fs';
-import { resolve } from 'path';
-import { imageSize } from 'image-size';
 import procesarPersonas from './personas.js';
+import { analizarCarpetaImagenes, procesarImagenes } from './imagenes.js';
+import { emojify } from 'node-emoji';
 
 const datosEmpiezanEnFila = 2;
 const campos: Campos = [
@@ -60,25 +59,36 @@ const listasEgresados: ListasEgresados = {
   ciudades: [],
   graduacion: []
 };
+export interface Errata {
+  tipo: string;
+  fila: number;
+  mensaje: string;
+}
+
+const errata: Errata[] = [];
 
 const archivo = './procesador/datos/Listado de proyectos - 60 años dpto antropología .xlsx';
 let personas: PersonaID;
 
 async function procesar() {
+  await analizarCarpetaImagenes(errata);
   personas = await procesarPersonas(archivo);
   const egresados = await procesarEgresados(archivo, listasEgresados);
+  mensajeExito('Egresados procesados');
   await procesarProyectos();
-  console.log('Proyectos procesados');
+  mensajeExito('Proyectos procesados');
   await procesarLugares(archivo, listas, listasEgresados);
-  console.log('fin de lugares');
+  mensajeExito('Lugares procesados');
   procesarDatosBuscador(egresados);
-  console.log('listos datos buscador');
+  mensajeExito('Datos buscador');
   await agregarDescripciones();
-  console.log('listas descripciones áreas');
+  mensajeExito('Descripciones áreas');
   await agregarDescripcionesRamas();
-  console.log('listas descripciones ramas');
+  mensajeExito('Descripciones ramas');
   guardarJSON(listas, 'listas');
-  console.log('fin');
+  console.log(emojify(':fox_face:'), logBloque('FIN'), emojify(':peacock:'));
+
+  guardarJSON(errata, 'errata');
 }
 
 procesar().catch(console.error);
@@ -191,7 +201,7 @@ async function procesarProyectos(): Promise<void> {
   let numeroFila = 1;
 
   return new Promise((resolver) => {
-    flujo.on('data', (fila) => {
+    flujo.on('data', async (fila) => {
       if (numeroFila > datosEmpiezanEnFila) {
         procesarFila(fila.formatted.arr, numeroFila);
       }
@@ -323,7 +333,7 @@ async function procesarProyectos(): Promise<void> {
   });
 }
 
-function procesarFila(fila: string[], numeroFila: number) {
+async function procesarFila(fila: string[], numeroFila: number) {
   const nombreProyecto = fila[1].trim();
   const respuesta: Proyecto = {
     id: +fila[0],
@@ -343,8 +353,8 @@ function procesarFila(fila: string[], numeroFila: number) {
     const nombre = fila[5].trim();
     const apellido = fila[6].trim();
 
-    const nombres = nombre ? nombre.split(',') : [];
-    const apellidos = apellido ? apellido.split(',') : [];
+    const nombres = nombre ? separarPartes(nombre) : [];
+    const apellidos = apellido ? separarPartes(apellido) : [];
 
     if (nombres.length && apellidos.length) {
       if (nombres.length !== apellidos.length) {
@@ -409,31 +419,7 @@ function procesarFila(fila: string[], numeroFila: number) {
   });
 
   if (fila[20] && fila[20] !== 'No aplica') {
-    const nombresFotos = fila[20].split(',').map((nombre) => nombre.trim());
-    const carpetaFotos = resolve('./estaticos/imgs/fotos', `${fila[0]}`);
-
-    if (existsSync(carpetaFotos)) {
-      const archivosEnCarpeta = readdirSync(carpetaFotos);
-
-      nombresFotos.forEach((nombreFoto) => {
-        const versionesFoto = archivosEnCarpeta.filter((nombre) => nombre.includes(nombreFoto));
-        const indicePeque = versionesFoto.findIndex((version) => version.includes('_p.'));
-        const indiceGrande = versionesFoto.findIndex((version) => !version.includes('_p.'));
-        if (indiceGrande < 0) {
-          return;
-        }
-        const datosImgGrande = imageSize(resolve(carpetaFotos, versionesFoto[indiceGrande]));
-
-        const datosImg = {
-          grande: versionesFoto[indiceGrande],
-          peque: versionesFoto[indicePeque],
-          ancho: datosImgGrande.width ? datosImgGrande.width : 0,
-          alto: datosImgGrande.height ? datosImgGrande.height : 0
-        };
-
-        respuesta.imagenes?.push(datosImg);
-      });
-    }
+    respuesta.imagenes = await procesarImagenes(fila[20], errata, numeroFila);
   }
 
   campos.forEach((campo) => {
@@ -448,7 +434,7 @@ function procesarFila(fila: string[], numeroFila: number) {
 
 function validarValorMultiple(valor: string, lista: ElementoLista[], tipo: LLavesMultiples) {
   if (!valor) return null;
-  const partes = valor.includes(';') ? valor.trim().split(';') : valor.trim().split(',');
+  const partes = separarPartes(valor);
   const nombres: string[] = [];
 
   partes.forEach((valorCrudo, i) => {
