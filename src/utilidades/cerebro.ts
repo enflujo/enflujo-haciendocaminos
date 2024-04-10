@@ -270,7 +270,9 @@ elementoSeleccionado.subscribe((elemento) => {
         regiones: datosProyecto.regiones ? datosProyecto.regiones : [],
         decadas: datosProyecto.decadas ? datosProyecto.decadas : [],
         enlaces: datosProyecto.enlaces ? datosProyecto.enlaces : [],
-        imagenes: datosProyecto.imagenes ? datosProyecto.imagenes : []
+        imagenes: datosProyecto.imagenes ? datosProyecto.imagenes : [],
+        videos: datosProyecto.videos ? datosProyecto.videos : [],
+        documentos: datosProyecto.documentos ? datosProyecto.documentos : []
       });
     } else {
       const listas = datosListas.value;

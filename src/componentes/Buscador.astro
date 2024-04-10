@@ -17,6 +17,8 @@ const listas = { ...nombresListasProyectos, ...nombresListasEgresados };
         </div>
       ))
     }
+
+    <span id='sinResultados'>No hay resultados para la busqueda: <span class='sinResultadoPara'></span></span>
   </div>
 </div>
 
@@ -28,8 +30,8 @@ const listas = { ...nombresListasProyectos, ...nombresListasEgresados };
   const botonBuscador = document.getElementById('botonBuscador') as HTMLDivElement;
   const sugerencias = document.getElementById('sugerencias') as HTMLDataListElement;
   const cajas = sugerencias.querySelectorAll<HTMLDivElement>('.cajaBuscador');
-  const sinResultados = document.createElement('span');
-  sinResultados.className = 'sinResultados';
+  const sinResultados = document.getElementById('sinResultados') as HTMLSpanElement;
+  const sinResultadosPara = sinResultados.querySelector('.sinResultadoPara') as HTMLSpanElement;
 
   interface ListasBuscador {
     tipo: string;
@@ -60,7 +62,7 @@ const listas = { ...nombresListasProyectos, ...nombresListasEgresados };
     function buscar() {
       const texto = buscador.value.trim();
 
-      sinResultados.innerText = '';
+      sinResultadosPara.innerText = '';
       cajas.forEach((caja) => caja.classList.remove('visible'));
 
       if (!texto || !texto.length) {
@@ -77,6 +79,7 @@ const listas = { ...nombresListasProyectos, ...nombresListasEgresados };
 
       if (busqueda.total > 0) {
         sugerencias.classList.add('visible');
+        sinResultados.classList.remove('visible');
 
         const resultadoEnListas = busqueda.reduce((listas: ListasBuscador[], actual) => {
           const llave = actual.obj.tipo;
@@ -102,8 +105,8 @@ const listas = { ...nombresListasProyectos, ...nombresListasEgresados };
           obj.elementos.forEach((elemento) => ul.appendChild(elemento));
         });
       } else {
-        sinResultados.innerText = `No hay resultados para la busqueda: ${texto}`;
-        sugerencias.appendChild(sinResultados);
+        sinResultados.classList.add('visible');
+        sinResultadosPara.innerText = texto;
       }
     }
   });
@@ -131,6 +134,7 @@ const listas = { ...nombresListasProyectos, ...nombresListasEgresados };
 
     &:focus {
       background-color: var(--resaltadoVerde);
+      color: black;
 
       &::placeholder {
         color: rgba(72, 72, 72, 0.452);
@@ -146,6 +150,22 @@ const listas = { ...nombresListasProyectos, ...nombresListasEgresados };
       color: black;
       left: 10px;
       width: 95%;
+    }
+  }
+
+  #sinResultados {
+    font-size: 1.6em;
+    text-align: center;
+    color: black;
+    display: none;
+    width: 100%;
+
+    &.visible {
+      display: block;
+    }
+
+    .sinResultadoPara {
+      font-weight: bold;
     }
   }
 

@@ -54,6 +54,8 @@ export type Proyecto = {
   regiones?: DefinicionSimple[];
   departamentos?: DefinicionSimple[];
   enlaces?: string[];
+  videos?: string[];
+  documentos?: string[];
   imagenes?: DatosImg[];
   vinculaciones?: DefinicionSimple[];
 };
@@ -137,6 +139,8 @@ export interface Ficha extends RelacionesFicha {
   imagenes?: DatosImg[];
   id?: number;
   academia?: number;
+  videos?: string[];
+  documentos?: string[];
 }
 
 // Tipos egresados

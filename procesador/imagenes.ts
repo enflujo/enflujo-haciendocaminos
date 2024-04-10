@@ -8,12 +8,11 @@ import { emojify } from 'node-emoji';
 const formatosImg = ['JPEG', 'JPG', 'PNG', 'WebP', 'GIF', 'AVIF', 'TIFF', 'SVG'].map(
   (formato) => `.${formato.toLowerCase()}`
 );
-const carpetaPublicaImgs = resolve('./estaticos/fotos');
-
+export const carpetaPublicaImgs = resolve('./estaticos/fotos');
+export const carpetaFuenteImgs = resolve('./procesador/datos/imgs');
 const imagenesFuente: { ext: string; nombre: string; ruta: string; ancho: number; alto: number }[] = [];
 
 export async function analizarCarpetaImagenes(errata: Errata[]) {
-  const carpetaFuenteImgs = resolve('./procesador/datos/imgs');
   let imagenes: string[] = [];
 
   try {

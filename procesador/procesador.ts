@@ -13,13 +13,16 @@ import type {
 } from '../src/tipos.ts';
 import { getXlsxStream } from 'xlstream';
 import slugificar from 'slug';
+import { type VideoTypeData, extract } from '@extractus/oembed-extractor';
 import { enMinusculas, guardarJSON, logBloque, mensajeExito, ordenarListaObjetos, separarPartes } from './ayudas.js';
 import { procesarLugares } from './lugares.js';
 import procesarEgresados from './egresados.js';
 import procesarPersonas from './personas.js';
-import { analizarCarpetaImagenes, procesarImagenes } from './imagenes.js';
+import { analizarCarpetaImagenes, carpetaFuenteImgs, carpetaPublicaImgs, procesarImagenes } from './imagenes.js';
 import { emojify } from 'node-emoji';
 import { procesarNombresLideres } from './lideres.js';
+import { constants, copyFileSync, existsSync } from 'fs';
+import { resolve } from 'path';
 
 const datosEmpiezanEnFila = 2;
 const campos: Campos = [
@@ -202,17 +205,39 @@ async function procesarProyectos(): Promise<void> {
   });
 
   let numeroFila = 1;
+  let filasProcesadas = 0;
+  let conteoFilas = -datosEmpiezanEnFila;
+  let totalFilas = Infinity;
+  let filasPreprocesadas = false;
 
   return new Promise((resolver) => {
     flujo.on('data', async (fila) => {
-      if (numeroFila > datosEmpiezanEnFila) {
-        procesarFila(fila.formatted.arr, numeroFila);
-      }
+      conteoFilas++;
 
+      if (numeroFila > datosEmpiezanEnFila) {
+        await procesarFila(fila.formatted.arr, numeroFila);
+        filasProcesadas++;
+      }
+      // console.log(conteoFilas, filasProcesadas);
       numeroFila++;
+
+      if (!filasPreprocesadas && totalFilas === filasProcesadas) {
+        filasPreprocesadas = true;
+        construirRelacionesDeProyectos();
+      }
     });
 
     flujo.on('close', () => {
+      totalFilas = conteoFilas;
+
+      if (!filasPreprocesadas && totalFilas === filasProcesadas) {
+        filasPreprocesadas = true;
+        construirRelacionesDeProyectos();
+      }
+    });
+
+    // Antes esto se estaba haciendo en el evento `flujo.on('close', () => {})` pero toca esperar a los async await.
+    function construirRelacionesDeProyectos() {
       for (const lista in listas) {
         ordenarListaObjetos(listas[lista as keyof Listas], 'slug', true);
       }
@@ -332,7 +357,9 @@ async function procesarProyectos(): Promise<void> {
       guardarJSON(proyectos, 'proyectos');
 
       resolver();
-    });
+    }
+
+    flujo.on('close', () => {});
   });
 }
 
@@ -344,6 +371,8 @@ async function procesarFila(fila: string[], numeroFila: number) {
     descripcion: fila[17],
     enlaces: fila[18] && fila[18].toLocaleLowerCase() !== 'no aplica' ? fila[18].trim().split(' ') : [],
     imagenes: [],
+    videos: [],
+    documentos: [],
     lideres: procesarNombresLideres(fila[5], fila[6], nombreProyecto, numeroFila, listas.lideres, personas)
   };
 
@@ -358,6 +387,30 @@ async function procesarFila(fila: string[], numeroFila: number) {
 
   if (fila[20] && fila[20].toLowerCase() !== 'no aplica') {
     respuesta.imagenes = await procesarImagenes(fila[20], errata, numeroFila);
+  }
+
+  if (fila[21] && fila[21].toLowerCase() !== 'no aplica') {
+    const partes = separarPartes(fila[21]);
+    if (partes && partes.length) {
+      for await (const url of partes) {
+        const datosVideo = (await extract(url)) as VideoTypeData;
+        respuesta.videos?.push(datosVideo.html);
+      }
+    }
+  }
+
+  if (fila[22] && fila[22].toLowerCase() !== 'no aplica') {
+    const partes = separarPartes(fila[22]);
+
+    partes.forEach((nombreDoc) => {
+      const fuenteDoc = resolve(carpetaFuenteImgs, nombreDoc);
+      const existe = existsSync(fuenteDoc);
+
+      if (existe) {
+        copyFileSync(fuenteDoc, resolve(carpetaPublicaImgs, nombreDoc));
+        respuesta.documentos?.push(nombreDoc);
+      }
+    });
   }
 
   campos.forEach((campo) => {

@@ -167,7 +167,6 @@ export default async function procesarEgresados(
   function validarValorMultiple(valor: string, lista: ElementoLista[]) {
     if (!valor) return null;
     const partes = separarPartes(valor);
-    console.log(partes);
     const respuesta: DefinicionSimple[] = [];
 
     partes.forEach((elemento) => {

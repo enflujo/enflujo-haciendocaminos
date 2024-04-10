@@ -4,6 +4,7 @@ import Red from './Red.astro';
 
 const secciones = [
   { nombre: 'Enlaces', slug: 'enlaces' },
+  { nombre: 'Documentos', slug: 'documentos' },
   { nombre: 'Proyectos', slug: 'proyecto' },
   { nombre: 'Egresados', slug: 'egresado' },
   { nombre: 'Año de Graduación', slug: 'graduacion' },
@@ -52,6 +53,7 @@ const secciones = [
     <div class='seccionDatos descripcion' data-nombre='descripcion'></div>
 
     <Red />
+    <div class='seccionDatos videos' data-nombre='videos'></div>
     <Galeria />
 
     {
@@ -101,6 +103,8 @@ const secciones = [
     '.seccionDatos[data-nombre="descripcion"]'
   ) as HTMLDivElement;
   const seccionEnlaces = ficha.querySelector<SeccionFicha>('.seccionDatos[data-nombre="enlaces"]') as SeccionFicha;
+  const seccionDocs = ficha.querySelector<SeccionFicha>('.seccionDatos[data-nombre="documentos"]') as SeccionFicha;
+  const contenedorVideos = ficha.querySelector<HTMLDivElement>('.seccionDatos[data-nombre="videos"]') as HTMLDivElement;
 
   // Cargar ficha anterior o ficha siguiente al hace click en los botones
   siguiente.onclick = () => {
@@ -198,6 +202,45 @@ const secciones = [
       });
     } else {
       seccionEnlaces.esconder();
+    }
+
+    // Docuemtnos
+    if (datos.documentos && datos.documentos.length) {
+      seccionDocs.limpiar();
+      seccionDocs.mostrar();
+
+      datos.documentos.forEach((nombreDoc) => {
+        const fila = document.createElement('li');
+        const enlace = document.createElement('a');
+        enlace.href = `/fotos/${nombreDoc}`;
+        enlace.innerText = nombreDoc;
+        enlace.target = '_blank';
+        fila.append(enlace);
+        seccionDocs.agregarElemento(fila);
+      });
+    } else {
+      seccionDocs.esconder();
+    }
+
+    if (datos.videos && datos.videos.length) {
+      contenedorVideos.innerText = '';
+      contenedorVideos.classList.add('visible');
+
+      const parsero = new DOMParser();
+
+      datos.videos.forEach((html) => {
+        const iframe = parsero.parseFromString(html, 'text/html').querySelector('iframe');
+
+        if (iframe) {
+          iframe.classList.add('video');
+          iframe.width = '560';
+          iframe.height = '315';
+
+          contenedorVideos.appendChild(iframe);
+        }
+      });
+    } else {
+      contenedorVideos.classList.remove('visible');
     }
 
     const vistaActual = vista.get();
@@ -572,6 +615,11 @@ const secciones = [
       margin: 0 18px;
       padding: 0;
     }
+  }
+
+  .video {
+    display: block;
+    margin: 0 auto;
   }
 
   #redAcademica {
