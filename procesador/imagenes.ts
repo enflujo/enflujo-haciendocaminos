@@ -35,14 +35,22 @@ export async function analizarCarpetaImagenes(errata: Errata[]) {
 
     if (esImagen) {
       try {
-        const metadatos = await sharp(rutaArchivo).metadata();
+        const metadatos = await sharp(rutaArchivo).rotate().metadata();
+        let ancho = metadatos.width ? metadatos.width : 0;
+        let alto = metadatos.height ? metadatos.height : 0;
+
+        if (metadatos.orientation && metadatos.orientation > 4) {
+          const _ancho = ancho;
+          ancho = alto;
+          alto = _ancho;
+        }
 
         imagenesFuente.push({
           nombre: name,
           ext: metadatos.format as string,
           ruta: rutaArchivo,
-          ancho: metadatos.width ? metadatos.width : 0,
-          alto: metadatos.height ? metadatos.height : 0
+          ancho,
+          alto
         });
       } catch (error) {
         const mensaje = `Problema procesando la imagen fuente: ${rutaArchivo}, el error del procesador es: ${JSON.stringify(error)}`;
@@ -82,7 +90,7 @@ export async function procesarImagenes(lista: string, errata: Errata[], numeroFi
       if (!existsSync(ruta)) {
         console.log(emojify(':hammer:'), logAviso('Creando nueva img:'), logCyan(nombreFoto));
 
-        const instanciaImg = sharp(existeImagenFuente.ruta);
+        const instanciaImg = sharp(existeImagenFuente.ruta).rotate();
 
         if (existeImagenFuente.alto > 1500) {
           instanciaImg.resize({ height: 1500 });

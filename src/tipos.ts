@@ -16,6 +16,7 @@ export type Municipios = { nombre: string; slug: string; lon: number; lat: numbe
 
 export type LLavesMultiples =
   | 'decadas'
+  | 'vinculaciones'
   | 'lideres'
   | 'participantes'
   | 'ramas'
@@ -54,6 +55,7 @@ export type Proyecto = {
   departamentos?: DefinicionSimple[];
   enlaces?: string[];
   imagenes?: DatosImg[];
+  vinculaciones?: DefinicionSimple[];
 };
 
 export type Listas = {
@@ -69,6 +71,7 @@ export type Listas = {
   decadas: ElementoLista[];
   regiones: ElementoLista[];
   departamentos: ElementoLista[];
+  vinculaciones: ElementoLista[];
 };
 
 export type Campos = { llave: LLavesMultiples; indice: number; procesarAparte?: boolean }[];
@@ -108,6 +111,7 @@ export interface RelacionesFicha {
   paises?: ElementoFicha[];
   categorias?: ElementoFicha[];
   lideres?: ElementoFicha[];
+  vinculaciones?: ElementoFicha[];
   participantes?: ElementoFicha[];
   ramas?: ElementoFicha[];
   temas?: ElementoFicha[];

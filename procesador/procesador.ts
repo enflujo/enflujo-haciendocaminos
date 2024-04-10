@@ -19,12 +19,14 @@ import procesarEgresados from './egresados.js';
 import procesarPersonas from './personas.js';
 import { analizarCarpetaImagenes, procesarImagenes } from './imagenes.js';
 import { emojify } from 'node-emoji';
+import { procesarNombresLideres } from './lideres.js';
 
 const datosEmpiezanEnFila = 2;
 const campos: Campos = [
   { llave: 'lideres', indice: 5, procesarAparte: true },
   { llave: 'categorias', indice: 2 },
   { llave: 'decadas', indice: 4 },
+  { llave: 'vinculaciones', indice: 7 },
   { llave: 'participantes', indice: 8 },
   { llave: 'ramas', indice: 9 },
   { llave: 'temas', indice: 10 },
@@ -49,7 +51,8 @@ const listas: Listas = {
   municipios: [],
   decadas: [],
   regiones: [],
-  departamentos: []
+  departamentos: [],
+  vinculaciones: []
 };
 
 const listasEgresados: ListasEgresados = {
@@ -341,84 +344,19 @@ async function procesarFila(fila: string[], numeroFila: number) {
     descripcion: fila[17],
     enlaces: fila[18] && fila[18].toLocaleLowerCase() !== 'no aplica' ? fila[18].trim().split(' ') : [],
     imagenes: [],
-    lideres: []
+    lideres: procesarNombresLideres(fila[5], fila[6], nombreProyecto, numeroFila, listas.lideres, personas)
   };
 
   const años = validarAño(`${fila[3]}`.trim());
   if (años) respuesta.años = años;
 
-  let lideres: { nombre: string; slug: string; nombreCompleto?: string }[] = [];
-
-  if (fila[5] && fila[6]) {
-    const nombre = fila[5].trim();
-    const apellido = fila[6].trim();
-
-    const nombres = nombre ? separarPartes(nombre) : [];
-    const apellidos = apellido ? separarPartes(apellido) : [];
-
-    if (nombres.length && apellidos.length) {
-      if (nombres.length !== apellidos.length) {
-        console.log(
-          'En fila',
-          numeroFila,
-          'no coincide el numero de nombres y apellidos, hay',
-          nombres.length,
-          `nombres (${fila[5]}) y`,
-          apellidos.length,
-          `apellidos (${fila[6]}).`
-        );
-      } else {
-        const lista = nombres.map((nombreLider, i) => {
-          const nombreLimpio = nombreLider.trim();
-          const apellidoLimpio = apellidos[i].trim();
-          const nuevoNombre = [apellidoLimpio, nombreLimpio].join(', ');
-          const nombreCompleto = [nombreLimpio, apellidoLimpio].join(' ');
-
-          return {
-            nombre: nuevoNombre,
-            slug: slugificar(nuevoNombre),
-            nombreCompleto
-          };
-        });
-
-        lideres.push(...lista);
-      }
-    }
-  } else {
-    if (!fila[6]) {
-      console.log(`El proyecto ${nombreProyecto} en fila`, numeroFila, ' no tiene nombre o apellido de líder');
-    } else if (fila[6].toLowerCase() !== 'no aplica') {
-      const completo = fila[6].trim();
-      lideres.push({ nombre: completo, slug: slugificar(completo) });
-    }
+  // Agregar la portada de primero en la lista de imágenes
+  if (fila[19] && fila[19].toLowerCase() !== 'no aplica') {
+    const portada = await procesarImagenes(fila[19], errata, numeroFila);
+    if (portada && portada.length) respuesta.imagenes?.push(portada[0]);
   }
 
-  lideres.forEach((lider) => {
-    const existe = listas.lideres.find((obj) => obj.slug === lider.slug);
-
-    if (!existe) {
-      const objeto: ElementoLista = {
-        nombre: lider.nombre,
-        conteo: 1,
-        slug: lider.slug,
-        relaciones: [],
-        proyectos: []
-      };
-
-      // Agregar ID de Academia para mostrar red
-      if (lider.nombreCompleto && personas[lider.nombreCompleto]) {
-        objeto.academia = personas[lider.nombreCompleto];
-      }
-
-      listas.lideres.push(objeto);
-    } else {
-      existe.conteo++;
-    }
-
-    respuesta.lideres?.push(lider);
-  });
-
-  if (fila[20] && fila[20] !== 'No aplica') {
+  if (fila[20] && fila[20].toLowerCase() !== 'no aplica') {
     respuesta.imagenes = await procesarImagenes(fila[20], errata, numeroFila);
   }
 

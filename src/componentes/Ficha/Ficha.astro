@@ -9,6 +9,7 @@ const secciones = [
   { nombre: 'Año de Graduación', slug: 'graduacion' },
 
   { nombre: 'Líderes de Proyectos', slug: 'lideres' },
+  { nombre: 'Tipo de vinculación', slug: 'vinculaciones' },
   { nombre: 'Participantes', slug: 'participantes' },
 
   { nombre: 'Categorías', slug: 'categorias' },
@@ -51,6 +52,7 @@ const secciones = [
     <div class='seccionDatos descripcion' data-nombre='descripcion'></div>
 
     <Red />
+    <Galeria />
 
     {
       secciones.map((seccion) => (
@@ -60,8 +62,6 @@ const secciones = [
         </enflujo-seccion-ficha>
       ))
     }
-
-    <Galeria />
   </section>
 </div>
 
@@ -209,6 +209,7 @@ const secciones = [
     llenarCampos('proyecto', datos, vistaActual);
     llenarCampos('categorias', datos, vistaActual);
     llenarCampos('lideres', datos, vistaActual);
+    llenarCampos('vinculaciones', datos, vistaActual);
     llenarCampos('participantes', datos, vistaActual);
     llenarCampos('ramas', datos, vistaActual);
 
