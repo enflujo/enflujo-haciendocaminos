@@ -1,0 +1,113 @@
+---
+import { descripcionGeneral, nombrePagina } from '@/utilidades/constantes';
+import type { AboutPage, Graph, Organization, Person, WebApplication } from 'schema-dts';
+interface Props {
+  pagina: AboutPage;
+}
+
+const PersonaJC: Person = {
+  '@type': 'Person',
+  '@id': 'https://juancgonzalez.com/#identidad',
+  name: 'Juan Camilo González',
+  // image:
+  sameAs: [],
+  nationality: 'Colombian'
+};
+
+/* const PersonaJGC: Person = {
+  '@type': 'Person',
+  '@id': 'https://juancgonzalez.com/#identidad',
+  name: 'Julián Camilo García',
+  // image:
+  sameAs: [],
+  nationality: 'Colombian'
+};
+
+const PersonaAB: Person = {
+  '@type': 'Person',
+  '@id': 'https://juancgonzalez.com/#identidad',
+  name: 'Antonia Bustamante',
+  // image:
+  sameAs: [],
+  nationality: 'Colombian'
+}; */
+
+const OrgEnFlujo: Organization = {
+  '@type': 'Organization',
+  '@id': 'https://enflujo.com/#identidad',
+  name: 'Laboratorio EnFlujo',
+  description: 'Laboratorio de creación e investigación sobre el presente digital. Universidad de los Andes.',
+  url: 'https://enflujo.com',
+  foundingDate: '2020',
+  foundingLocation: 'Bogotá, Colombia',
+  founder: {
+    '@id': 'https://juancgonzalez.com/#identidad'
+  },
+  sameAs: [
+    'https://www.instagram.com/labenflujo/',
+    'https://github.com/enflujo',
+    'https://twitter.com/labenflujo',
+    'https://www.facebook.com/labenflujo'
+  ],
+  logo: 'https://imagina.uniandes.edu.co/especiales/siya/imagenes/SEO_EnFlujo.webp'
+};
+
+const OrgDeptoAntropologíaUniandes: Organization = {
+  '@type': 'Organization',
+  '@id': 'https://cienciassociales.uniandes.edu.co/antropologia/#identidad',
+  name: 'Departamento de Antropología Universidad de Los Andes',
+  description:
+    'El Departamento de Antropología de la Universidad de los Andes se creó en 1964 y fue el primero de esta disciplina en ser fundado en una universidad colombiana.',
+  url: 'https://cienciassociales.uniandes.edu.co/antropologia',
+  foundingDate: '1964',
+  foundingLocation: 'Bogotá, Colombia',
+  // founder: {
+  //   '@id': 'https://juancgonzalez.com/#identidad',
+  // },
+  sameAs: [
+    // 'https://www.instagram.com/labenflujo/',
+    // 'https://github.com/enflujo',
+    // 'https://twitter.com/labenflujo',
+    // 'https://www.facebook.com/labenflujo',
+  ],
+  logo: 'https://cienciassociales.uniandes.edu.co/antropologia/wp-content/themes/faciso-antropologia/images/logo-antopologia.svg'
+};
+
+const OrgUniandes: Organization = {
+  '@type': 'Organization',
+  '@id': 'https://uniandes.edu.co/#identidad',
+  name: 'Universidad de Los Andes',
+  //legalName: 'NiñezYA - Sociedad Civil por la Niñez y la Adolescencia',
+  url: 'https://uniandes.edu.co/',
+  foundingDate: '1949',
+  logo: 'https://decanaturadeestudiantes.uniandes.edu.co/sites/default/files/logo-andes.svg'
+};
+
+const Aplicacion: WebApplication = {
+  '@type': 'WebApplication',
+  applicationCategory: 'Aplicación Web',
+  author: {
+    '@id': 'https://enflujo.com/#identidad'
+  },
+  copyrightYear: '2024',
+  dateModified: new Date().toISOString(),
+  datePublished: new Date('03/31/2024').toISOString(),
+  description: descripcionGeneral,
+  inLanguage: 'es-CO',
+  name: nombrePagina,
+  operatingSystem: 'Web Browser',
+  url: 'https://haciendocaminos.uniandes.edu.co/',
+  publisher: {
+    '@id': 'https://cienciassociales.uniandes.edu.co/antropologia/#identidad'
+  }
+};
+
+const { pagina } = Astro.props;
+
+const datos: Graph = {
+  '@context': 'https://schema.org',
+  '@graph': [OrgDeptoAntropologíaUniandes, OrgUniandes, OrgEnFlujo, PersonaJC, pagina, Aplicacion]
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(datos)} />

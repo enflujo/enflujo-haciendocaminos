@@ -1,4 +1,7 @@
 ---
+import DatosEstructurados from '@/plantillas/DatosEstructurados.astro';
+import { descripcionGeneral, nombrePagina } from '@/utilidades/constantes';
+import type { AboutPage } from 'schema-dts';
 import Mapa from '@/componentes/Mapa.astro';
 import Plantilla from '@/plantillas/Plantilla.astro';
 import listas from '../../estaticos/listas.json';
@@ -9,9 +12,21 @@ import Creditos from '@/componentes/Creditos.astro';
 import Listas from '@/componentes/Listas.astro';
 import Proyectos from '@/componentes/Proyectos.astro';
 import PataLogos from '@/componentes/PataLogos.astro';
+
+const datosPagina: AboutPage = {
+  '@type': 'AboutPage',
+  url: 'https://haciendocaminos.uniandes.edu.co/',
+  name: nombrePagina,
+  inLanguage: 'es-CO',
+  description: descripcionGeneral
+  // fechaPublicacion: new Date('11-19-2023'),
+  // fechaActualizacion: new Date(),
+  // tags: ['antropologia', 'datos', 'colombia', 'visualizacion', 'investigacion'],
+};
 ---
 
 <Plantilla>
+  <DatosEstructurados slot="cabeza" pagina={datosPagina} />
   <Cabezote />
   <main>
     <Creditos />

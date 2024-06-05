@@ -1,4 +1,6 @@
 ---
+import { descripcionGeneral, nombrePagina } from '@/utilidades/constantes';
+
 interface Props {
   titulo?: string;
   descripcion?: string;
@@ -7,65 +9,63 @@ interface Props {
 
 const { titulo, descripcion, imagen } = Astro.props;
 
-const nombreProyecto = '60 Años Haciendo Caminos | Departamento de Antropología';
-const descripcionGeneral =
-  'Haciendo Caminos es la historia del Departamento de Antropología de la Universidad de Los Andes contada a través de los proyectos de investigación que sus profesores y estudiantes han realizado desde su creación.';
 const { pathname } = Astro.url;
-const tituloSEO = titulo ? `${titulo} | ${nombreProyecto}` : nombreProyecto;
+const tituloSEO = titulo ? `${titulo} | ${nombrePagina}` : nombrePagina;
 const descripcionSEO = descripcion || descripcionGeneral;
 const urlBase = new URL(import.meta.env.BASE_URL, Astro.site);
 const urlPagina = new URL(pathname, Astro.site);
 const rutaImg = imagen ? new URL(imagen.ruta, urlBase.href + '/') : new URL('imagen_OG.png', urlBase.href + '/');
-const altImg = imagen ? imagen.alt : nombreProyecto;
+const altImg = imagen ? imagen.alt : nombrePagina;
 ---
 
 <!doctype html>
-<html lang='es'>
+<html lang="es">
   <head>
-    <meta charset='UTF-8' />
-    <meta name='viewport' content='width=device-width' />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
 
-    <link rel='preconnect' href='https://rsms.me/' />
-    <link rel='stylesheet' href='https://rsms.me/inter/inter.css' />
+    <link rel="preconnect" href="https://rsms.me/" />
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
 
-    <link rel='icon' href={`${import.meta.env.BASE_URL}favicon.ico`} sizes='32x32' />
-    <link rel='icon' href={`${import.meta.env.BASE_URL}favicon.svg`} type='image/svg+xml' />
-    <link rel='apple-touch-icon' href={`${import.meta.env.BASE_URL}apple-touch-icon.png`} />
-    <link rel='manifest' href={`${import.meta.env.BASE_URL}sitio.webmanifest`} />
-    <link rel='sitemap' href={`${import.meta.env.BASE_URL}sitemap-index.xml`} />
-    <meta name='generator' content={Astro.generator} />
-    <link rel='canonical' href={urlPagina} />
+    <link rel="icon" href={`${import.meta.env.BASE_URL}favicon.ico`} sizes="32x32" />
+    <link rel="icon" href={`${import.meta.env.BASE_URL}favicon.svg`} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={`${import.meta.env.BASE_URL}apple-touch-icon.png`} />
+    <link rel="manifest" href={`${import.meta.env.BASE_URL}sitio.webmanifest`} />
+    <link rel="sitemap" href={`${import.meta.env.BASE_URL}sitemap-index.xml`} />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="canonical" href={urlPagina} />
 
     <title>{tituloSEO}</title>
-    <meta name='description' content={descripcionSEO} />
+    <meta name="description" content={descripcionSEO} />
     <!-- OpenGraph -->
-    <meta property='og:locale' content='es_CO' />
-    <meta property='og:site_name' content={nombreProyecto} />
-    <meta property='og:type' content='website' />
-    <meta property='og:url' content={urlPagina} />
-    <meta property='og:title' content={tituloSEO} />
-    <meta property='og:description' content={descripcionSEO} />
-    <meta property='og:image' content={rutaImg} />
-    <meta property='og:image:alt' content={altImg} />
-    <meta property='og:image:width' content='1200' />
-    <meta property='og:image:height' content='630' />
+    <meta property="og:locale" content="es_CO" />
+    <meta property="og:site_name" content={nombrePagina} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={urlPagina} />
+    <meta property="og:title" content={tituloSEO} />
+    <meta property="og:description" content={descripcionSEO} />
+    <meta property="og:image" content={rutaImg} />
+    <meta property="og:image:alt" content={altImg} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <!-- Twitter -->
-    <meta name='twitter:card' content='summary_large_image' />
-    <meta name='twitter:site' content='@facisouniandes' />
-    <meta name='twitter:creator' content='@facisouniandes' />
-    <meta name='twitter:url' content='https://cienciassociales.uniandes.edu.co/antropologia/' />
-    <meta name='twitter:title' content={tituloSEO} />
-    <meta name='twitter:description' content={descripcionSEO} />
-    <meta name='twitter:image' content={rutaImg} />
-    <meta name='twitter:image:alt' content={altImg} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@facisouniandes" />
+    <meta name="twitter:creator" content="@facisouniandes" />
+    <meta name="twitter:url" content="https://cienciassociales.uniandes.edu.co/antropologia/" />
+    <meta name="twitter:title" content={tituloSEO} />
+    <meta name="twitter:description" content={descripcionSEO} />
+    <meta name="twitter:image" content={rutaImg} />
+    <meta name="twitter:image:alt" content={altImg} />
+    <slot name="cabeza" />
 
     {
       import.meta.env.PROD && (
         <script
           is:inline
           defer
-          data-website-id='569a36fc-18d4-4ee4-a40c-7c7a9a35b3a1'
-          src='https://analitica.enflujo.com/script.js'
+          data-website-id="569a36fc-18d4-4ee4-a40c-7c7a9a35b3a1"
+          src="https://analitica.enflujo.com/script.js"
         />
       )
     }
@@ -99,6 +99,6 @@ const altImg = imagen ? imagen.alt : nombreProyecto;
   `);
 </script>
 
-<style lang='scss' is:global>
+<style lang="scss" is:global>
   @import '@/scss/estilos.scss';
 </style>
