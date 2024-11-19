@@ -11,8 +11,7 @@
     "astro": "astro",
     "lint": "prettier --check .",
     "lint:fix": "prettier --write --list-different .",
-    "datos": "nodemon --exec node --loader ts-node/esm ./procesador/procesador.ts",
-    "procesar": "ts-node --esm ./procesador/procesador.ts"
+    "datos": "nodemon --exec node --loader ts-node/esm ./procesador/procesador.ts"
   },
   "dependencies": {
     "@astrojs/check": "^0.5.10",
@@ -29,7 +28,7 @@
     "nanostores": "^0.10.3",
     "node-emoji": "^2.1.3",
     "photoswipe": "^5.4.3",
-    "sharp": "^0.33.3",
+    "sharp": "^0.33.5",
     "typescript": "^5.4.4"
   },
   "devDependencies": {
@@ -51,5 +50,6 @@
     "ignore": [
       "estaticos"
     ]
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

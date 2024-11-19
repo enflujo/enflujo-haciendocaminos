@@ -89,7 +89,7 @@ Se deben copiar a la siguiente carpeta:
 Ubicados en la carpeta donde clonamos el repositorio, correr el siguiente comando en la terminal:
 
 ```bash
-yarn procesar
+yarn datos
 ```
 
 Cuando vea el mensaje `🦊 FIN 🦚` significa que ya se procesaron todos los datos.
